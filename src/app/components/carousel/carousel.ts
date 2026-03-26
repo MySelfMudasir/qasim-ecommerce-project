@@ -54,9 +54,6 @@ export class Carousel implements OnDestroy {
       const cfg = this.finalConfig();
       const slides = this.slides();
 
-      console.log('Slides:', this.slides());
-      console.log('Config:', this.config());
-
       if (cfg.autoPlay && slides.length > 0) {
         this.startAutoSlide();
       } else {

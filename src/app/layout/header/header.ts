@@ -7,6 +7,7 @@ import { MatButton } from '@angular/material/button';
 import { SearchBar } from '../../components/search-bar/search-bar';
 import { RouterLink } from "@angular/router";
 import {MatProgressBarModule} from '@angular/material/progress-bar';
+import { SearchService } from '../../services/search';
 
 @Component({
   selector: 'app-header',
@@ -16,7 +17,8 @@ import {MatProgressBarModule} from '@angular/material/progress-bar';
 })
 export class Header {
   sidenavService = inject(SidenavService);
-
+  searchService = inject(SearchService);
+  showProgressBar = true;
   toggleMenu() {
     this.sidenavService.toggle();
   }

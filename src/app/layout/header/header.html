@@ -1,6 +1,5 @@
 <mat-toolbar class="w-full elevated py-2">
     <div class="w-full flex items-center justify-between gap-4">
-
         <!-- Left: menu + title -->
         <div class="flex items-center gap-3">
             <button matButton (click)="toggleMenu()">
@@ -16,12 +15,14 @@
             <app-search-bar class="w-full max-w-[600px]"></app-search-bar>
         </div>
 
-
         <!-- Right: actions -->
         <div class="flex items-center">
             <app-header-actions></app-header-actions>
         </div>
     </div>
-    
 </mat-toolbar>
-<mat-progress-bar mode="indeterminate"></mat-progress-bar>
+
+@if (searchService.showProgressBar()) {
+    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+  
+}
