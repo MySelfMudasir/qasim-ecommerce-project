@@ -1,0 +1,55 @@
+<div class="p-8 max-w-[400px] rounded-lg">
+    <div class="flex justify-between">
+        <div>
+            <h3 class="text-xl font-medium mb-1">Sign Up</h3>
+            <p class="text-sm text-gray-500">Create a new account to continue Shopping</p>
+        </div>
+        <button tabindex="-1" matIconButton class="-mt-2 -mr-2" mat-dialog-close>
+            <mat-icon>close</mat-icon>
+        </button>
+
+    </div>
+    <form [formGroup]="signUpForm" class="mt-6 w-full" (ngSubmit)="signUp()">
+        <mat-form-field appearance="outline" class="w-full mb-1">
+            <mat-label>Name</mat-label>
+            <input matInput type="text" required placeholder="enter your name" autocomplete="off"
+                formControlName="name">
+            <mat-icon matPrefix>person</mat-icon>
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="w-full mb-1">
+            <mat-label>Email</mat-label>
+            <input matInput type="email" required placeholder="enter your email" autocomplete="off"
+                formControlName="email">
+            <mat-icon matPrefix>email</mat-icon>
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="w-full mb-0">
+            <mat-label>Password</mat-label>
+            <input matInput [type]="passwordVisible() ? 'text' : 'password'" required placeholder="enter your password"
+                autocomplete="off" formControlName="password">
+            <mat-icon matPrefix>lock</mat-icon>
+            <button mat-icon-button matSuffix class="mr-2" (click)="passwordVisible.set(!passwordVisible())"
+                type="button">
+                <mat-icon [fontIcon]="passwordVisible() ? 'visibility_off' : 'visibility'"></mat-icon>
+            </button>
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="w-full mb-0">
+            <mat-label>Confirm Password</mat-label>
+            <input matInput [type]="confirmPasswordVisible() ? 'text' : 'password'" required placeholder="enter your password"
+                autocomplete="off" formControlName="confirmPassword">
+            <mat-icon matPrefix>lock</mat-icon>
+            <button mat-icon-button matSuffix class="mr-2" (click)="confirmPasswordVisible.set(!confirmPasswordVisible())"
+                type="button">
+                <mat-icon [fontIcon]="confirmPasswordVisible() ? 'visibility_off' : 'visibility'"></mat-icon>
+            </button>
+        </mat-form-field>
+        <button matButton="filled" class="w-full mt-2 py-3 rounded-lg" [disabled]="signUpForm.invalid" type="submit">
+            Sign Up
+        </button>
+    </form>
+
+    <p class="text-sm text-gray-500 mt-2 text-center">
+        I already have an account?
+        <a class="text-blue-600 cursor-pointer" (click)="openSignInDialog()">Sign In</a>
+    </p>
+
+</div>

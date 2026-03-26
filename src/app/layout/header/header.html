@@ -1,0 +1,23 @@
+<mat-toolbar class="w-full elevated py-2">
+    <div class="w-full flex items-center justify-between gap-4">
+
+        <!-- Left: menu + title -->
+        <div class="flex items-center gap-3">
+            <button matButton (click)="toggleMenu()">
+                <mat-icon class="!text-2xl">menu</mat-icon>
+            </button>
+            <span class="text-lg font-medium">Modern Store</span>
+        </div>
+
+        <!-- Center: search -->
+        <div class="flex-1 flex justify-center px-4">
+            <app-search-bar class="w-full max-w-[600px]"></app-search-bar>
+        </div>
+
+
+        <!-- Right: actions -->
+        <div class="flex items-center">
+            <app-header-actions></app-header-actions>
+        </div>
+    </div>
+</mat-toolbar>

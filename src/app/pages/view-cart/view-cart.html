@@ -1,0 +1,26 @@
+
+<div class="mx-auto max-w-[1200px] py-6">
+
+    <app-back-button class="mb-6 block" navigateTo="/products/all">Continue Shopping</app-back-button>
+    <h1 class="text-3xl font-extrabold mb-5">Shopping Cart</h1>
+
+    <app-tease-wishlist class="mb-6 block"></app-tease-wishlist>
+
+    
+    <div class="grid gird-cols-1 lg:grid-cols-3 gap-6">
+        <div class="lg:col-span-2">
+            <app-list-cart-items></app-list-cart-items>
+        </div>
+        <div class="lg:col-span-1">
+            <app-summarize-order>
+                <ng-container actionButtons>
+                    <button matButton="filled" class="w-full mt-6 py-3" (click)="store.proceedToCheckout()">
+                        Proceed to Checkout
+                    </button>
+                </ng-container>
+                
+            </app-summarize-order>
+        </div>
+    </div>
+
+</div>
