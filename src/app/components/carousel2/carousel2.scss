@@ -1,0 +1,33 @@
+/* carousel.component.scss */
+
+:host {
+  display: block;
+  width: 100%;
+}
+
+/* Progress bar keyframes */
+@keyframes progress {
+  from { width: 0%; }
+  to   { width: 100%; }
+}
+
+.animate-progress {
+  animation: progress linear forwards;
+}
+
+/* Smooth slide transitions */
+.transition-all {
+  transition-property: opacity, transform;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Ensure images don't interfere with layout */
+img.absolute {
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+
+/* Focus ring suppression for non-keyboard nav */
+:host(:not(:focus-visible)) section {
+  outline: none;
+}

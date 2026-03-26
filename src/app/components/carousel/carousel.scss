@@ -1,0 +1,14 @@
+.indicator {
+  background-color: var(--mat-sys-surface-container);
+}
+
+.indicator.active {
+  background-color: var(--mat-sys-primary);
+}
+
+
+/* ✅ Fix Material 3 secondary button */
+.mat-mdc-unelevated-button.mat-secondary {
+  --mat-button-filled-container-color: var(--mat-sys-secondary);
+  --mat-button-filled-label-text-color: var(--mat-sys-on-secondary);
+}

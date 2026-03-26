@@ -12,17 +12,18 @@ html {
         medium-weight: 500,
         regular-weight: 400
       ),
-      density: -5
+      density: -0
     )
   );
 
-  @include mat.theme-overrides(
+  
+ @include mat.theme-overrides(
     (
-      primary: light-dark(#6750a4, #cdc0ec),
+      primary: light-dark(#006043, #cdc0ec),
       'on-primary': light-dark(#ffffff, #443a5f),
       'primary-container': light-dark(#eaddff, #574d72),
       'on-primary-container': light-dark(#21005d, #e9deff),
-      secondary: light-dark(#625b71, #cbc2db),
+      secondary: light-dark(#006043, #cbc2db),
       'on-secondary': light-dark(#ffffff, #433d51),
       'secondary-container': light-dark(#e8def8, #3e384c),
       'on-secondary-container': light-dark(#1d192b, #c4bbd4),
@@ -57,4 +58,5 @@ html {
       shadow: light-dark(#000000, #000000),
     )
   );
+
 }

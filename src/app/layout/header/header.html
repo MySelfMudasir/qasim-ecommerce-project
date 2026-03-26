@@ -6,7 +6,9 @@
             <button matButton (click)="toggleMenu()">
                 <mat-icon class="!text-2xl">menu</mat-icon>
             </button>
-            <span class="text-lg font-medium">Modern Store</span>
+            <button matButton routerLink="/">
+                <span class="text-lg font-medium">Modern Store</span>
+            </button>
         </div>
 
         <!-- Center: search -->
@@ -20,4 +22,6 @@
             <app-header-actions></app-header-actions>
         </div>
     </div>
+    
 </mat-toolbar>
+<mat-progress-bar mode="indeterminate"></mat-progress-bar>

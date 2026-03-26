@@ -1,0 +1,91 @@
+<div class="relative w-full max-h-[500px] overflow-hidden rounded-lg">
+
+
+    <!-- SLIDE MODE -->
+    <div *ngIf="finalConfig().animation === 'slide'" class="flex transition-transform duration-700 ease-in-out"
+        [style.transform]="'translateX(-' + currentIndex() * 100 + '%)'">
+        <div *ngFor="let s of slides()" class="w-full flex-shrink-0 relative">
+            <img [src]="s.image" class="w-full object-cover" />
+            <!-- overlay -->
+            <div class="absolute inset-0 bg-black/8 z-10"></div>
+            <!-- text -->
+            <div class="absolute inset-0 flex flex-col items-center justify-center px-6 md:px-16 bg-black/20 z-10">
+                <h1 class="text-white text-4xl md:text-6xl font-bold">
+                    {{s.title}}
+                </h1>
+                <p class="text-white text-xl mt-2">
+                    {{s.subtitle}}
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- FADE MODE -->
+    <div *ngIf="finalConfig().animation === 'fade'" class="relative w-full h-[250px] md:h-[500px]">
+        <div *ngFor="let s of slides(); let i = index" class="absolute inset-0 transition-opacity duration-700"
+            [class.opacity-100]="i === currentIndex()" [class.opacity-0]="i !== currentIndex()"
+            [class.z-10]="i === currentIndex()" [class.z-0]="i !== currentIndex()">
+            <img [src]="s.image" class="w-full h-full object-cover" />
+            <!-- overlay -->
+            <div class="absolute inset-0 bg-black/8 z-10"></div>
+            <!-- text -->
+            <div class="absolute inset-0 flex flex-col items-center justify-center px-6 md:px-16 bg-black/20 z-10">
+                <h1 class="text-white text-4xl md:text-6xl font-bold">
+                    {{s.title}}
+                </h1>
+                <p class="text-white text-xl mt-2">
+                    {{s.subtitle}}
+                </p>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- ZOOM MODE -->
+    <div *ngIf="finalConfig().animation === 'zoom'" class="relative w-full h-[250px] md:h-[500px]">
+        <div *ngFor="let s of slides(); let i = index" class="absolute inset-0 transition-all duration-700"
+            [class.scale-100]="i === currentIndex()" [class.scale-110]="i !== currentIndex()"
+            [class.opacity-100]="i === currentIndex()" [class.opacity-0]="i !== currentIndex()">
+            <img [src]="s.image" class="w-full h-full object-cover" />
+            <!-- overlay -->
+            <div class="absolute inset-0 bg-black/8 z-10"></div>
+            <!-- text -->
+            <div class="absolute inset-0 flex flex-col items-center justify-center px-6 md:px-16 bg-black/20 z-10">
+                <h1 class="text-white text-4xl md:text-6xl font-bold">
+                    {{s.title}}
+                </h1>
+                <p class="text-white text-xl mt-2">
+                    {{s.subtitle}}
+                </p>
+            </div>
+        </div>
+    </div>
+
+
+
+    <!-- CONTROLS -->
+    <button
+        class="absolute left-2 sm:left-3 top-1/2 -translate-y-1/2 z-30 flex items-center justify-center rounded-full bg-white/20 hover:bg-white/40 backdrop-blur-sm border border-white/30 text-white transition-all duration-200 hover:scale-110 focus:outline-none focus-visible:ring-2 focus-visible:ring-white"
+        [ngStyle]="{ width: 'clamp(28px, 4vw, 44px)', height: 'clamp(28px, 4vw, 44px)' }"
+        *ngIf="finalConfig().showControls" (click)="prev()"
+        style="position: absolute; top: 50%; left: 10px; transform: translateY(-50%); z-index: 10;">
+        <mat-icon>chevron_left</mat-icon>
+    </button>
+
+    <button
+        class="absolute right-2 sm:right-3 top-1/2 -translate-y-1/2 z-30 flex items-center justify-center rounded-full bg-white/20 hover:bg-white/40 backdrop-blur-sm border border-white/30 text-white transition-all duration-200 hover:scale-110 focus:outline-none focus-visible:ring-2 focus-visible:ring-white"
+        [ngStyle]="{ width: 'clamp(28px, 4vw, 44px)', height: 'clamp(28px, 4vw, 44px)' }"
+        *ngIf="finalConfig().showControls" (click)="next()"
+        style="position: absolute; top: 50%; right: 10px; transform: translateY(-50%); z-index: 10;">
+        <mat-icon>chevron_right</mat-icon>
+    </button>
+
+
+    <!-- ✅ INDICATORS (GLOBAL) -->
+    <div *ngIf="finalConfig().showIndicators" class="absolute bottom-4 w-full flex justify-center gap-2 z-10">
+        <span *ngFor="let s of slides(); let i = index" (click)="goTo(i)"
+            class="w-4 h-4 rounded-full cursor-pointer indicator" [class.active]="i === currentIndex()">
+        </span>
+    </div>
+
+</div>

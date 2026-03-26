@@ -1,0 +1,220 @@
+<!-- Bakery Carousel Component -->
+<section
+  class="relative w-full overflow-hidden rounded-xl select-none focus:outline-none"
+  [style.aspect-ratio]="'16/5'"
+  [attr.tabindex]="0"
+  (mouseenter)="onMouseEnter()"
+  (mouseleave)="onMouseLeave()"
+  aria-label="Promotional carousel"
+  role="region"
+>
+  <!-- ─── Slides ─────────────────────────────────────────────────── -->
+  @for (slide of slides; track trackBySlide($index, slide)) {
+    <div
+      class="absolute inset-0 flex items-center w-full h-full transition-all"
+      [style.background-color]="slide.bgColor"
+      [style.transition-duration]="transitionDuration + 'ms'"
+      [ngClass]="{
+        'opacity-100 translate-x-0 z-10': currentIndex() === $index,
+        'opacity-0 -translate-x-full z-0':
+          currentIndex() !== $index && direction() === 'next',
+        'opacity-0 translate-x-full z-0':
+          currentIndex() !== $index && direction() === 'prev'
+      }"
+      role="tabpanel"
+      [attr.aria-label]="slide.headline + ' ' + slide.subheadline"
+      [attr.aria-hidden]="currentIndex() !== $index"
+    >
+      <!-- Subtle grain overlay -->
+      <div
+        class="absolute inset-0 opacity-[0.04] pointer-events-none z-0"
+        style="background-image: url('data:image/svg+xml,%3Csvg viewBox=\'0 0 256 256\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noise\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.9\' numOctaves=\'4\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23noise)\'/%3E%3C/svg%3E'); background-size: 256px 256px;"
+      ></div>
+
+      <!-- Text content -->
+      <div
+        class="relative z-20 flex flex-col justify-center pl-[5%] sm:pl-[7%] w-[40%] sm:w-[38%] md:w-[36%] lg:w-[34%] h-full gap-y-1 sm:gap-y-2"
+        [style.color]="slide.textColor"
+      >
+        <!-- Badge -->
+        @if (slide.badge) {
+          <span
+            class="text-[0.5rem] sm:text-[0.6rem] md:text-xs font-bold tracking-[0.18em] uppercase opacity-70 mb-1"
+          >
+            {{ slide.badge }}
+          </span>
+        }
+
+        <!-- Main headline -->
+        <h2
+          class="font-black leading-none tracking-tight"
+          style="font-family: 'Playfair Display', Georgia, serif;"
+          [ngStyle]="{
+            'font-size': 'clamp(2rem, 6vw, 5rem)'
+          }"
+        >
+          {{ slide.headline }}
+        </h2>
+
+        <!-- Sub-headline + discount badge row -->
+        <div class="flex items-center gap-x-2 sm:gap-x-3">
+          @if (slide.subheadline) {
+            <span
+              class="font-light italic leading-none tracking-wide"
+              style="font-family: 'Playfair Display', Georgia, serif;"
+              [ngStyle]="{ 'font-size': 'clamp(1.1rem, 3.2vw, 2.6rem)' }"
+            >
+              {{ slide.subheadline }}
+            </span>
+          }
+
+          <!-- Discount circle -->
+          @if (slide.discount) {
+            <div
+              class="relative flex-shrink-0 flex flex-col items-center justify-center rounded-full border-2 aspect-square"
+              [style.border-color]="slide.accentColor"
+              [ngStyle]="{
+                width: 'clamp(44px, 7vw, 72px)',
+                height: 'clamp(44px, 7vw, 72px)'
+              }"
+            >
+              <!-- Ring pulse -->
+              <div
+                class="absolute inset-0 rounded-full animate-ping opacity-20"
+                [style.background-color]="slide.accentColor"
+              ></div>
+
+              @if (slide.discountLabel) {
+                <span
+                  class="text-[0.38rem] sm:text-[0.5rem] font-semibold tracking-wider leading-tight text-center uppercase whitespace-pre-line"
+                  [style.color]="slide.accentColor"
+                >{{ slide.discountLabel }}</span>
+              }
+              <span
+                class="font-black leading-none"
+                [style.color]="slide.textColor"
+                [ngStyle]="{ 'font-size': 'clamp(0.8rem, 2vw, 1.5rem)' }"
+              >{{ slide.discount }}</span>
+              @if (slide.discountLabel?.includes('OFF')) {
+                <span
+                  class="text-[0.38rem] sm:text-[0.5rem] font-bold tracking-wider uppercase"
+                  [style.color]="slide.accentColor"
+                >OFF</span>
+              }
+            </div>
+          }
+        </div>
+
+        <!-- CTA -->
+        <a
+          [href]="slide.ctaLink || '#'"
+          class="group mt-2 sm:mt-3 inline-flex items-center gap-x-1.5 text-[0.6rem] sm:text-[0.7rem] md:text-sm font-semibold tracking-widest uppercase cursor-pointer w-fit"
+          [style.color]="slide.textColor"
+          (click)="$event.preventDefault()"
+        >
+          {{ slide.ctaText }}
+          <svg
+            class="w-3 h-3 sm:w-4 sm:h-4 transition-transform duration-300 group-hover:translate-x-1"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path d="M5 12h14M12 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+          <!-- underline decoration -->
+          <span
+            class="absolute bottom-0 left-0 h-px w-0 group-hover:w-full transition-all duration-300"
+            [style.background-color]="slide.accentColor"
+          ></span>
+        </a>
+      </div>
+
+      <!-- ── Product images ─────────────────────────────────── -->
+      <div class="absolute inset-0 z-10 pointer-events-none">
+        @for (img of slide.images; track img.alt) {
+          <img
+            [src]="img.src"
+            [alt]="img.alt"
+            [ngClass]="img.classes"
+            class="absolute object-contain drop-shadow-2xl"
+            [style.transition]="
+              'opacity ' + transitionDuration + 'ms ease, transform ' + transitionDuration + 'ms ease'
+            "
+            [ngStyle]="{
+              opacity: currentIndex() === $index ? '1' : '0',
+              transform:
+                currentIndex() === $index ? 'translateY(0)' : 'translateY(20px)'
+            }"
+            loading="lazy"
+          />
+        }
+      </div>
+    </div>
+  }
+
+  <!-- ─── Arrow Buttons ─────────────────────────────────────────── -->
+  @if (showArrows && slides.length > 1) {
+    <!-- Prev -->
+    <button
+      (click)="prev()"
+      class="absolute left-2 sm:left-3 top-1/2 -translate-y-1/2 z-30 flex items-center justify-center rounded-full bg-white/20 hover:bg-white/40 backdrop-blur-sm border border-white/30 text-white transition-all duration-200 hover:scale-110 focus:outline-none focus-visible:ring-2 focus-visible:ring-white"
+      [ngStyle]="{ width: 'clamp(28px, 4vw, 44px)', height: 'clamp(28px, 4vw, 44px)' }"
+      aria-label="Previous slide"
+    >
+      <svg class="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <path d="M15 18l-6-6 6-6" stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+    </button>
+
+    <!-- Next -->
+    <button
+      (click)="next()"
+      class="absolute right-2 sm:right-3 top-1/2 -translate-y-1/2 z-30 flex items-center justify-center rounded-full bg-white/20 hover:bg-white/40 backdrop-blur-sm border border-white/30 text-white transition-all duration-200 hover:scale-110 focus:outline-none focus-visible:ring-2 focus-visible:ring-white"
+      [ngStyle]="{ width: 'clamp(28px, 4vw, 44px)', height: 'clamp(28px, 4vw, 44px)' }"
+      aria-label="Next slide"
+    >
+      <svg class="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <path d="M9 18l6-6-6-6" stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+    </button>
+  }
+
+  <!-- ─── Indicators ─────────────────────────────────────────────── -->
+  @if (showIndicators && slides.length > 1) {
+    <div
+      class="absolute bottom-3 sm:bottom-4 left-1/2 -translate-x-1/2 z-30 flex items-center gap-x-1.5 sm:gap-x-2"
+      role="tablist"
+      aria-label="Carousel indicators"
+    >
+      @for (slide of slides; track slide.id; let i = $index) {
+        <button
+          (click)="goTo(i)"
+          role="tab"
+          [attr.aria-selected]="currentIndex() === i"
+          [attr.aria-label]="'Go to slide ' + (i + 1)"
+          class="rounded-full transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-white"
+          [ngClass]="{
+            'bg-white scale-125': currentIndex() === i,
+            'bg-white/40 hover:bg-white/70': currentIndex() !== i
+          }"
+          [ngStyle]="{
+            width: currentIndex() === i ? 'clamp(18px, 2.5vw, 26px)' : 'clamp(7px, 1vw, 10px)',
+            height: 'clamp(7px, 1vw, 10px)'
+          }"
+        ></button>
+      }
+    </div>
+  }
+
+  <!-- ─── Progress bar ───────────────────────────────────────────── -->
+  @if (autoPlay && !isPaused()) {
+    <div class="absolute bottom-0 left-0 right-0 h-0.5 z-30 overflow-hidden">
+      <div
+        class="h-full bg-white/50 animate-progress"
+        [style.animation-duration]="autoPlayInterval + 'ms'"
+        
+      ></div>
+    </div>
+  }
+</section>
