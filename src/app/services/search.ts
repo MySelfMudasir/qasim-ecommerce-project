@@ -4,21 +4,19 @@ import { Injectable, signal } from '@angular/core';
   providedIn: 'root',
 })
 export class SearchService {
- private _showProgressBar = signal(false);
+  private _showProgressBar = signal(false);
 
- showProgressBar = this._showProgressBar.asReadonly();
+  showProgressBar = this._showProgressBar.asReadonly();
 
- toggle(){
-  this._showProgressBar.update(v => !v);
- }
+  toggle() {
+    this._showProgressBar.update((v) => !v);
+  }
 
-   open() {
+  open() {
     this._showProgressBar.set(true);
   }
 
   close() {
     this._showProgressBar.set(false);
   }
-
-
 }

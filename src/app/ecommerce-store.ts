@@ -441,6 +441,27 @@ export const EcommerceStore = signalStore(
         patchState(store, { wishlistItems: [] });
       },
 
+      loadMoreProducts: () => {        
+        const moreProducts = [
+          {
+            id: crypto.randomUUID(),
+            name: 'New Product',
+            price: 50,
+            category: store.selectedCategory(),
+            imageUrl: 'https://placehold.co/600x400',
+            rating: 4,
+            reviewCount: 5,
+            inStock: true,
+            description: 'Newly loaded product MILK Solids, Corn Starch, Garlic Powder, Dextrose, Sage, Pepper Extracts (Black & White Pepper), EGG Powder.',
+            reviews: [],
+          },
+        ];
+
+        patchState(store, {
+          products: [...store.products(), ...moreProducts],
+        });
+      },
+
       addToCart: (product: ProductModel, quantity = 1) => {
         const existingItemIndex = store.cartItems().findIndex((i) => i.product.id === product.id);
         const updateCartItems = produce(store.cartItems(), (draft) => {

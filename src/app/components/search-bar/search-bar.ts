@@ -34,11 +34,11 @@ export class SearchBar {
       this.searchForm.markAllAsTouched();
       return;
     }
-    this.searchSservice.toggle();
+    this.searchSservice.open();
   }
   
   clearSearch() {
-    this.searchSservice.toggle();
+    this.searchSservice.close();
     this.searchForm.reset();
   }
 }

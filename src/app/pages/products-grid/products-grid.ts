@@ -14,6 +14,7 @@ import { ViewPanel } from '../../directives/view-panel';
 import { Carousel, CarouselConfig } from '../../components/carousel/carousel';
 import { Carousel2 } from '../../components/carousel2/carousel2';
 import { MenuBar } from "../../components/menu-bar/menu-bar";
+import { LoadMoreProducts } from "../../components/load-more-products/load-more-products";
 
 @Component({
   selector: 'app-products-grid',
@@ -32,13 +33,20 @@ import { MenuBar } from "../../components/menu-bar/menu-bar";
     MenuBar,
     ViewPanel,
     Carousel,
-    MenuBar
+    MenuBar,
+    LoadMoreProducts
 ],
   templateUrl: './products-grid.html',
   styleUrl: './products-grid.scss',
+  host: {
+    class: 'block',
+  }
 })
 export class ProductsGrid {
   selectedCategory = input<string>('all');
+  store = inject(EcommerceStore);
+  sidenavService = inject(SidenavService);
+  mySlides: any[];
 
   categoriesList = signal<string[]>([
     'all',
@@ -53,9 +61,7 @@ export class ProductsGrid {
     'Gardening',
   ]);
 
-  store = inject(EcommerceStore);
-  sidenavService = inject(SidenavService);
-  mySlides: any[];
+
   constructor() {
     this.store.setCategory(this.selectedCategory);
     this.mySlides = [
@@ -86,6 +92,9 @@ export class ProductsGrid {
     ];
   }
 
+  onCategoryChange(category: string) {
+  this.store.setCategory(category); // ✅ updates store immediately
+  }
 
   carouselConfig: CarouselConfig = {
     autoPlay: true,
