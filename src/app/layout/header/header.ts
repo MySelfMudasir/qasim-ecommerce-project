@@ -19,7 +19,4 @@ export class Header {
   sidenavService = inject(SidenavService);
   searchService = inject(SearchService);
   showProgressBar = true;
-  toggleMenu() {
-    this.sidenavService.toggle();
-  }
 }

@@ -1,5 +1,7 @@
 <mat-sidenav-container class="h-full">
-  <mat-sidenav mode="side" [opened]="sidenavService.opened()">
+  <mat-sidenav 
+  [mode]="sidenavService.mode()" 
+  [opened]="sidenavService.opened()">
     <div class="p-6">
       <h2 class="text-lg text-gray-900">Categories</h2>
 
@@ -18,6 +20,7 @@
   <mat-sidenav-content class="bg-gray-100 p-6 h-full">
 
 
+    <app-menu-bar></app-menu-bar>
 
     <div appViewPanel class="mb-4">
       <app-carousel [slides]="mySlides" [config]="carouselConfig"></app-carousel>

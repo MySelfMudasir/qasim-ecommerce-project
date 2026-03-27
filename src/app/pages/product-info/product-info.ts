@@ -2,7 +2,7 @@ import { Component, inject, input, signal } from '@angular/core';
 import { ProductModel } from '../../models/product';
 import { CommonModule } from '@angular/common';
 import { StockStatus } from '../stock-status/stock-status';
-import { QuantitySelector } from "../../quantity-selector/quantity-selector";
+import { QuantitySelector } from '../../components/quantity-selector/quantity-selector';
 import { MatIcon } from '@angular/material/icon';
 import { EcommerceStore } from '../../ecommerce-store';
 import { ToggleWishlistButton } from "../../components/toggle-wishlist-button/toggle-wishlist-button";

@@ -2,10 +2,10 @@ import { Component, computed, inject, input } from '@angular/core';
 import { EcommerceStore } from '../../ecommerce-store';
 import { BackButton } from "../../components/back-button/back-button";
 import { MatIcon } from '@angular/material/icon';
-import { QuantitySelector } from "../../quantity-selector/quantity-selector";
 import { ToggleWishlistButton } from "../../components/toggle-wishlist-button/toggle-wishlist-button";
 import { ProductInfo } from '../product-info/product-info';
 import { ViewReviews } from '../view-reviews/view-reviews';
+import { QuantitySelector } from '../../components/quantity-selector/quantity-selector';
 
 @Component({
   selector: 'app-view-product-details',

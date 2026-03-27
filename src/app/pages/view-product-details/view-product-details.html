@@ -1,18 +1,19 @@
-<div class="mx-auto max-w-[1200px] py-6">
-
-    <app-back-button class="block mb-6" [navigateTo]="backRoute()"> Continue Shopping</app-back-button>
-
+<div class="mx-auto max-w-[1200px] py-6 px-4 sm:px-6 lg:px-0">
+    <app-back-button class="block mb-6" [navigateTo]="backRoute()">
+        Continue Shopping
+    </app-back-button>
 
     @if(store.selectedProduct(); as product) {
-    <div class="flex gap-8 mb-8">
-        <img [src]="product.imageUrl" alt="Product Image" class="w-[500px] h-[550px] object-cover rounded-lg"
-        [style.view-transition-name]="'product-image-' + product.id">
-        <div class="flex-1">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8 mb-8 items-start">
+        <img [src]="product.imageUrl" alt="Product Image"
+            class="w-full h-[320px] sm:h-[420px] lg:h-[550px] object-cover rounded-lg"
+            [style.view-transition-name]="'product-image-' + product.id" />
+
+        <div class="min-w-0">
             <app-product-info [product]="product"></app-product-info>
         </div>
     </div>
 
     <app-view-reviews [product]="product"></app-view-reviews>
-
     }
 </div>

@@ -1,0 +1,61 @@
+<div class="mx-auto mb-3">
+    <button matButton [matMenuTriggerFor]="browseMenu">
+        <div class="flex items-center">
+            <span class="items-center">Browse & Shop</span>
+            <mat-icon class="items-center">keyboard_arrow_down</mat-icon>
+        </div>
+    </button>
+    <mat-menu #browseMenu="matMenu" yPosition="below">
+        <button mat-menu-item>Electronics</button>
+        <button mat-menu-item>Clothing</button>
+        <button mat-menu-item>Home & Garden</button>
+    </mat-menu>
+
+    <button matButton [matMenuTriggerFor]="membershipMenu">
+        <div class="flex items-center">
+            <span class="items-center">My Membership</span>
+            <mat-icon class="items-center">keyboard_arrow_down</mat-icon>
+        </div>
+    </button>
+    <mat-menu #membershipMenu="matMenu" yPosition="below">
+        <button mat-menu-item>Premium Member</button>
+        <button mat-menu-item>Rewards Points</button>
+        <button mat-menu-item>Member Benefits</button>
+    </mat-menu>
+
+    <button matButton [matMenuTriggerFor]="promotionsMenu">
+        <div class="flex items-center">
+            <span class="items-center">Monthly Promotions</span>
+            <mat-icon class="items-center">keyboard_arrow_down</mat-icon>
+        </div>
+    </button>
+    <mat-menu #promotionsMenu="matMenu" yPosition="below">
+        <button mat-menu-item>Flash Sales</button>
+        <button mat-menu-item>Clearance</button>
+        <button mat-menu-item>Bundle Deals</button>
+    </mat-menu>
+
+    <button matButton [matMenuTriggerFor]="listsMenu">
+        <div class="flex items-center">
+            <span class="items-center">Shopping Lists</span>
+            <mat-icon class="items-center">keyboard_arrow_down</mat-icon>
+        </div>
+    </button>
+    <mat-menu #listsMenu="matMenu" yPosition="below">
+        <button mat-menu-item>My Lists</button>
+        <button mat-menu-item>Shared Lists</button>
+        <button mat-menu-item>Create New List</button>
+    </mat-menu>
+
+    <button matButton [matMenuTriggerFor]="arrivalsMenu">
+        <div class="flex items-center">
+            <span class="items-center">New Arrivals</span>
+            <mat-icon class="items-center">keyboard_arrow_down</mat-icon>
+        </div>
+    </button>
+    <mat-menu #arrivalsMenu="matMenu" yPosition="below">
+        <button mat-menu-item>This Week</button>
+        <button mat-menu-item>This Month</button>
+        <button mat-menu-item>Trending Now</button>
+    </mat-menu>
+</div>

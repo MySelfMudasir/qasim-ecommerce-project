@@ -58,5 +58,20 @@ html {
       shadow: light-dark(#000000, #000000),
     )
   );
+}
 
+
+
+.mat-mdc-menu-panel {
+  --mat-menu-container-color: #006043;
+  --mat-menu-container-shape: 12px;
+  --mat-menu-divider-color: #fff;
+
+  --mat-menu-item-label-text-color: #fff;
+  --mat-menu-item-icon-color: #fff;
+
+  --mat-menu-item-hover-state-layer-color: #099067;
+  --mat-menu-item-focus-state-layer-color: #ffffff1f;
+
+  --mat-menu-container-elevation-shadow: 0px 8px 20px rgba(0,0,0,0.4);
 }
