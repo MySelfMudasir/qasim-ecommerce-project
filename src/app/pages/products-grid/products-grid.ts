@@ -15,6 +15,7 @@ import { Carousel, CarouselConfig } from '../../components/carousel/carousel';
 import { Carousel2 } from '../../components/carousel2/carousel2';
 import { MenuBar } from "../../components/menu-bar/menu-bar";
 import { LoadMoreProducts } from "../../components/load-more-products/load-more-products";
+import { SkeletonCard } from "../../shared/skeleton-card/skeleton-card";
 
 @Component({
   selector: 'app-products-grid',
@@ -34,35 +35,27 @@ import { LoadMoreProducts } from "../../components/load-more-products/load-more-
     ViewPanel,
     Carousel,
     MenuBar,
-    LoadMoreProducts
+    LoadMoreProducts,
+    SkeletonCard
 ],
   templateUrl: './products-grid.html',
   styleUrl: './products-grid.scss',
-  host: {
-    class: 'block',
-  }
 })
 export class ProductsGrid {
   selectedCategory = input<string>('all');
   store = inject(EcommerceStore);
   sidenavService = inject(SidenavService);
   mySlides: any[];
-
-  categoriesList = signal<string[]>([
-    'all',
-    'Electronics',
-    'Furniture',
-    'stationery',
-    'sportswear',
-    'Kitchenware',
-    'Outdoor',
-    'home',
-    'Musical',
-    'Gardening',
-  ]);
+  
 
 
+  
   constructor() {
+    setInterval(() => {
+    this.store.setPreLoader(false);
+  }, 1000);
+
+  
     this.store.setCategory(this.selectedCategory);
     this.mySlides = [
       {

@@ -21,6 +21,7 @@ import { AddReviewParams, UserReviewModel } from './models/user-review';
 
 export type EcommerceState = {
   products: ProductModel[];
+  categoriesList: string[];
   selectedCategory: string;
   wishlistItems: ProductModel[];
   cartItems: cartModel[];
@@ -28,6 +29,8 @@ export type EcommerceState = {
   loading: boolean;
   selectedProductId: string | undefined;
   writeReview: boolean;
+  skeleton: boolean;
+  preLoader: boolean;
 };
 
 export const EcommerceStore = signalStore(
@@ -81,7 +84,7 @@ export const EcommerceStore = signalStore(
             title: 'Great Camera!',
             comment: 'I love the vintage look...',
             reviewDate: new Date('2023-08-15'),
-          }
+          },
         ],
       },
       {
@@ -122,17 +125,17 @@ export const EcommerceStore = signalStore(
         inStock: false,
         category: 'Electronics',
         reviews: [
-            {
-              id: 'r1',
-              productId: '1',
-              userId: 'u1',
-              userName: 'Anonymous',
-              userImageUrl: 'https://randomuser.me/api/portraits/men/2.jpg',
-              rating: 5,
-              title: 'Great Camera!',
-              comment: 'I love the vintage look...',
-              reviewDate: new Date('2023-08-15'),
-            },
+          {
+            id: 'r1',
+            productId: '1',
+            userId: 'u1',
+            userName: 'Anonymous',
+            userImageUrl: 'https://randomuser.me/api/portraits/men/2.jpg',
+            rating: 5,
+            title: 'Great Camera!',
+            comment: 'I love the vintage look...',
+            reviewDate: new Date('2023-08-15'),
+          },
         ],
       },
       {
@@ -370,6 +373,19 @@ export const EcommerceStore = signalStore(
         ],
       },
     ],
+    categoriesList: [
+      'all',
+      'New',
+      'Electronics',
+      'Furniture',
+      'stationery',
+      'sportswear',
+      'Kitchenware',
+      'Outdoor',
+      'home',
+      'Musical',
+      'Gardening',
+    ],
     selectedCategory: 'all',
     wishlistItems: [],
     cartItems: [],
@@ -377,6 +393,8 @@ export const EcommerceStore = signalStore(
     loading: false,
     selectedProductId: undefined,
     writeReview: false,
+    skeleton: true,
+    preLoader: true,
   } as EcommerceState),
 
   withStorageSync({
@@ -413,11 +431,25 @@ export const EcommerceStore = signalStore(
       router = inject(Router),
     ) => ({
       setCategory: signalMethod<string>((selectedCategory: string) => {
-        patchState(store, { selectedCategory });
+        // 1. show skeleton
+        patchState(store, { selectedCategory, skeleton: true });
+
+        // 2. simulate API delay (or real API later)
+        setTimeout(() => {
+          patchState(store, { skeleton: false });
+        }, 2000);
       }),
 
       setProductId: signalMethod<string>((productId: string) => {
         patchState(store, { selectedProductId: productId });
+      }),
+
+      setSkeleton: signalMethod<boolean>((value: boolean) => {
+        patchState(store, { skeleton: value });
+      }),
+
+      setPreLoader: signalMethod<boolean>((value: boolean) => {
+        patchState(store, { preLoader: value });
       }),
 
       addToWishlist: (product: ProductModel) => {
@@ -441,7 +473,7 @@ export const EcommerceStore = signalStore(
         patchState(store, { wishlistItems: [] });
       },
 
-      loadMoreProducts: () => {        
+      loadMoreProducts: () => {
         const moreProducts = [
           {
             id: crypto.randomUUID(),
@@ -452,7 +484,8 @@ export const EcommerceStore = signalStore(
             rating: 4,
             reviewCount: 5,
             inStock: true,
-            description: 'Newly loaded product MILK Solids, Corn Starch, Garlic Powder, Dextrose, Sage, Pepper Extracts (Black & White Pepper), EGG Powder.',
+            description:
+              'Newly loaded product MILK Solids, Corn Starch, Garlic Powder, Dextrose, Sage, Pepper Extracts (Black & White Pepper), EGG Powder.',
             reviews: [],
           },
         ];
@@ -605,10 +638,10 @@ export const EcommerceStore = signalStore(
         patchState(store, { writeReview: false });
       },
 
-      addReview: async ({title, rating, comment}: AddReviewParams) => {
+      addReview: async ({ title, rating, comment }: AddReviewParams) => {
         patchState(store, { loading: true });
-        const product = store.products().find(p => p.id === store.selectedProductId());
-        if(!product) {
+        const product = store.products().find((p) => p.id === store.selectedProductId());
+        if (!product) {
           patchState(store, { loading: false });
           toaster.error('Product not found');
           return;
@@ -627,22 +660,20 @@ export const EcommerceStore = signalStore(
         };
 
         const updatedProducts = produce(store.products(), (draft) => {
-        const index = draft.findIndex((p) => p.id = product.id);
-        draft[index].reviews.push(review);
-        draft[index].rating =
-        Math.round(
-        (draft[index].reviews.reduce((acc, r) => acc + r.rating, 0) /
-        draft[index].reviews.length) *
-        10,
-        ) / 10;
-        draft[index].reviewCount = draft[index].reviews.length;
+          const index = draft.findIndex((p) => (p.id = product.id));
+          draft[index].reviews.push(review);
+          draft[index].rating =
+            Math.round(
+              (draft[index].reviews.reduce((acc, r) => acc + r.rating, 0) /
+                draft[index].reviews.length) *
+                10,
+            ) / 10;
+          draft[index].reviewCount = draft[index].reviews.length;
         });
 
         await new Promise((res) => setTimeout(res, 2000));
-        patchState(store, {  loading: false, products: updatedProducts, writeReview: false });
-      }
-
-
+        patchState(store, { loading: false, products: updatedProducts, writeReview: false });
+      },
     }),
   ),
 );

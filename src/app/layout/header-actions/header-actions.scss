@@ -1,0 +1,6 @@
+span.user-name {
+  color: var(--mat-menu-item-label-text-color);
+}
+span.user-email {
+  color: color-mix(in srgb, var(--mat-menu-item-label-text-color) 70%, #000000);
+}

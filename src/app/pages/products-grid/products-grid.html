@@ -4,7 +4,7 @@
       <h2 class="text-lg text-gray-900">Categories</h2>
 
       <mat-nav-list>
-        @for (cat of categoriesList(); track cat) {
+        @for (cat of store.categoriesList(); track cat) {
         <mat-list-item class="my-2" [activated]="cat === selectedCategory()" [routerLink]="['/products', cat]"
           (click)="onCategoryChange(cat)">
           <span matListItemTitle class="font-medium" [class]="cat === selectedCategory() ? '!text-white' : null">
@@ -20,7 +20,7 @@
 
 
     <div class="mb-3">
-    <app-menu-bar></app-menu-bar>
+      <app-menu-bar></app-menu-bar>
     </div>
 
     <!-- <div appViewPanel class="mb-4">
@@ -33,11 +33,17 @@
 
 
 
-    <div class="bg-gray-100 p-6 h-full">
+    <div class="bg-gray-100 p-6">
       <h1 class="text-2xl font-bold text-gray-900">{{ selectedCategory() | titlecase }}</h1>
       <p class="text-base text-gray-600 mb-6">{{ store.filteredProducts().length }} products found</p>
 
       <div class="responsive-grid">
+        @if (store.skeleton()) {
+        @for (item of [1,2,3,4,5,6]; track item) {
+        <app-skeleton-card></app-skeleton-card>
+        }
+        }
+        @else {
         @for (product of store.filteredProducts(); track product.id) {
         <app-product-card [product]="product">
           <app-toggle-wishlist-button class="!absolute top-3 right-3" [product]="product"
@@ -45,12 +51,15 @@
           </app-toggle-wishlist-button>
         </app-product-card>
         }
+        }
       </div>
     </div>
 
-    <div class="mb-4">
+
+    @if(store.filteredProducts().length !== 0) {
+    <div class="pt-4">
       <app-load-more-products></app-load-more-products>
     </div>
-
+    }
   </mat-sidenav-content>
 </mat-sidenav-container>

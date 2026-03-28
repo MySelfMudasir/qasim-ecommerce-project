@@ -1,77 +1,63 @@
 @use '@angular/material' as mat;
 
-html {
+/* Root theme (ONLY place where mat.theme is used) */
+:root {
   color-scheme: light dark;
-  @include mat.theme(
-    (
-      color: mat.$violet-palette,
-      typography: (
-        plain-family: 'Inter',
-        brand-family: 'Inter',
-        bold-weight: 700,
-        medium-weight: 500,
-        regular-weight: 400
-      ),
-      density: -0
-    )
-  );
 
-  
- @include mat.theme-overrides(
-    (
-      primary: light-dark(#006043, #cdc0ec),
-      'on-primary': light-dark(#ffffff, #443a5f),
-      'primary-container': light-dark(#eaddff, #574d72),
-      'on-primary-container': light-dark(#21005d, #e9deff),
-      secondary: light-dark(#006043, #cbc2db),
-      'on-secondary': light-dark(#ffffff, #433d51),
-      'secondary-container': light-dark(#e8def8, #3e384c),
-      'on-secondary-container': light-dark(#1d192b, #c4bbd4),
-      tertiary: light-dark(#7d5260, #ffcfef),
-      'on-tertiary': light-dark(#ffffff, #69415f),
-      'tertiary-container': light-dark(#ffd8e4, #f4bfe3),
-      'on-tertiary-container': light-dark(#31111d, #5f3956),
-      error: light-dark(#b3261e, #f97386),
-      'on-error': light-dark(#ffffff, #490013),
-      'error-container': light-dark(#f9dedc, #871c34),
-      'on-error-container': light-dark(#410e0b, #ff97a3),
-      surface: light-dark(#fffbfe, #0f0d12),
-      'on-surface': light-dark(#1c1b1f, #eae3ef),
-      'on-surface-variant': light-dark(#49454f, #aea9b4),
-      'surface-container': light-dark(#f3edf7, #1b181f),
-      'surface-container-high': light-dark(#ece6f0, #211e26),
-      'surface-container-highest': light-dark(#e6e0e9, #27242d),
-      'surface-container-low': light-dark(#f7f2fa, #141218),
-      'surface-container-lowest': light-dark(#ffffff, #000000),
-      'surface-bright': light-dark(#fffbfe, #2e2b34),
-      'surface-dim': light-dark(#ded8e1, #0f0d12),
-      'surface-variant': light-dark(#e7e0ec, #27242d),
-      'surface-tint': light-dark(#6750a4, #cdc0ec),
-      'inverse-surface': light-dark(#313033, #fdf7fe),
-      'inverse-on-surface': light-dark(#f4eff4, #575459),
-      'inverse-primary': light-dark(#d0bcff, #645980),
-      outline: light-dark(#79747e, #78737e),
-      'outline-variant': light-dark(#cac4d0, #4a4650),
-      background: light-dark(#fffbfe, #0f0d12),
-      'on-background': light-dark(#1c1b1f, #eae3ef),
-      scrim: light-dark(#000000, #000000),
-      shadow: light-dark(#000000, #000000),
-    )
-  );
+  @include mat.theme((
+    color: mat.$violet-palette,
+    typography: (
+      plain-family: 'Inter',
+      brand-family: 'Inter',
+      bold-weight: 700,
+      medium-weight: 500,
+      regular-weight: 400
+    ),
+    density: 0
+  ));
+
+  @include mat.theme-overrides((
+    primary: light-dark(#006043, #cdc0ec),
+    'on-primary': light-dark(#ffffff, #443a5f),
+
+    secondary: light-dark(#006043, #cbc2db),
+    'on-secondary': light-dark(#ffffff, #433d51),
+
+    surface: light-dark(#fffbfe, #0f0d12),
+    'on-surface': light-dark(#1c1b1f, #eae3ef),
+
+    background: light-dark(#fffbfe, #0f0d12),
+    'on-background': light-dark(#1c1b1f, #eae3ef),
+
+    error: light-dark(#b3261e, #f97386),
+    'on-error': light-dark(#ffffff, #490013),
+
+    outline: light-dark(#79747e, #78737e)
+  ));
 }
 
-
-
+/* Menu customization */
 .mat-mdc-menu-panel {
-  --mat-menu-container-color: #006043;
+  --mat-menu-container-color: #fff;
   --mat-menu-container-shape: 12px;
-  --mat-menu-divider-color: #fff;
+  --mat-menu-divider-color: #006043;
 
-  --mat-menu-item-label-text-color: #fff;
-  --mat-menu-item-icon-color: #fff;
+  --mat-menu-item-label-text-color: #006043;
+  --mat-menu-item-icon-color: #006043;
 
-  --mat-menu-item-hover-state-layer-color: #099067;
+  --mat-menu-item-hover-state-layer-color: #006043;
   --mat-menu-item-focus-state-layer-color: #ffffff1f;
 
-  --mat-menu-container-elevation-shadow: 0px 8px 20px rgba(0,0,0,0.4);
+  --mat-menu-container-elevation-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
 }
+
+/* Change label + icon color when item is hovered/focused */
+/* Stronger selector */
+.mat-mdc-menu-panel .mat-mdc-menu-content .mat-mdc-menu-item:hover,
+.mat-mdc-menu-panel .mat-mdc-menu-content .mat-mdc-menu-item.cdk-program-focused,
+.mat-mdc-menu-panel .mat-mdc-menu-content .mat-mdc-menu-item.cdk-keyboard-focused {
+  --mat-menu-item-label-text-color: #ffffff !important;
+  --mat-menu-item-icon-color: #ffffff !important;
+  background-color: #006043 !important;
+}
+

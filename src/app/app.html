@@ -1,11 +1,14 @@
 
 
+@if (store.preLoader()) {
+  <app-pre-loader></app-pre-loader>
+}
 
-<app-header class="z-10 relative">
-</app-header>
-    <div class="h-[calc(100%-64px)] overflow-auto">
-      <router-outlet />
-    </div>
+
+<app-header class="z-10 relative"></app-header>
+<div class="h-[calc(100%-64px)] overflow-auto">
+  <router-outlet />
+</div>
 
 <!-- <app-header style="z-index: 999; position: relative;"></app-header>
 <div class="h-[calc(100%-64px)] overflow">
