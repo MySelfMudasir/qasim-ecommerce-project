@@ -22,7 +22,10 @@ export class ViewProductDetails {
     this.store.setProductId(this.productId);
   }
 
+
   backRoute = computed(() => {
     return `/products/${this.store.selectedCategory()}`
   })
+
+
 }

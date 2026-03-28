@@ -18,6 +18,7 @@ import { Router, RouterLink } from '@angular/router';
 import { orderModel } from './models/order';
 import { withStorageSync } from '@angular-architects/ngrx-toolkit';
 import { AddReviewParams, UserReviewModel } from './models/user-review';
+import { AppTitleService } from './services/app-title-strategy';
 
 export type EcommerceState = {
   products: ProductModel[];
@@ -429,6 +430,7 @@ export const EcommerceStore = signalStore(
       toaster = inject(HotToastService),
       matDialog = inject(MatDialog),
       router = inject(Router),
+      titleService = inject(AppTitleService)
     ) => ({
       setCategory: signalMethod<string>((selectedCategory: string) => {
         // 1. show skeleton
@@ -442,6 +444,10 @@ export const EcommerceStore = signalStore(
 
       setProductId: signalMethod<string>((productId: string) => {
         patchState(store, { selectedProductId: productId });
+        const product = store.products().find(p => p.id === productId);
+        if (product) {
+          titleService.setTitle(product.name);
+        }
       }),
 
       setSkeleton: signalMethod<boolean>((value: boolean) => {

@@ -12,11 +12,11 @@
                 <h1 class="mb-2 text-lg font-semibold uppercase tracking-wide font-extrabold">Tech</h1>
                 <div class="flex items-center justify-between gap-4">
                     <span class="items-center"><button mat-menu-item class="!rounded-lg">Electronics</button></span>
-                        <mat-icon class="items-center">keyboard_arrow_right</mat-icon>
+                    <mat-icon class="items-center">keyboard_arrow_right</mat-icon>
                 </div>
                 <div class="flex items-center justify-between gap-4">
                     <span class="items-center"><button mat-menu-item class="!rounded-lg">Accessories</button></span>
-                        <mat-icon class="items-center">keyboard_arrow_right</mat-icon>
+                    <mat-icon class="items-center">keyboard_arrow_right</mat-icon>
                 </div>
                 <div class="flex items-center justify-between gap-4">
                     <span class="items-center"><button mat-menu-item class="!rounded-lg">Gaming</button></span>
@@ -28,38 +28,43 @@
                 <h1 class="mb-2 text-lg font-semibold uppercase tracking-wide font-extrabold">Lifestyle</h1>
                 <div class="flex items-center justify-between gap-4">
                     <span class="items-center"><button mat-menu-item class="!rounded-lg">Clothing</button></span>
-                        <mat-icon class="items-center">keyboard_arrow_right</mat-icon>
+                    <mat-icon class="items-center">keyboard_arrow_right</mat-icon>
                 </div>
                 <div class="flex items-center justify-between gap-4">
                     <span class="items-center"><button mat-menu-item class="!rounded-lg">Shoes</button></span>
-                        <mat-icon class="items-center">keyboard_arrow_right</mat-icon>
+                    <mat-icon class="items-center">keyboard_arrow_right</mat-icon>
                 </div>
                 <div class="flex items-center justify-between gap-4">
                     <span class="items-center"><button mat-menu-item class="!rounded-lg">Beauty</button></span>
-                        <mat-icon class="items-center">keyboard_arrow_right</mat-icon>
+                    <mat-icon class="items-center">keyboard_arrow_right</mat-icon>
                 </div>
             </div>
 
             <div class="rounded-xl p-3">
                 <h1 class="mb-2 text-lg font-semibold uppercase tracking-wide font-extrabold">Home</h1>
                 <div class="flex items-center justify-between gap-4">
-                    <span class="items-center"><button mat-menu-item class="!rounded-lg">Home &amp; Garden</button></span>
-                        <mat-icon class="items-center">keyboard_arrow_right</mat-icon>
+                    <span class="items-center"><button mat-menu-item class="!rounded-lg">Home & Garden</button></span>
+                    <mat-icon class="items-center">keyboard_arrow_right</mat-icon>
                 </div>
                 <div class="flex items-center justify-between gap-4">
                     <span class="items-center"><button mat-menu-item class="!rounded-lg">Kitchen</button></span>
-                        <mat-icon class="items-center">keyboard_arrow_right</mat-icon>
+                    <mat-icon class="items-center">keyboard_arrow_right</mat-icon>
                 </div>
                 <div class="flex items-center justify-between gap-4">
                     <span class="items-center"><button mat-menu-item class="!rounded-lg">Furniture</button></span>
-                        <mat-icon class="items-center">keyboard_arrow_right</mat-icon>
+                    <mat-icon class="items-center">keyboard_arrow_right</mat-icon>
                 </div>
             </div>
         </div>
     </mat-menu>
 
 
-    <button matButton [matMenuTriggerFor]="animals">Animal index</button>
+    <button matButton [matMenuTriggerFor]="animals">
+        <div class="flex items-center">
+                <span class="items-center">Grocery Items</span>
+                <mat-icon class="items-center">keyboard_arrow_down</mat-icon>
+            </div>
+    </button>
     <mat-menu #animals="matMenu">
         <button mat-menu-item [matMenuTriggerFor]="vertebrates">Vertebrates</button>
         <button mat-menu-item [matMenuTriggerFor]="invertebrates">Invertebrates</button>

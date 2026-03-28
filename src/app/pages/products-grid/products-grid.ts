@@ -16,6 +16,7 @@ import { Carousel2 } from '../../components/carousel2/carousel2';
 import { MenuBar } from "../../components/menu-bar/menu-bar";
 import { LoadMoreProducts } from "../../components/load-more-products/load-more-products";
 import { SkeletonCard } from "../../shared/skeleton-card/skeleton-card";
+import { AppTitleService } from '../../services/app-title-strategy';
 
 @Component({
   selector: 'app-products-grid',
@@ -46,16 +47,11 @@ export class ProductsGrid {
   store = inject(EcommerceStore);
   sidenavService = inject(SidenavService);
   mySlides: any[];
-  
+  titleService = inject(AppTitleService);
 
 
-  
   constructor() {
-    setInterval(() => {
-    this.store.setPreLoader(false);
-  }, 1000);
-
-  
+    this.titleService.resetTitle();
     this.store.setCategory(this.selectedCategory);
     this.mySlides = [
       {
@@ -85,9 +81,11 @@ export class ProductsGrid {
     ];
   }
 
+
   onCategoryChange(category: string) {
   this.store.setCategory(category); // ✅ updates store immediately
   }
+
 
   carouselConfig: CarouselConfig = {
     autoPlay: true,
