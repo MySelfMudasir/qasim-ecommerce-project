@@ -1,0 +1,43 @@
+@use '@angular/material' as mat;
+
+
+mat-form-field {
+  @include mat.theme(
+    (
+      density: -4,
+    )
+  );
+
+  width: 100%;
+}
+
+mat-sidenav {
+  @include mat.sidenav-overrides(
+    (
+      container-width: 250px,
+      container-shape: 0px,
+      container-background-color: white,
+      container-divider-color: var(--mat-sys-outline-variant),
+    )
+  );
+
+  @include mat.list-overrides(
+    (
+      active-indicator-color: var(--mat-sys-primary),
+      active-indicator-shape: 6px,
+      list-item-one-line-container-height: 40px,
+    )
+  );
+}
+
+// Style to fix the weird border with angular material + tailwindcss
+.mdc-notched-outline__notch {
+  border-right: none !important;
+}
+
+.mat-mdc-menu-panel {
+  min-width: 112px;
+  max-width: 961px !important;
+  overflow: auto;
+  box-sizing: border-box;
+}

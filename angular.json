@@ -52,8 +52,7 @@
               }
             ],
             "styles": [
-              "src/styles.scss",
-              "src/custom-theme.scss"
+              "src/styles.scss"
             ]
           },
           "configurations": {

@@ -1,9 +1,7 @@
 @use '@angular/material' as mat;
 
-/* Root theme (ONLY place where mat.theme is used) */
+/* Base theme (shared config) */
 :root {
-  color-scheme: light dark;
-
   @include mat.theme((
     color: mat.$violet-palette,
     typography: (
@@ -15,28 +13,63 @@
     ),
     density: 0
   ));
+}
+
+/* =========================
+   🌞 LIGHT THEME
+========================= */
+.light-theme {
+  color-scheme: light;
 
   @include mat.theme-overrides((
-    primary: light-dark(#006043, #cdc0ec),
-    'on-primary': light-dark(#ffffff, #443a5f),
+    primary: #006043,
+    'on-primary': #ffffff,
 
-    secondary: light-dark(#006043, #cbc2db),
-    'on-secondary': light-dark(#ffffff, #433d51),
+    secondary: #006043,
+    'on-secondary': #ffffff,
 
-    surface: light-dark(#fffbfe, #0f0d12),
-    'on-surface': light-dark(#1c1b1f, #eae3ef),
+    surface: #fffbfe,
+    'on-surface': #1c1b1f,
 
-    background: light-dark(#fffbfe, #0f0d12),
-    'on-background': light-dark(#1c1b1f, #eae3ef),
+    background: #fffbfe,
+    'on-background': #1c1b1f,
 
-    error: light-dark(#b3261e, #f97386),
-    'on-error': light-dark(#ffffff, #490013),
+    error: #b3261e,
+    'on-error': #ffffff,
 
-    outline: light-dark(#79747e, #78737e)
+    outline: #79747e
   ));
 }
 
-/* Menu customization */
+/* =========================
+   🌙 DARK THEME
+========================= */
+.dark-theme {
+  color-scheme: dark;
+
+  @include mat.theme-overrides((
+    primary: #ff0000,
+    'on-primary': #fff,
+
+    secondary: #cbc2db,
+    'on-secondary': #433d51,
+
+    surface: #0f0d12,
+    'on-surface': #eae3ef,
+
+    background: #0f0d12,
+    'on-background': #eae3ef,
+
+    error: #f97386,
+    'on-error': #490013,
+
+    outline: #78737e
+  ));
+}
+
+/* =========================
+   🎨 COMPONENT OVERRIDES
+========================= */
 .mat-mdc-menu-panel {
   --mat-menu-container-color: #fff;
   --mat-menu-container-shape: 12px;
@@ -51,8 +84,6 @@
   --mat-menu-container-elevation-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
 }
 
-/* Change label + icon color when item is hovered/focused */
-/* Stronger selector */
 .mat-mdc-menu-panel .mat-mdc-menu-content .mat-mdc-menu-item:hover,
 .mat-mdc-menu-panel .mat-mdc-menu-content .mat-mdc-menu-item.cdk-program-focused,
 .mat-mdc-menu-panel .mat-mdc-menu-content .mat-mdc-menu-item.cdk-keyboard-focused {
@@ -60,4 +91,3 @@
   --mat-menu-item-icon-color: #ffffff !important;
   background-color: #006043 !important;
 }
-
