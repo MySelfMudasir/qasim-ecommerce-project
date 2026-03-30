@@ -1,7 +1,6 @@
 @use '@angular/material' as mat;
 
 
-
 body {
   // Reset the user agent margin.
   margin: 0;
@@ -16,6 +15,7 @@ body {
 
   --mat-sys-body-large-size: 0.875rem;
 }
+
 
 .light-theme {
   body {

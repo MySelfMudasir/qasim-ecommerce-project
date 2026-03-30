@@ -10,6 +10,16 @@
   <router-outlet />
 </div>
 
+
+
+<div class="fixed inset-0 flex items-center justify-center z-50 pointer-events-none select-none" [ngStyle]="{'background': backdropColor}" *ngIf="isBlocked === 'block'">
+     <div class="bg-white p-6 rounded-lg text-center" [ngStyle]="{'width': width}">
+          <p class="text-medium">{{ message }}</p>
+          <img [src]="url" class="mx-auto mt-4 h-50">
+     </div>
+</div>
+
+
 <!-- <app-header style="z-index: 999; position: relative;"></app-header>
 <div class="h-[calc(100%-64px)] overflow">
   <router-outlet></router-outlet>
