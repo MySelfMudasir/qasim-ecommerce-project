@@ -1,0 +1,15 @@
+
+npm install firebase @angular/fire
+npm install firebase @angular/fire --force
+npm uninstall firebase @angular/fire
+
+
+ng add @angular/ssr
+ng add @angular/ssr --force
+
+npm uninstall @angular/ssr
+npm uninstall @angular/platform-browser
+
+
+ng serve
+npm run dev:ssr

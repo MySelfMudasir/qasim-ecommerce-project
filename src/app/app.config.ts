@@ -2,9 +2,10 @@ import { ApplicationConfig, provideBrowserGlobalErrorListeners } from '@angular/
 import { provideRouter, withComponentInputBinding, withViewTransitions } from '@angular/router';
 import { routes } from './app.routes';
 import { provideHotToastConfig } from '@ngxpert/hot-toast';
-import { provideFirebaseApp, initializeApp } from '@angular/fire/app';
-import { provideDatabase, getDatabase } from '@angular/fire/database';
+// import { provideFirebaseApp, initializeApp } from '@angular/fire/app';
+// import { provideDatabase, getDatabase } from '@angular/fire/database';
 import { environment } from '../environments/environment.development';
+import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -19,7 +20,7 @@ export const appConfig: ApplicationConfig = {
       duration: 1000,
     }),
 
-    provideFirebaseApp(() => initializeApp(environment.firebase)),
-    provideDatabase(() => getDatabase())
+    // provideFirebaseApp(() => initializeApp(environment.firebase)),
+    // provideDatabase(() => getDatabase()), provideClientHydration(withEventReplay())
   ]
 };

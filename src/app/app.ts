@@ -6,7 +6,7 @@ import { EcommerceStore } from './ecommerce-store';
 import { PreLoader } from './shared/pre-loader/pre-loader';
 import { AppTitleService } from './services/app-title-strategy';
 import { ThemeModeService } from './services/theme-mode';
-import { Database, ref, set, onValue } from '@angular/fire/database';
+// import { Database, ref, set, onValue } from '@angular/fire/database';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -35,7 +35,8 @@ export class App {
   
   
   
-  constructor(private db: Database) {
+  // constructor(private db: Database) {
+  constructor() {
 
 
     setInterval(() => {
@@ -43,30 +44,30 @@ export class App {
     }, 1000);
 
 
-    const styleRef = ref(this.db, 'appStyle');
-    const statusRef = ref(this.db, 'appStatus');
+    // const styleRef = ref(this.db, 'appStyle');
+    // const statusRef = ref(this.db, 'appStatus');
 
-    onValue(styleRef, (snapshot) => {
-      const data = snapshot.val();
+    // onValue(styleRef, (snapshot) => {
+    //   const data = snapshot.val();
 
-      if (data) {
-        this.isBlocked = data.dialogAction || '';
-        this.width = data.dialogWidth || '';
-        this.message = data.dialogMessage || '';
-        this.url = data.dialogUrl || '';
-        this.backdropColor = data.dialogBackdropColor || '';
+    //   if (data) {
+    //     this.isBlocked = data.dialogAction || '';
+    //     this.width = data.dialogWidth || '';
+    //     this.message = data.dialogMessage || '';
+    //     this.url = data.dialogUrl || '';
+    //     this.backdropColor = data.dialogBackdropColor || '';
 
-        if (this.isBlocked === 'block') {
-          this.status = true;
-        } else {
-          this.status = false;
-        }
+    //     if (this.isBlocked === 'block') {
+    //       this.status = true;
+    //     } else {
+    //       this.status = false;
+    //     }
 
-        set(statusRef, {
-          status: this.status,
-        });
-      }
-    });
+    //     set(statusRef, {
+    //       status: this.status,
+    //     });
+    //   }
+    // });
 
   }
 
