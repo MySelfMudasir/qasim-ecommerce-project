@@ -1,139 +1,56 @@
-<div class="mx-auto">
-    <button matButton [matMenuTriggerFor]="browseMenu">
-        <div class="flex items-center">
-            <span class="items-center">Browse & Shop</span>
-            <mat-icon class="items-center">keyboard_arrow_down</mat-icon>
-        </div>
-    </button>
-    <mat-menu #browseMenu="matMenu" yPosition="below" panelClass="custom-menu-panel"
-        class="w-[720px] max-w-[95vw] rounded-2xl border border-slate-200 p-4 shadow-2xl">
-        <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
-            <div class="rounded-xl p-3">
-                <h1 class="mb-2 text-lg font-semibold uppercase tracking-wide font-extrabold">Tech</h1>
-                <div class="flex items-center justify-between gap-4">
-                    <span class="items-center"><button mat-menu-item class="!rounded-lg">Electronics</button></span>
-                    <mat-icon class="items-center">keyboard_arrow_right</mat-icon>
-                </div>
-                <div class="flex items-center justify-between gap-4">
-                    <span class="items-center"><button mat-menu-item class="!rounded-lg">Accessories</button></span>
-                    <mat-icon class="items-center">keyboard_arrow_right</mat-icon>
-                </div>
-                <div class="flex items-center justify-between gap-4">
-                    <span class="items-center"><button mat-menu-item class="!rounded-lg">Gaming</button></span>
-                        <mat-icon class="items-center">keyboard_arrow_right</mat-icon>
-                </div>
-            </div>
+<div class="mx-auto flex gap-4">
+    <ng-container *ngFor="let menu of menus; let i = index">
 
-            <div class="rounded-xl p-3">
-                <h1 class="mb-2 text-lg font-semibold uppercase tracking-wide font-extrabold">Lifestyle</h1>
-                <div class="flex items-center justify-between gap-4">
-                    <span class="items-center"><button mat-menu-item class="!rounded-lg">Clothing</button></span>
-                    <mat-icon class="items-center">keyboard_arrow_right</mat-icon>
-                </div>
-                <div class="flex items-center justify-between gap-4">
-                    <span class="items-center"><button mat-menu-item class="!rounded-lg">Shoes</button></span>
-                    <mat-icon class="items-center">keyboard_arrow_right</mat-icon>
-                </div>
-                <div class="flex items-center justify-between gap-4">
-                    <span class="items-center"><button mat-menu-item class="!rounded-lg">Beauty</button></span>
-                    <mat-icon class="items-center">keyboard_arrow_right</mat-icon>
-                </div>
-            </div>
-
-            <div class="rounded-xl p-3">
-                <h1 class="mb-2 text-lg font-semibold uppercase tracking-wide font-extrabold">Home</h1>
-                <div class="flex items-center justify-between gap-4">
-                    <span class="items-center"><button mat-menu-item class="!rounded-lg">Home & Garden</button></span>
-                    <mat-icon class="items-center">keyboard_arrow_right</mat-icon>
-                </div>
-                <div class="flex items-center justify-between gap-4">
-                    <span class="items-center"><button mat-menu-item class="!rounded-lg">Kitchen</button></span>
-                    <mat-icon class="items-center">keyboard_arrow_right</mat-icon>
-                </div>
-                <div class="flex items-center justify-between gap-4">
-                    <span class="items-center"><button mat-menu-item class="!rounded-lg">Furniture</button></span>
-                    <mat-icon class="items-center">keyboard_arrow_right</mat-icon>
-                </div>
+        <div class="" [matMenuTriggerFor]="menuRef">
+            <div class="flex items-center menu-item">
+                <span>{{ menu.label }}</span>
+                <mat-icon>keyboard_arrow_down</mat-icon>
             </div>
         </div>
-    </mat-menu>
 
+        <!-- MENU -->
+        <mat-menu #menuRef="matMenu">
 
-    <button matButton [matMenuTriggerFor]="animals">
-        <div class="flex items-center">
-                <span class="items-center">Grocery Items</span>
-                <mat-icon class="items-center">keyboard_arrow_down</mat-icon>
-            </div>
-    </button>
-    <mat-menu #animals="matMenu">
-        <button mat-menu-item [matMenuTriggerFor]="vertebrates">Vertebrates</button>
-        <button mat-menu-item [matMenuTriggerFor]="invertebrates">Invertebrates</button>
-    </mat-menu>
+            <!-- MEGA MENU -->
+            <ng-container *ngIf="menu.type === 'mega'">
+                <div class="grid grid-cols-2 md:grid-cols-3 gap-4 p-4 w-[720px] max-w-[95vw]">
 
-    <mat-menu #vertebrates="matMenu">
-        <button mat-menu-item>Fishes</button>
-        <button mat-menu-item>Amphibians</button>
-        <button mat-menu-item>Birds</button>
-        <button mat-menu-item>Mammals</button>
-    </mat-menu>
+                    <div *ngFor="let section of menu.sections">
+                        <h1 class="font-bold mb-2">{{ section.title }}</h1>
 
-    <mat-menu #invertebrates="matMenu">
-        <button mat-menu-item>Insects</button>
-        <button mat-menu-item>Molluscs</button>
-        <button mat-menu-item>Crustaceans</button>
-        <button mat-menu-item>Corals</button>
-        <button mat-menu-item>Arachnids</button>
-        <button mat-menu-item>Velvet worms</button>
-        <button mat-menu-item>Horseshoe crabs</button>
-    </mat-menu>
+                        <div *ngFor="let item of section.items" class="flex justify-between items-center">
+                            <button matButton>{{ item.label }}</button>
+                        </div>
+                    </div>
 
+                </div>
+            </ng-container>
 
+            <!-- SIMPLE MENU -->
+            <ng-container *ngIf="!menu.type">
+                <ng-container *ngFor="let item of menu.items">
 
-    <button matButton [matMenuTriggerFor]="membershipMenu">
-        <div class="flex items-center">
-            <span class="items-center">My Membership</span>
-            <mat-icon class="items-center">keyboard_arrow_down</mat-icon>
-        </div>
-    </button>
-    <mat-menu #membershipMenu="matMenu" yPosition="below">
-        <button mat-menu-item>Premium Member</button>
-        <button mat-menu-item>Rewards Points</button>
-        <button mat-menu-item>Member Benefits</button>
-    </mat-menu>
+                    <!-- ITEM WITH CHILDREN -->
+                    <button mat-menu-item *ngIf="item.children" [matMenuTriggerFor]="childMenu">
+                        {{ item.label }}
+                    </button>
 
-    <button matButton [matMenuTriggerFor]="promotionsMenu">
-        <div class="flex items-center">
-            <span class="items-center">Monthly Promotions</span>
-            <mat-icon class="items-center">keyboard_arrow_down</mat-icon>
-        </div>
-    </button>
-    <mat-menu #promotionsMenu="matMenu" yPosition="below">
-        <button mat-menu-item>Flash Sales</button>
-        <button mat-menu-item>Clearance</button>
-        <button mat-menu-item>Bundle Deals</button>
-    </mat-menu>
+                    <!-- SIMPLE ITEM -->
+                    <button mat-menu-item *ngIf="!item.children">
+                        {{ item.label }}
+                    </button>
 
-    <button matButton [matMenuTriggerFor]="listsMenu">
-        <div class="flex items-center">
-            <span class="items-center">Shopping Lists</span>
-            <mat-icon class="items-center">keyboard_arrow_down</mat-icon>
-        </div>
-    </button>
-    <mat-menu #listsMenu="matMenu" yPosition="below">
-        <button mat-menu-item>My Lists</button>
-        <button mat-menu-item>Shared Lists</button>
-        <button mat-menu-item>Create New List</button>
-    </mat-menu>
+                    <!-- CHILD MENU -->
+                    <mat-menu #childMenu="matMenu">
+                        <button mat-menu-item *ngFor="let child of item.children">
+                            {{ child.label }}
+                        </button>
+                    </mat-menu>
 
-    <button matButton [matMenuTriggerFor]="arrivalsMenu">
-        <div class="flex items-center">
-            <span class="items-center">New Arrivals</span>
-            <mat-icon class="items-center">keyboard_arrow_down</mat-icon>
-        </div>
-    </button>
-    <mat-menu #arrivalsMenu="matMenu" yPosition="below">
-        <button mat-menu-item>This Week</button>
-        <button mat-menu-item>This Month</button>
-        <button mat-menu-item>Trending Now</button>
-    </mat-menu>
+                </ng-container>
+            </ng-container>
+
+        </mat-menu>
+
+    </ng-container>
 </div>
