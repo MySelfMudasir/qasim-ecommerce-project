@@ -13,7 +13,7 @@ import { MatDivider } from '@angular/material/divider';
 import { MatDialog } from '@angular/material/dialog';
 import { SignInDialog } from '../../components/sign-in-dialog/sign-in-dialog';
 import { SignUpDialog } from '../../components/sign-up-dialog/sign-up-dialog';
-import { ThemeModeService } from '../../services/theme-mode';
+import { ThemeService } from '../../services/theme-mode';
 
 @Component({
   selector: 'app-header-actions',
@@ -32,7 +32,7 @@ import { ThemeModeService } from '../../services/theme-mode';
 })
 export class HeaderActions {
   store = inject(EcommerceStore);
-  themeModeService = inject(ThemeModeService);
+  themeService = inject(ThemeService);
   matDialog = inject(MatDialog);
   isDark = false;
 
@@ -53,10 +53,10 @@ export class HeaderActions {
   }
 
 
-toggleTheme() {
-  this.themeModeService.toggleTheme();
-  this.isDark = this.themeModeService.isDark;
-}
+// toggleTheme() {
+//   this.themeService.toggleTheme();
+//   this.isDark = this.themeService.isDark;
+// }
 
 
 

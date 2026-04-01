@@ -52,7 +52,12 @@
               }
             ],
             "styles": [
-              "src/styles.scss"
+              "src/styles.scss",
+              "src/styles/_layout.scss",
+              "src/styles/_overrides.scss",
+              "src/styles/_buttons.scss",
+              "src/styles/_theme.scss",
+              "src/styles/_utilities.scss"
             ]
           },
           "configurations": {

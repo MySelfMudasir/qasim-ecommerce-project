@@ -2,41 +2,16 @@
 
 
 body {
-  // Reset the user agent margin.
   margin: 0;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   font: var(--mat-sys-body-medium);
 
-  @include mat.dialog-overrides(
-    (
-      container-shape: 6px,
-    )
-  );
+  background-color: var(--app-bg);
+  color: var(--app-text);
+
+  @include mat.dialog-overrides((
+    container-shape: 6px,
+  ));
 
   --mat-sys-body-large-size: 0.875rem;
 }
-
-
-.light-theme {
-  body {
-    background-color: #fffbfe;   // your light background
-    color: #1c1b1f;              // your light on-background
-  }
-}
-
-.dark-theme {
-  body {
-    background-color: #0f0d12;   // your dark background
-    color: #eae3ef;              // your dark on-background
-  }
-}
-
-
-
-html,
-body {
-  height: 100%;
-}
-
-
-

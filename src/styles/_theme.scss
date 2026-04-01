@@ -2,6 +2,22 @@
 
 /* Base theme (shared config) */
 :root {
+  // APP DESIGN TOKENS (GLOBAL)
+  --app-primary: #006043;
+  --app-primary-contrast: #ffffff;
+
+  --app-bg: #f5f5f5;
+  --app-surface: #ffffff;
+
+  --app-text: #1c1b1f;
+  --app-text-muted: #6b7280;
+
+  --app-border: #e5e7eb;
+
+  --app-hover: rgba(0, 0, 0, 0.05);
+
+
+  
   @include mat.theme((
     color: mat.$violet-palette,
     typography: (
@@ -15,70 +31,38 @@
   ));
 }
 
-/* =========================
-   🌞 LIGHT THEME
-========================= */
+
 .light-theme {
   color-scheme: light;
 
   @include mat.theme-overrides((
-    primary: #006043,
-    'on-primary': #ffffff,
+    primary: var(--app-primary),
+    'on-primary': var(--app-primary-contrast),
 
-    secondary: #006043,
-    'on-secondary': #ffffff,
+    surface: var(--app-surface),
+    'on-surface': var(--app-text),
 
-    surface: #fffbfe,
-    'on-surface': #1c1b1f,
+    background: var(--app-bg),
+    'on-background': var(--app-text),
 
-    background: #fffbfe,
-    'on-background': #1c1b1f,
-
-    error: #b3261e,
-    'on-error': #ffffff,
-
-    outline: #79747e
+    outline: var(--app-border)
   ));
 }
 
-/* =========================
-   🌙 DARK THEME
-========================= */
-.dark-theme {
-  color-scheme: dark;
 
-  @include mat.theme-overrides((
-    primary: #ff0000,
-    'on-primary': #fff,
-
-    secondary: #cbc2db,
-    'on-secondary': #433d51,
-
-    surface: #0f0d12,
-    'on-surface': #eae3ef,
-
-    background: #0f0d12,
-    'on-background': #eae3ef,
-
-    error: #f97386,
-    'on-error': #490013,
-
-    outline: #78737e
-  ));
-}
 
 /* =========================
-   🎨 COMPONENT OVERRIDES
+   COMPONENT OVERRIDES
 ========================= */
 .mat-mdc-menu-panel {
   --mat-menu-container-color: #fff;
   --mat-menu-container-shape: 12px;
-  --mat-menu-divider-color: #006043;
+  --mat-menu-divider-color: var(--app-primary);
 
-  --mat-menu-item-label-text-color: #006043;
-  --mat-menu-item-icon-color: #006043;
+  --mat-menu-item-label-text-color: var(--app-primary);
+  --mat-menu-item-icon-color: var(--app-primary);
 
-  --mat-menu-item-hover-state-layer-color: #006043;
+  --mat-menu-item-hover-state-layer-color: var(--app-primary);
   --mat-menu-item-focus-state-layer-color: #ffffff1f;
 
   --mat-menu-container-elevation-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
@@ -89,5 +73,5 @@
 .mat-mdc-menu-panel .mat-mdc-menu-content .mat-mdc-menu-item.cdk-keyboard-focused {
   --mat-menu-item-label-text-color: #ffffff !important;
   --mat-menu-item-icon-color: #ffffff !important;
-  background-color: #006043 !important;
+  background-color: var(--app-primary) !important;
 }

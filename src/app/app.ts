@@ -5,7 +5,7 @@ import { ViewPanel } from './directives/view-panel';
 import { EcommerceStore } from './ecommerce-store';
 import { PreLoader } from './shared/pre-loader/pre-loader';
 import { AppTitleService } from './services/app-title-strategy';
-import { ThemeModeService } from './services/theme-mode';
+import { ThemeService } from './services/theme-mode';
 // import { Database, ref, set, onValue } from '@angular/fire/database';
 import { CommonModule } from '@angular/common';
 
@@ -30,7 +30,7 @@ export class App {
 
   titleService = inject(AppTitleService);
   store = inject(EcommerceStore);
-  themeService = inject(ThemeModeService);
+  themeService = inject(ThemeService);
 
   
   
@@ -69,13 +69,6 @@ export class App {
     //   }
     // });
 
-  }
-
-
-
-
-  ngOnInit() {
-    this.themeService.initTheme(); // set theme from localStorage or OS    
   }
 
 
