@@ -1,31 +1,28 @@
 @use '@angular/material' as mat;
 
-/* Base theme (shared config) */
 :root {
-  // APP DESIGN TOKENS (GLOBAL)
+  // SHARED TOKENS
   --app-primary: #006043;
   --app-primary-contrast: #ffffff;
-
+  
+  // DEFAULT TO LIGHT MODE
   --app-bg: #f5f5f5;
+  --app-bg-muted: #f9fafb;
+  --app-bg-muted-2: #E5E7EB;
   --app-surface: #ffffff;
-
   --app-text: #1c1b1f;
   --app-text-muted: #6b7280;
-
+  --app-text-danger: #dc2626;
+  --app-text-success: #16a34a;
   --app-border: #e5e7eb;
+  --app-border-danger: #dc2626;
+  --app-border-success: #16a34a;
 
-  --app-hover: rgba(0, 0, 0, 0.05);
-
-
-  
   @include mat.theme((
     color: mat.$violet-palette,
     typography: (
       plain-family: 'Inter',
-      brand-family: 'Inter',
-      bold-weight: 700,
-      medium-weight: 500,
-      regular-weight: 400
+      brand-family: 'Inter'
     ),
     density: 0
   ));
@@ -34,44 +31,51 @@
 
 .light-theme {
   color-scheme: light;
-
+  // Variables are already set in :root, but you can override here if needed
+  
   @include mat.theme-overrides((
     primary: var(--app-primary),
     'on-primary': var(--app-primary-contrast),
-
     surface: var(--app-surface),
     'on-surface': var(--app-text),
+    background: var(--app-bg),
+    outline: var(--app-border)
+  ));
+}
 
+.dark-theme {
+  color-scheme: dark;
+
+  // DARK MODE OVERRIDES
+  --app-bg: #121212;
+  --app-bg-muted: #1e1e1e;
+  --app-surface: #1e1e1e;
+  --app-text: #e2e2e2;
+  --app-text-muted: #9ca3af;
+  --app-text-danger: #f87171;
+  --app-text-success: #34d399;
+  --app-text-muted-2: #6b7280;
+  --app-border: #374151;
+  --app-border-danger: #dc2626;
+  --app-border-success: #16a34a;
+
+
+  @include mat.theme-overrides((
+    primary: #33ab84, // Slightly lighter primary for dark mode accessibility
+    'on-primary': #ffffff,
+    surface: var(--app-surface),
+    'on-surface': var(--app-text),
     background: var(--app-bg),
     'on-background': var(--app-text),
-
     outline: var(--app-border)
   ));
 }
 
 
-
-/* =========================
-   COMPONENT OVERRIDES
-========================= */
-.mat-mdc-menu-panel {
-  --mat-menu-container-color: #fff;
-  --mat-menu-container-shape: 12px;
-  --mat-menu-divider-color: var(--app-primary);
-
-  --mat-menu-item-label-text-color: var(--app-primary);
-  --mat-menu-item-icon-color: var(--app-primary);
-
-  --mat-menu-item-hover-state-layer-color: var(--app-primary);
-  --mat-menu-item-focus-state-layer-color: #ffffff1f;
-
-  --mat-menu-container-elevation-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
-}
-
-.mat-mdc-menu-panel .mat-mdc-menu-content .mat-mdc-menu-item:hover,
-.mat-mdc-menu-panel .mat-mdc-menu-content .mat-mdc-menu-item.cdk-program-focused,
-.mat-mdc-menu-panel .mat-mdc-menu-content .mat-mdc-menu-item.cdk-keyboard-focused {
-  --mat-menu-item-label-text-color: #ffffff !important;
-  --mat-menu-item-icon-color: #ffffff !important;
-  background-color: var(--app-primary) !important;
+/* Fix Menu Panel for Dark Mode */
+.dark-theme .mat-mdc-menu-panel {
+  --mat-menu-container-color: var(--app-surface);
+  --mat-menu-item-label-text-color: var(--app-text);
+  --mat-menu-item-icon-color: var(--app-text);
+  --mat-menu-container-elevation-shadow: 0 8px 20px rgba(0, 0, 0, 0.8);
 }

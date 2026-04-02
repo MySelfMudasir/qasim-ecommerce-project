@@ -1,4 +1,4 @@
-<div class="relative bg-white cursor-pointer rounded-xl shadow-lg overflow-hidden flex flex-col h-full transition-all duration-200 ease-out hover:-translate-y-1 hover:hover:shadow-xl">
+<div class="relative cursor-pointer rounded-xl shadow-lg overflow-hidden flex flex-col h-full transition-all duration-200 ease-out hover:-translate-y-1 hover:hover:shadow-xl" style="background-color: var(--app-surface); color: var(--app-text)">
 
     <img [src]="product().imageUrl" [alt]="product().name" class="w-full h-[300px] object-cover rounded-t-xl"
         [routerLink]="['/product', product().id]" [style.view-transition-name]="'product-image-' + product().id">
@@ -6,8 +6,8 @@
     <ng-content></ng-content>
 
     <div class="p-5 flex flex-col flex-1" [routerLink]="['/product', product().id]">
-        <h3 class="text-lg font-semibold text-gray-900 mb-2 leading-tight">{{ product().name }}</h3>
-        <p class="text-sm text-gray-600 mb-4 flex-1 leading-relaxed">{{ product().description }}</p>
+        <h3 class="text-lg font-semibold mb-2 leading-tight" style="color: var(--app-text);">{{ product().name }}</h3>
+        <p class="text-sm mb-4 flex-1 leading-relaxed" style="color: var(--app-text-muted);">{{ product().description }}</p>
 
 
         <app-star-rating class="mb-3" [rating]="product().rating">
@@ -19,7 +19,7 @@
             {{ product().inStock ? 'In Stock' : 'Out of Stock' }}
         </div>
         <div class="flex items-center justify-between mt-auto">
-            <span class="text-2xl font-bold text-gray-900">${{ product().price.toFixed(2) }}</span>
+            <span class="text-2xl font-bold">${{ product().price.toFixed(2) }}</span>
             <button matButton="filled" class="flex items-center gap-2" (click)="store.addToCart(product())"
                 [disabled]="!product().inStock">
                 <mat-icon>shopping_cart</mat-icon>

@@ -398,10 +398,10 @@ export const EcommerceStore = signalStore(
     preLoader: true,
   } as EcommerceState),
 
-  withStorageSync({
-    key: 'E-Commerce Store',
-    select: ({ user, wishlistItems, cartItems }) => ({ user, wishlistItems, cartItems }),
-  }),
+  // withStorageSync({
+  //   key: 'E-Commerce Store',
+  //   select: ({ user, wishlistItems, cartItems }) => ({ user, wishlistItems, cartItems }),
+  // }),
 
   withComputed(({ selectedCategory, products, wishlistItems, cartItems, selectedProductId }) => ({
     filteredProducts: computed(() => {
@@ -434,7 +434,7 @@ export const EcommerceStore = signalStore(
     ) => ({
       setCategory: signalMethod<string>((selectedCategory: string) => {
         // // 1. show skeleton
-        // patchState(store, { selectedCategory, skeleton: true });
+        patchState(store, { selectedCategory, skeleton: false, preLoader: false });
 
         // // 2. simulate API delay (or real API later)
         // setTimeout(() => {

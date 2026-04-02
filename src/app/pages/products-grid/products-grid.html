@@ -1,7 +1,7 @@
 <mat-sidenav-container class="h-full">
-  <mat-sidenav [mode]="sidenavService.mode()" [opened]="sidenavService.opened()">
+  <mat-sidenav [mode]="sidenavService.mode()" [opened]="sidenavService.opened()" class="h-full">
     <div class="p-6">
-      <h2 class="text-lg text-gray-900">Categories</h2>
+      <h2 class="text-lg">Categories</h2>
 
       <mat-nav-list>
         @for (cat of store.categoriesList(); track cat) {
@@ -15,7 +15,7 @@
 
     </div>
   </mat-sidenav>
-  <mat-sidenav-content class="bg-gray-100 p-6 h-full">
+  <mat-sidenav-content class="p-6 h-full" style="background-color: var(--app-bg)">
 
 
 
@@ -33,15 +33,23 @@
 
 
 
-    <div class="bg-gray-100 p-6">
-      <h1 class="text-2xl font-bold text-gray-900">{{ selectedCategory() | titlecase }}</h1>
-      <p class="text-base text-gray-600 mb-6">{{ store.filteredProducts().length }} products found</p>
+    <div class="p-6" style="background-color: var(--app-bg)">
+      <h1 class="text-2xl font-bold" style="color: var(--app-text)">{{ selectedCategory() | titlecase }}</h1>
+      <p class="text-base mb-6" style="background-color: var(--app-bg); color: var(--app-text-muted)">
+        {{ store.filteredProducts().length }} products found
+      </p>
 
       <div class="responsive-grid">
         @if (store.skeleton()) {
         @for (item of [1,2,3,4,5,6]; track item) {
         <app-skeleton-card></app-skeleton-card>
         }
+        }
+        @else if (store.filteredProducts().length === 0) {
+        <div class="col-span-full flex flex-col items-center justify-center py-16" style="background-color: var(--app-bg)">
+          <h2 class="text-xl font-semibold mb-2" style="color: var(--app-text)">No products found</h2>
+          <p class="text-sm" style="color: var(--app-text-muted)">Try selecting a different category.</p>
+        </div>
         }
         @else {
         @for (product of store.filteredProducts(); track product.id) {

@@ -53,10 +53,10 @@ export class HeaderActions {
   }
 
 
-// toggleTheme() {
-//   this.themeService.toggleTheme();
-//   this.isDark = this.themeService.isDark;
-// }
+toggleTheme() {
+  this.themeService.toggleTheme();
+  this.isDark = this.themeService.isDark;
+}
 
 
 

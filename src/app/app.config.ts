@@ -37,7 +37,7 @@ export const appConfig: ApplicationConfig = {
         return () => themeService.initTheme();
       },
       multi: true,
-    }
+    }, provideClientHydration(withEventReplay())
 
 
 

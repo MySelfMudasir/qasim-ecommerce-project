@@ -13,3 +13,8 @@ npm uninstall @angular/platform-browser
 
 ng serve
 npm run dev:ssr
+npm run build
+npm run serve:ssr
+npm run serve:csr
+
+

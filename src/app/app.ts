@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, Inject, inject, PLATFORM_ID, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { Header } from './layout/header/header';
 import { ViewPanel } from './directives/view-panel';
@@ -7,17 +7,18 @@ import { PreLoader } from './shared/pre-loader/pre-loader';
 import { AppTitleService } from './services/app-title-strategy';
 import { ThemeService } from './services/theme-mode';
 // import { Database, ref, set, onValue } from '@angular/fire/database';
-import { CommonModule } from '@angular/common';
+import { Router, NavigationStart, NavigationEnd, NavigationCancel, NavigationError } from '@angular/router';
+import { isPlatformBrowser } from '@angular/common';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, Header, ViewPanel, PreLoader, CommonModule],
+  imports: [RouterOutlet, Header, ViewPanel, PreLoader],
   templateUrl: './app.html',
   styleUrl: './app.scss',
 })
 export class App {
   protected readonly title = signal('ecommerce');
-  isDark = false;
+  private isBrowser: boolean;
 
   isBlocked: string = '';
   width: string = '';
@@ -36,13 +37,7 @@ export class App {
   
   
   // constructor(private db: Database) {
-  constructor() {
-
-
-    setInterval(() => {
-      this.store.setPreLoader(false);
-    }, 1000);
-
+  // constructor() {
 
     // const styleRef = ref(this.db, 'appStyle');
     // const statusRef = ref(this.db, 'appStatus');
@@ -69,7 +64,48 @@ export class App {
     //   }
     // });
 
+  // }
+
+
+constructor(
+    private router: Router,
+    @Inject(PLATFORM_ID) private platformId: Object
+  ) {
+    this.isBrowser = isPlatformBrowser(this.platformId);
+
+    // ✅ Router loader (safe)
+    this.router.events.subscribe(event => {
+
+      if (event instanceof NavigationStart) {
+        this.store.setPreLoader(true);
+      }
+
+      if (
+        event instanceof NavigationEnd ||
+        event instanceof NavigationCancel ||
+        event instanceof NavigationError
+      ) {
+        this.store.setPreLoader(false);
+      }
+
+    });
   }
+
+  ngOnInit() {
+    // ✅ ONLY run in browser
+    if (this.isBrowser) {
+      const loader = document.getElementById('global-loader');
+      if (loader) {
+        loader.remove();
+      }
+    }
+  }
+
+
+
+
+
+
 
 
 

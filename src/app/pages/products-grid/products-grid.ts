@@ -83,7 +83,7 @@ export class ProductsGrid {
 
 
   onCategoryChange(category: string) {
-  this.store.setCategory(category); // ✅ updates store immediately
+  this.store.setCategory(category); // updates store immediately
   }
 
 

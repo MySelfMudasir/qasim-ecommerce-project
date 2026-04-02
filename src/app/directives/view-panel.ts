@@ -3,7 +3,8 @@ import { Directive } from '@angular/core';
 @Directive({
   selector: '[appViewPanel]',
   host: {
-    class: 'border-2 border-gray-200 rounded-xl p-6 bg-white'
+    class: 'border rounded-xl p-6',
+    style: 'background-color: var(--app-surface); border-color: var(--app-border);'
   }
 })
 export class ViewPanel {

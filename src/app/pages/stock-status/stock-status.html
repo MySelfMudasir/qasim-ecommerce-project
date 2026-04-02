@@ -1,12 +1,12 @@
 @if(inStock()) {
-    <div class="flex items-center gap-2 border border-gray-200 rounded-lg px-3 py-3 bg-white w-full">
+    <div class="flex items-center gap-2 rounded-lg px-3 py-3 w-full" style="background-color: var(--app-bg); color: var(--app-text-success); border: 2px solid var(--app-border-success)">
         <mat-icon class="small">check_circle</mat-icon>
-        <span class="text-xs text-gray-800">In Stock and ready to ship</span>
+        <span class="text-xs" style="color: var(--app-text-muted)">In Stock and ready to ship</span>
     </div>
 }
 @else {
-    <div class="flex items-center gap-2 border border-gray-200 rounded-lg px-3 py-3 bg-white w-full danger">
+    <div class="flex items-center gap-2 rounded-lg px-3 py-3 w-full" style="background-color: var(--app-bg); color: var(--app-text-danger); border: 2px solid var(--app-border-danger)">
         <mat-icon class="small">warning</mat-icon>
-        <span class="text-xs">This item is currently out of stock. Add it to your wishlist to be notified when it's available again.</span>
+        <span class="text-xs" style="color: var(--app-text-muted)">This item is currently out of stock. Add it to your wishlist to be notified when it's available again.</span>
     </div>
 }

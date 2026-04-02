@@ -11,7 +11,7 @@
         @for (product of store.wishlistItems(); track product.id) {
         <app-product-card [product]="product">
             <button
-                class="!absolute top-3 right-3 z-10 w-10 h-10 rounded !bg-white border-0 shadow-md flex items-center justify-center cursor-pointer transition-all duration-200 hover:scale-110 hover:shadow-lg"
+                matIconButton class="!absolute top-3 right-3 z-10 w-10 h-10 rounded border-0 shadow-md flex items-center justify-center cursor-pointer transition-all duration-200 hover:scale-110 hover:shadow-lg" style="background-color: var(--app-bg)"
                 (click)="store.removeFromWishlist(product)">
                 <mat-icon>delete</mat-icon>
             </button>

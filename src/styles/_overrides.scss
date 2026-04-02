@@ -28,6 +28,18 @@ mat-sidenav {
       list-item-one-line-container-height: 40px,
     )
   );
+
+  .mat-mdc-list-item {
+    color: var(--app-text);
+  }
+
+}
+
+// Fix for the active category text color in dark mode
+.dark-theme .mat-mdc-list-item.mdc-list-item--activated {
+    .mdc-list-item__primary-text {
+        color: var(--app-primary-contrast) !important;
+    }
 }
 
 // Style to fix the weird border with angular material + tailwindcss
