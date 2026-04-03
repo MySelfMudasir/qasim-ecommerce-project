@@ -18,3 +18,28 @@ npm run serve:ssr
 npm run serve:csr
 
 
+
+// For local
+"scripts": {
+"ng": "ng",
+"start": "ng serve",
+"build": "ng build",
+"watch": "ng build --watch --configuration development",
+"test": "ng test",
+"serve:ssr:ecommerce": "node dist/ecommerce/server/server.mjs",
+"serve:ssr": "node dist/ecommerce/server/server.mjs",
+"serve:csr": "npx serve dist/ecommerce/browser"
+},
+
+
+// For render
+"scripts": {
+  "ng": "ng",
+  "start": "node dist/ecommerce/server/server.mjs",
+  "build": "ng build",
+  "build:ssr": "ng build",
+  "watch": "ng build --watch --configuration development",
+  "test": "ng test",
+  "serve:ssr": "node dist/ecommerce/server/server.mjs",
+  "serve:csr": "npx serve dist/ecommerce/browser"
+},

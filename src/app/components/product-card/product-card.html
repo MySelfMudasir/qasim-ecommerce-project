@@ -5,7 +5,7 @@
 
     <ng-content></ng-content>
 
-    <div class="p-5 flex flex-col flex-1" [routerLink]="['/product', product().id]">
+    <div class="p-5 flex flex-col flex-1">
         <h3 class="text-lg font-semibold mb-2 leading-tight" style="color: var(--app-text);">{{ product().name }}</h3>
         <p class="text-sm mb-4 flex-1 leading-relaxed" style="color: var(--app-text-muted);">{{ product().description }}</p>
 
@@ -15,15 +15,17 @@
         </app-star-rating>
 
 
-        <div class="text-sm font-medium mb-4">
+        <div class="text-sm font-medium mb-4" [ngStyle]="product().inStock ? {'color': 'var(--app-text-success)'} : {'color': 'var(--app-text-danger)'}">
             {{ product().inStock ? 'In Stock' : 'Out of Stock' }}
         </div>
+        
+
         <div class="flex items-center justify-between mt-auto">
             <span class="text-2xl font-bold">${{ product().price.toFixed(2) }}</span>
             <button matButton="filled" class="flex items-center gap-2" (click)="store.addToCart(product())"
                 [disabled]="!product().inStock">
                 <mat-icon>shopping_cart</mat-icon>
-                {{ product().inStock ? 'In Stock' : 'Out of Stock' }}
+                {{ product().inStock ? 'Add to Cart' : 'Out of Stock' }}
             </button>
         </div>
     </div>
