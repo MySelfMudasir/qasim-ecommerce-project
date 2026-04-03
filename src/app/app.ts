@@ -18,7 +18,7 @@ import { isPlatformBrowser } from '@angular/common';
 })
 export class App {
   protected readonly title = signal('ecommerce');
-  private isBrowser: boolean;
+  // private isBrowser: boolean;
 
   isBlocked: string = '';
   width: string = '';
@@ -67,38 +67,38 @@ export class App {
   // }
 
 
-constructor(
-    private router: Router,
-    @Inject(PLATFORM_ID) private platformId: Object
-  ) {
-    this.isBrowser = isPlatformBrowser(this.platformId);
+// constructor(
+//     private router: Router,
+//     @Inject(PLATFORM_ID) private platformId: Object
+//   ) {
+//     this.isBrowser = isPlatformBrowser(this.platformId);
 
-    // ✅ Router loader (safe)
-    this.router.events.subscribe(event => {
+//     // Router loader (safe)
+//     this.router.events.subscribe(event => {
 
-      if (event instanceof NavigationStart) {
-        this.store.setPreLoader(true);
-      }
+//       if (event instanceof NavigationStart) {
+//         this.store.setPreLoader(true);
+//       }
 
-      if (
-        event instanceof NavigationEnd ||
-        event instanceof NavigationCancel ||
-        event instanceof NavigationError
-      ) {
-        this.store.setPreLoader(false);
-      }
+//       if (
+//         event instanceof NavigationEnd ||
+//         event instanceof NavigationCancel ||
+//         event instanceof NavigationError
+//       ) {
+//         this.store.setPreLoader(false);
+//       }
 
-    });
-  }
+//     });
+//   }
 
   ngOnInit() {
-    // ✅ ONLY run in browser
-    if (this.isBrowser) {
+    // ONLY run in browser
+    // if (this.isBrowser) {
       const loader = document.getElementById('global-loader');
       if (loader) {
         loader.remove();
       }
-    }
+    // }
   }
 
 
