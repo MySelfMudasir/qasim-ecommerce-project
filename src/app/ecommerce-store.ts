@@ -413,7 +413,7 @@ export const EcommerceStore = signalStore(
     selectedProductId: undefined,
     writeReview: false,
     skeleton: true,
-    preLoader: true,
+    preLoader: false,
   } as EcommerceState),
 
   // withStorageSync({

@@ -9,6 +9,7 @@ import { ThemeService } from './services/theme';
 // import { Database, ref, set, onValue } from '@angular/fire/database';
 import { Router, NavigationStart, NavigationEnd, NavigationCancel, NavigationError } from '@angular/router';
 import { isPlatformBrowser } from '@angular/common';
+import { log } from 'node:console';
 
 @Component({
   selector: 'app-root',
@@ -92,6 +93,8 @@ export class App {
 //   }
 
   ngOnInit() {
+    console.log("MMMMMMMMMMMMMM");
+    
     // ONLY run in browser
     // if (this.isBrowser) {
       const loader = document.getElementById('global-loader');
