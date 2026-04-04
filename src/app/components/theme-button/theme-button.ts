@@ -10,15 +10,13 @@ import { MatButtonModule } from '@angular/material/button';
   styleUrl: './theme-button.scss',
 })
 export class ThemeButton {
-  isDark = false;
   themeService = inject(ThemeService);
 
-
+  get isDark() {
+    return this.themeService.isDark;
+  }
 
   toggleTheme() {
     this.themeService.toggleTheme();
-    this.isDark = this.themeService.isDark;
   }
-
-
 }

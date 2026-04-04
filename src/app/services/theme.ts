@@ -9,13 +9,13 @@ export class ThemeService {
   constructor(@Inject(PLATFORM_ID) private platformId: Object) {
     this.isBrowser = isPlatformBrowser(this.platformId);
 
+    // Listen to system theme changes
     if (this.isBrowser) {
-      window.matchMedia('(prefers-color-scheme: dark)')
-        .addEventListener('change', e => {
-          const systemPrefersDark = e.matches;
-
+      window
+        .matchMedia('(prefers-color-scheme: dark)')
+        .addEventListener('change', (e) => {
           if (!localStorage.getItem('theme')) {
-            this.isDark = systemPrefersDark;
+            this.isDark = e.matches;
             this.applyTheme();
           }
         });
@@ -26,8 +26,13 @@ export class ThemeService {
     if (!this.isBrowser) return;
 
     this.isDark = !this.isDark;
+
+    localStorage.setItem(
+      'theme',
+      this.isDark ? 'dark-theme' : 'light-theme'
+    );
+
     this.applyTheme();
-    localStorage.setItem('theme', this.isDark ? 'dark-theme' : 'light-theme');
   }
 
   initTheme() {
@@ -35,20 +40,27 @@ export class ThemeService {
 
     const savedTheme = localStorage.getItem('theme');
 
-    if (savedTheme) {
-      this.isDark = savedTheme === 'dark-theme';
-    } else {
-      this.isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    }
+    this.isDark = savedTheme
+      ? savedTheme === 'dark-theme'
+      : window.matchMedia('(prefers-color-scheme: dark)').matches;
 
-    this.applyTheme();
+    // ✅ APPLY EARLY (fix SSR flicker)
+    const el = document.documentElement;
+    el.classList.add(this.isDark ? 'dark-theme' : 'light-theme');
   }
 
   public applyTheme() {
     if (!this.isBrowser) return;
 
-    const body = document.body;
-    body.classList.remove('light-theme', 'dark-theme');
-    body.classList.add(this.isDark ? 'dark-theme' : 'light-theme');
+    const el = document.documentElement;
+
+    // remove old classes
+    el.classList.remove('light-theme', 'dark-theme');
+
+    // ✅ FORCE REPAINT (fix half-dark bug)
+    void el.offsetHeight;
+
+    // add new class
+    el.classList.add(this.isDark ? 'dark-theme' : 'light-theme');
   }
 }
