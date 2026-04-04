@@ -6,7 +6,7 @@ import { provideHotToastConfig } from '@ngxpert/hot-toast';
 // import { provideDatabase, getDatabase } from '@angular/fire/database';
 import { environment } from '../environments/environment.development';
 import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
-import { ThemeService } from './services/theme-mode';
+import { ThemeService } from './services/theme';
 import { APP_INITIALIZER } from '@angular/core';
 
 

@@ -1,12 +1,17 @@
-<div class="flex items-center gap-2">
+<div class="flex items-center">
+
+
+  <div class="hidden md:flex md:flex-1 md:justify-center">
   <button matIconButton class="example-icon favorite-icon" aria-label="Example icon-button with heart icon"
     routerLink="/wishlist" [matBadge]="store.wishlistCount()" [matBadgeHidden]="store.wishlistCount() === 0">
     <mat-icon>favorite</mat-icon>
   </button>
+  
   <button matIconButton class="example-icon" aria-label="Example icon-button with share icon" routerLink="/cart"
     [matBadge]="store.cartCount()" [matBadgeHidden]="store.cartCount() === 0">
     <mat-icon>shopping_cart</mat-icon>
   </button>
+  </div>
 
   @if(store.user(); as user) {
   <button matIconButton [matMenuTriggerFor]="userMenu">
@@ -31,12 +36,11 @@
   }
 
 
+  <div class="hidden md:flex md:flex-1 md:justify-center md:px-4">
+    <app-theme-button></app-theme-button>
+  </div>
 
-  <button matIconButton disabled="false" (click)="toggleTheme()" aria-label="Toggle theme">
-    <mat-icon>
-      {{ isDark ? 'light_mode' : 'dark_mode' }}
-    </mat-icon>
-  </button>
+
 
 
 </div>

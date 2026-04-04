@@ -5,7 +5,7 @@ import { ViewPanel } from './directives/view-panel';
 import { EcommerceStore } from './ecommerce-store';
 import { PreLoader } from './shared/pre-loader/pre-loader';
 import { AppTitleService } from './services/app-title-strategy';
-import { ThemeService } from './services/theme-mode';
+import { ThemeService } from './services/theme';
 // import { Database, ref, set, onValue } from '@angular/fire/database';
 import { Router, NavigationStart, NavigationEnd, NavigationCancel, NavigationError } from '@angular/router';
 import { isPlatformBrowser } from '@angular/common';

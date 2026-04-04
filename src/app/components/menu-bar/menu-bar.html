@@ -2,8 +2,8 @@
     <ng-container *ngFor="let menu of menus; let i = index">
 
         <div class="" [matMenuTriggerFor]="menuRef">
-            <div class="flex items-center menu-item">
-                <span>{{ menu.label }}</span>
+            <div class="flex items-center menu-item max-w-[120px] md:max-w-[180px]">
+                <span class="block truncate">{{ menu.label }}</span>
                 <mat-icon>keyboard_arrow_down</mat-icon>
             </div>
         </div>

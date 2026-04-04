@@ -13,7 +13,8 @@ import { MatDivider } from '@angular/material/divider';
 import { MatDialog } from '@angular/material/dialog';
 import { SignInDialog } from '../../components/sign-in-dialog/sign-in-dialog';
 import { SignUpDialog } from '../../components/sign-up-dialog/sign-up-dialog';
-import { ThemeService } from '../../services/theme-mode';
+import { ThemeService } from '../../services/theme';
+import { ThemeButton } from '../../components/theme-button/theme-button';
 
 @Component({
   selector: 'app-header-actions',
@@ -26,6 +27,7 @@ import { ThemeService } from '../../services/theme-mode';
     MatMenuItem,
     MatMenuTrigger,
     MatDivider,
+    ThemeButton
   ],
   templateUrl: './header-actions.html',
   styleUrl: './header-actions.scss',
@@ -34,7 +36,6 @@ export class HeaderActions {
   store = inject(EcommerceStore);
   themeService = inject(ThemeService);
   matDialog = inject(MatDialog);
-  isDark = false;
 
   
   openSignInDialog() {
@@ -51,12 +52,6 @@ export class HeaderActions {
       data: { checkout: false },
     });
   }
-
-
-toggleTheme() {
-  this.themeService.toggleTheme();
-  this.isDark = this.themeService.isDark;
-}
 
 
 

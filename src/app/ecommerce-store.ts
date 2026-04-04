@@ -412,7 +412,7 @@ export const EcommerceStore = signalStore(
     loading: false,
     selectedProductId: undefined,
     writeReview: false,
-    skeleton: false,
+    skeleton: true,
     preLoader: true,
   } as EcommerceState),
 
@@ -452,12 +452,12 @@ export const EcommerceStore = signalStore(
     ) => ({
       setCategory: signalMethod<string>((selectedCategory: string) => {
         // // 1. show skeleton
-        patchState(store, { selectedCategory, skeleton: false, preLoader: false });
+        patchState(store, { selectedCategory, skeleton: true, preLoader: false });
 
         // // 2. simulate API delay (or real API later)
-        // setTimeout(() => {
-        //   patchState(store, { skeleton: false });
-        // }, 2000);
+        setTimeout(() => {
+          patchState(store, { skeleton: false });
+        }, 1000);
       }),
 
       setProductId: signalMethod<string>((productId: string) => {
