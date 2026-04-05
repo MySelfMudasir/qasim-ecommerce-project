@@ -734,7 +734,7 @@ export const EcommerceStore = signalStore(
         };
 
         const updatedProducts = produce(store.products(), (draft) => {
-          const index = draft.findIndex((p) => (p.id = product.id));
+          const index = draft.findIndex((p) => p.id === product.id);
           draft[index].reviews.push(review);
           draft[index].rating =
             Math.round(

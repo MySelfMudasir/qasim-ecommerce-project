@@ -8,10 +8,11 @@ import { SearchBar } from '../../components/search-bar/search-bar';
 import { RouterLink } from "@angular/router";
 import {MatProgressBarModule} from '@angular/material/progress-bar';
 import { SearchService } from '../../services/search';
+import { MatRipple } from "@angular/material/core";
 
 @Component({
   selector: 'app-header',
-  imports: [MatToolbarModule, HeaderActions, MatIcon, MatButton, SearchBar, RouterLink, MatProgressBarModule],
+  imports: [MatToolbarModule, HeaderActions, MatIcon, MatButton, SearchBar, RouterLink, MatProgressBarModule, MatRipple],
   templateUrl: './header.html',
   styleUrl: './header.scss',
 })
