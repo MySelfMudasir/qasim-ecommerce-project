@@ -15,11 +15,11 @@
 
     </div>
   </mat-sidenav>
-  <mat-sidenav-content class="p-6 h-full" style="background-color: var(--app-bg)">
+  <mat-sidenav-content class="p-2 md:p-6 h-full" style="background-color: var(--app-bg)">
 
 
 
-    <div class="hidden md:flex my-3 mx-6">
+    <div class="hidden md:flex p-2">
       <app-menu-bar class=""></app-menu-bar>
     </div>
 
@@ -33,13 +33,20 @@
 
 
 
-    <div class="p-6" style="background-color: var(--app-bg)">
-      <h1 class="text-2xl font-bold" style="color: var(--app-text)">{{ selectedCategory() | titlecase }}</h1>
+    <div class="p-2" style="background-color: var(--app-bg)">
+
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="text-2xl font-bold">{{ selectedCategory() | titlecase }}</h1>
+        <span class="text-gray-500 text-xl">{{ store.filteredProducts().length > 99 ? '99+' : store.filteredProducts().length }} products found</span>
+    </div>
+
+
+      <!-- <h1 class="text-2xl font-bold" style="color: var(--app-text)">{{ selectedCategory() | titlecase }}</h1>
       <p class="text-base mb-6" style="background-color: var(--app-bg); color: var(--app-text-muted)">
         {{ store.filteredProducts().length }} products found
-      </p>
+      </p> -->
 
-      <div class="responsive-grid">
+      <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-3 md:gap-6">
         @if (store.skeleton()) {
         @for (item of [1,2,3,4,5,6]; track item) {
         <app-skeleton-card></app-skeleton-card>

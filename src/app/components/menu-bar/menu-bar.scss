@@ -2,7 +2,7 @@
   position: relative;
   cursor: pointer;
   color: var(--app-text);
-  padding: 8px 12px;
+  padding: 5px 12px;
   border-radius: 4px;
   transition: background 0.2s;
 
@@ -14,17 +14,17 @@
 .menu-item::after {
   content: '';
   position: absolute;
-  left: 0;
+  left: 50%;
   bottom: -6px;
-  width: 100%;
+  width: 70%;
   height: 3px;
   border-radius: 50px;
   background-color: var(--app-primary);
-  transform: scaleX(0);
+  transform: translateX(-50%) scaleX(0);
   transform-origin: center;
   transition: transform 0.3s ease;
 }
 
 .menu-item:hover::after {
-  transform: scaleX(1);
+  transform: translateX(-50%) scaleX(1);
 }

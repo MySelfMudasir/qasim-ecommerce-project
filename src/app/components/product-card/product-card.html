@@ -1,39 +1,49 @@
-<div class="relative cursor-pointer rounded-xl shadow-lg overflow-hidden flex flex-col h-full transition-all duration-200 ease-out hover:-translate-y-1 hover:hover:shadow-xl" style="background-color: var(--app-surface); color: var(--app-text)">
+<div class="relative cursor-pointer rounded-xl shadow-md overflow-hidden flex flex-col h-full transition-transform hover:-translate-y-1 hover:shadow-lg"
+    style="background-color: var(--app-surface); color: var(--app-text)">
 
-    <img [src]="product().imageUrl" [alt]="product().name" class="w-full h-[300px] object-cover rounded-t-xl"
+    <img [src]="product().imageUrl" [alt]="product().name" class="w-full aspect-square object-cover"
         [routerLink]="['/product', product().id]" [style.view-transition-name]="'product-image-' + product().id">
 
     <ng-content></ng-content>
 
-    <div class="p-5 flex flex-col flex-1">
-        <h3 class="text-lg font-semibold mb-2 leading-tight" style="color: var(--app-text);">{{ product().name }}</h3>
-        <p class="text-sm mb-4 flex-1 leading-relaxed" style="color: var(--app-text-muted);">{{ product().description }}</p>
+    <div class="p-3 md:p-4 flex flex-col flex-1">
+
+        <h3 class="text-xs md:text-lg font-bold mb-0.5 line-clamp-1" style="color: var(--app-text);">
+            {{ product().name }}
+        </h3>
+
+        <div class="hidden md:flex">
+            <p class="text-sm mb-3 line-clamp-2" style="color: var(--app-text-muted);">
+                {{ product().description }}
+            </p>
+        </div>
 
 
-        <app-star-rating class="mb-3" [rating]="product().rating">
+        <app-star-rating class="mb-2 text-xs" [rating]="product().rating">
             ({{ product().reviewCount }})
         </app-star-rating>
 
 
-        <div class="text-sm font-medium mb-4" [ngStyle]="product().inStock ? {'color': 'var(--app-text-success)'} : {'color': 'var(--app-text-danger)'}">
+        <div class="hidden md:block text-xs font-medium mb-3 line-clamp-1"
+            [ngStyle]="product().inStock ? {'color': 'var(--app-text-success)'} : {'color': 'var(--app-text-danger)'}">
             {{ product().inStock ? 'In Stock' : 'Out of Stock' }}
         </div>
-        
 
-        <div class="flex items-center justify-between mt-auto">
-            <span class="text-2xl font-bold">${{ product().price.toFixed(2) }}</span>
-            <button matButton="filled" class="flex items-center gap-2" (click)="store.addToCart(product())"
+
+        <div class="mt-auto flex flex-col gap-3">
+            <span class="text-lg md:text-xl font-bold leading-none">${{ product().price.toFixed(2) }}</span>
+
+            <button matButton="filled" class="w-full" (click)="store.addToCart(product())"
                 [disabled]="!product().inStock">
-                <mat-icon>shopping_cart</mat-icon>
-                {{ product().inStock ? 'Add to Cart' : 'Out of Stock' }}
+                <div class="flex items-center justify-center gap-2">
+                    <div class="hidden md:flex">
+                        <mat-icon class="!m-0">shopping_cart</mat-icon>
+                    </div>
+                    <span>{{ product().inStock ? 'Add to Cart' : 'Out of Stock' }}</span>
+                </div>
             </button>
         </div>
+
+
     </div>
 </div>
-
-
-
-
-
-
-

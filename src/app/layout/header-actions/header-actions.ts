@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { EcommerceStore } from '../../ecommerce-store';
 import { MatBadgeModule } from '@angular/material/badge';
 import {
@@ -34,6 +34,7 @@ import { ThemeButton } from '../../components/theme-button/theme-button';
 })
 export class HeaderActions {
   store = inject(EcommerceStore);
+  router = inject(Router)
   themeService = inject(ThemeService);
   matDialog = inject(MatDialog);
 
@@ -41,7 +42,7 @@ export class HeaderActions {
   openSignInDialog() {
     this.matDialog.open(SignInDialog, {
       disableClose: true,
-      data: { checkout: false },
+      data: { redirectUrl: this.router.url },
     });
   }
 
@@ -49,7 +50,7 @@ export class HeaderActions {
   openSignUpDialog() {
     this.matDialog.open(SignUpDialog, {
       disableClose: true,
-      data: { checkout: false },
+      data: { redirectUrl: this.router.url },
     });
   }
 

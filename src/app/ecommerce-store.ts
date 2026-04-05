@@ -31,8 +31,20 @@ export type EcommerceState = {
   selectedProductId: string | undefined;
   writeReview: boolean;
   skeleton: boolean;
-  preLoader: boolean;
+  preLoader: boolean;  
 };
+
+
+const LOGOUT_STATE: Partial<EcommerceState> = {
+  user: undefined,
+  writeReview: false,
+  // cartItems: [],
+  // wishlistItems: [],
+  // selectedProductId: undefined,
+  // skeleton: false,
+  // preLoader: false,
+};
+
 
 export const EcommerceStore = signalStore(
   {
@@ -414,6 +426,7 @@ export const EcommerceStore = signalStore(
     writeReview: false,
     skeleton: true,
     preLoader: false,
+  
   } as EcommerceState),
 
   // withStorageSync({
@@ -450,6 +463,8 @@ export const EcommerceStore = signalStore(
       router = inject(Router),
       titleService = inject(AppTitleService)
     ) => ({
+
+      
       setCategory: signalMethod<string>((selectedCategory: string) => {
         // // 1. show skeleton
         patchState(store, { selectedCategory, skeleton: true, preLoader: false });
@@ -467,6 +482,22 @@ export const EcommerceStore = signalStore(
           titleService.setTitle(product.name);
         }
       }),
+
+      openWishlist: () => {
+        patchState(store, { skeleton: true });
+
+        setTimeout(() => {
+          patchState(store, { skeleton: false });
+        }, 3000);
+      },
+
+      openCart: () => {
+        patchState(store, { skeleton: true });
+
+        setTimeout(() => {
+          patchState(store, { skeleton: false });
+        }, 2000);
+      },
 
       setSkeleton: signalMethod<boolean>((value: boolean) => {
         patchState(store, { skeleton: value });
@@ -613,7 +644,8 @@ export const EcommerceStore = signalStore(
         toaster.success('Order placed successfully!');
       },
 
-      signUp: ({ email, checkout, dialogId }: SignInParams) => {
+      signUp: ({ email, checkout, dialogId, redirectUrl }: SignInParams) => {
+        console.log('Signing in with', { email, checkout, dialogId, redirectUrl });
         patchState(store, {
           user: {
             id: crypto.randomUUID(),
@@ -625,14 +657,16 @@ export const EcommerceStore = signalStore(
 
         toaster.success(`Account created for ${email}`);
         matDialog.getDialogById(dialogId)?.close();
-
         if (checkout) {
           router.navigate(['/checkout']);
           toaster.success('Proceeding to checkout...');
+        } else if (redirectUrl) {
+          router.navigate([redirectUrl]);
         }
       },
 
-      signIn: ({ email, checkout, dialogId }: SignInParams) => {
+      signIn: ({ email, checkout, dialogId, redirectUrl }: SignInParams) => {
+        console.log('Signing in with', { email, checkout, dialogId, redirectUrl });
         patchState(store, {
           user: {
             id: '1',
@@ -643,18 +677,34 @@ export const EcommerceStore = signalStore(
         });
         toaster.success(`Signed in as ${email}`);
         const dialog = matDialog.getDialogById(dialogId)?.close();
+       if (store.user()) {
+          patchState(store, {
+            writeReview: true,
+          });
+        }
         if (checkout) {
           router.navigate(['/checkout']);
-          toaster.success('Proceeding to checkout...');
+        } else if (redirectUrl) {
+          router.navigate([redirectUrl]);
         }
       },
 
       signOut: () => {
-        patchState(store, { user: undefined });
-        router.navigate(['/']);
+        patchState(store, LOGOUT_STATE);
+        // router.navigate(['/']);
       },
 
       showWriteReview: () => {
+        if (!store.user()) {
+          matDialog.open(SignInDialog, {
+            disableClose: true,
+            data: {
+              redirectUrl: `/product/${store.selectedProductId()}`,
+            },
+          });
+
+          return;
+        }
         patchState(store, { writeReview: true });
       },
 

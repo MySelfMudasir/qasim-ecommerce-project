@@ -1,26 +1,14 @@
 import { Component, inject, signal, Signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
-import {
-  MAT_DIALOG_DATA,
-  MatDialog,
-  MatDialogClose,
-  MatDialogRef,
-} from '@angular/material/dialog';
-import {
-  NonNullableFormBuilder,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
-import {
-  MatFormFieldModule,
-  MatPrefix,
-  MatSuffix,
-} from '@angular/material/form-field';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogClose, MatDialogRef } from '@angular/material/dialog';
+import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MatFormFieldModule, MatPrefix, MatSuffix } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { EcommerceStore } from '../../ecommerce-store';
 import { SignInDialog } from '../sign-in-dialog/sign-in-dialog';
 import { SignInParams } from '../../models/user';
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-sign-up-dialog',
   imports: [
@@ -38,9 +26,10 @@ import { SignInParams } from '../../models/user';
 })
 export class SignUpDialog {
   store = inject(EcommerceStore);
+  router = inject(Router);
   fb = inject(NonNullableFormBuilder);
   matDialog = inject(MatDialog);
-  data = inject<{ checkout: boolean }>(MAT_DIALOG_DATA);
+  data = inject<{ checkout?: boolean; redirectUrl?: string }>(MAT_DIALOG_DATA);
   dialogRef = inject(MatDialogRef);
   passwordVisible = signal(false);
   confirmPasswordVisible = signal(false);
@@ -58,11 +47,12 @@ export class SignUpDialog {
       return;
     }
     const { email, password } = this.signUpForm.value;
-    console.log('Signing up with', { email, password });
+    // console.log('Signing up with', { email, password });
     this.store.signUp({
       email,
       password,
-      checkout: this.data.checkout,
+      checkout: this.router.url === '/cart' ? true : false,
+      redirectUrl: this.data.redirectUrl,
       dialogId: this.dialogRef.id,
     } as SignInParams);
   }
@@ -71,7 +61,7 @@ export class SignUpDialog {
     this.dialogRef.close();
     this.matDialog.open(SignInDialog, {
       disableClose: true,
-      data: { checkout: this.data.checkout },
+      data: { checkout: this.router.url === '/cart' ? true : false, redirectUrl: this.data.redirectUrl },
     });
   }
 }

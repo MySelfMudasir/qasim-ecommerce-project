@@ -35,7 +35,7 @@ export class MenuBar {
 
   menus: MenuGroup[] = [
     {
-      label: 'Browse & Shop',
+      label: 'Shopping Categories',
       type: 'mega',
       sections: [
         {

@@ -92,9 +92,7 @@ export class App {
 //     });
 //   }
 
-  ngOnInit() {
-    console.log("MMMMMMMMMMMMMM");
-    
+  ngOnInit() {    
     // ONLY run in browser
     // if (this.isBrowser) {
       const loader = document.getElementById('global-loader');

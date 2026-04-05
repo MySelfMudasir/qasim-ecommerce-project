@@ -21,6 +21,7 @@ import { MatInputModule } from '@angular/material/input';
 import { EcommerceStore } from '../../ecommerce-store';
 import { SignUpDialog } from '../sign-up-dialog/sign-up-dialog';
 import { SignInParams } from '../../models/user';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-sign-in-dialog',
@@ -39,9 +40,10 @@ import { SignInParams } from '../../models/user';
 })
 export class SignInDialog {
   store = inject(EcommerceStore);
+  router = inject(Router);
   fb = inject(NonNullableFormBuilder);
   matDialog = inject(MatDialog);
-  data = inject<{ checkout: boolean }>(MAT_DIALOG_DATA);
+  data = inject<{ checkout?: boolean; redirectUrl?: string }>(MAT_DIALOG_DATA);
   dialogRef = inject(MatDialogRef);
   passwordVisible = signal(false);
 
@@ -56,11 +58,12 @@ export class SignInDialog {
       return;
     }
     const { email, password } = this.signInForm.value;
-    console.log('Signing in with', { email, password });
+    // console.log('Signing in with', { email, password });
     this.store.signIn({
       email,
       password,
-      checkout: this.data.checkout,
+      checkout: this.router.url === '/cart' ? true : false,
+      redirectUrl: this.data.redirectUrl,
       dialogId: this.dialogRef.id,
     } as SignInParams);
   }
@@ -69,7 +72,8 @@ export class SignInDialog {
     this.dialogRef.close();
     this.matDialog.open(SignUpDialog, {
       disableClose: true,
-      data: { checkout: this.data.checkout },
+      data: { checkout: this.router.url === '/cart' ? true : false, redirectUrl: this.data.redirectUrl },
+      
     });
   }
 }

@@ -11,6 +11,7 @@ export type SignUpParams = {
     name: string;
     checkout?: boolean;
     dialogId: string;
+    redirectUrl?: string;
 }
 
 export type SignInParams =  {
@@ -19,4 +20,5 @@ export type SignInParams =  {
     name?: string;
     checkout?: boolean;
     dialogId: string;
+    redirectUrl?: string;
 }

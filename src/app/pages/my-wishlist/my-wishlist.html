@@ -7,15 +7,22 @@
         <span class="text-gray-500 text-xl">{{ store.wishlistCount() }} items </span>
     </div>
 
-    <div class="responsive-grid">
+    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-3 md:gap-6">
+        @if (store.skeleton()) {
+        @for (item of [1,2,3,4,5,6]; track item) {
+        <app-skeleton-card></app-skeleton-card>
+        }
+        }
+        @else {
         @for (product of store.wishlistItems(); track product.id) {
         <app-product-card [product]="product">
-            <button
-                matIconButton class="!absolute top-3 right-3 z-10 w-10 h-10 rounded border-0 shadow-md flex items-center justify-center cursor-pointer transition-all duration-200 hover:scale-110 hover:shadow-lg" style="background-color: var(--app-bg)"
-                (click)="store.removeFromWishlist(product)">
+            <button matIconButton
+                class="!absolute top-3 right-3 z-10 w-10 h-10 rounded border-0 shadow-md flex items-center justify-center cursor-pointer transition-all duration-200 hover:scale-110 hover:shadow-lg"
+                style="background-color: var(--app-bg)" (click)="store.removeFromWishlist(product)">
                 <mat-icon>delete</mat-icon>
             </button>
         </app-product-card>
+        }
         }
     </div>
 
@@ -26,6 +33,6 @@
     }
 
     @else {
-      <app-empty-wishlist></app-empty-wishlist>
+    <app-empty-wishlist></app-empty-wishlist>
     }
 </div>
