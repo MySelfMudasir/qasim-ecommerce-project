@@ -488,7 +488,7 @@ export const EcommerceStore = signalStore(
 
         setTimeout(() => {
           patchState(store, { skeleton: false });
-        }, 3000);
+        }, 2000);
       },
 
       openCart: () => {
