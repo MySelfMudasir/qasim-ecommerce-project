@@ -645,7 +645,7 @@ export const EcommerceStore = signalStore(
       },
 
       signUp: ({ email, checkout, dialogId, redirectUrl }: SignInParams) => {
-        console.log('Signing in with', { email, checkout, dialogId, redirectUrl });
+        // console.log('Signing in with', { email, checkout, dialogId, redirectUrl });
         patchState(store, {
           user: {
             id: crypto.randomUUID(),
@@ -666,7 +666,7 @@ export const EcommerceStore = signalStore(
       },
 
       signIn: ({ email, checkout, dialogId, redirectUrl }: SignInParams) => {
-        console.log('Signing in with', { email, checkout, dialogId, redirectUrl });
+        // console.log('Signing in with', { email, checkout, dialogId, redirectUrl });
         patchState(store, {
           user: {
             id: '1',
@@ -677,11 +677,6 @@ export const EcommerceStore = signalStore(
         });
         toaster.success(`Signed in as ${email}`);
         const dialog = matDialog.getDialogById(dialogId)?.close();
-       if (store.user()) {
-          patchState(store, {
-            writeReview: true,
-          });
-        }
         if (checkout) {
           router.navigate(['/checkout']);
         } else if (redirectUrl) {
