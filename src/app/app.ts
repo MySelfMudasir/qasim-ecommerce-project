@@ -8,12 +8,13 @@ import { AppTitleService } from './services/app-title-strategy';
 import { ThemeService } from './services/theme';
 // import { Database, ref, set, onValue } from '@angular/fire/database';
 import { Router, NavigationStart, NavigationEnd, NavigationCancel, NavigationError } from '@angular/router';
-import { isPlatformBrowser } from '@angular/common';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { log } from 'node:console';
+import { MyService } from './services/my-service';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, Header, ViewPanel, PreLoader],
+  imports: [RouterOutlet, Header, ViewPanel, CommonModule, PreLoader],
   templateUrl: './app.html',
   styleUrl: './app.scss',
 })
@@ -33,6 +34,7 @@ export class App {
   titleService = inject(AppTitleService);
   store = inject(EcommerceStore);
   themeService = inject(ThemeService);
+  myService = inject(MyService);
 
   
   

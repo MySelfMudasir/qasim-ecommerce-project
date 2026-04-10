@@ -1,8 +1,14 @@
 
 npm install firebase @angular/fire
 npm install firebase @angular/fire --force
+npm install firebase @angular/fire --legacy-peer-deps
 npm uninstall firebase @angular/fire
 
+
+ng update @angular/core@20 @angular/cli@20
+
+
+ng add @ngrx/signals
 
 ng add @angular/ssr
 ng add @angular/ssr --force

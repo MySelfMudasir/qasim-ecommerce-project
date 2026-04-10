@@ -2,8 +2,8 @@ import { ApplicationConfig, inject, provideBrowserGlobalErrorListeners } from '@
 import { provideRouter, withComponentInputBinding, withViewTransitions } from '@angular/router';
 import { routes } from './app.routes';
 import { provideHotToastConfig } from '@ngxpert/hot-toast';
-// import { provideFirebaseApp, initializeApp } from '@angular/fire/app';
-// import { provideDatabase, getDatabase } from '@angular/fire/database';
+import { provideFirebaseApp, initializeApp } from '@angular/fire/app';
+import { provideDatabase, getDatabase } from '@angular/fire/database';
 import { environment } from '../environments/environment.development';
 import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
 import { ThemeService } from './services/theme';
@@ -24,8 +24,8 @@ export const appConfig: ApplicationConfig = {
     }),
 
 
-    // provideFirebaseApp(() => initializeApp(environment.firebase)),
-    // provideDatabase(() => getDatabase()), provideClientHydration(withEventReplay())
+    provideFirebaseApp(() => initializeApp(environment.firebase)),
+    provideDatabase(() => getDatabase()), provideClientHydration(withEventReplay()),
 
 
     provideClientHydration(withEventReplay()),
