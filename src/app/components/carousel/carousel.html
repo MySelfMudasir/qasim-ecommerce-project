@@ -64,21 +64,20 @@
 
 
     <!-- CONTROLS -->
-    <button
-        class="absolute left-2 sm:left-3 top-1/2 -translate-y-1/2 z-30 flex items-center justify-center rounded-full bg-white/20 hover:bg-white/40 backdrop-blur-sm border border-white/30 text-white transition-all duration-200 hover:scale-110 focus:outline-none focus-visible:ring-2 focus-visible:ring-white"
-        [ngStyle]="{ width: 'clamp(28px, 4vw, 44px)', height: 'clamp(28px, 4vw, 44px)' }"
-        *ngIf="finalConfig().showControls" (click)="prev()"
-        style="position: absolute; top: 50%; left: 10px; transform: translateY(-50%); z-index: 10;">
-        <mat-icon>chevron_left</mat-icon>
-    </button>
+<button
+    class="absolute left-2 sm:left-3 top-1/2 -translate-y-1/2 z-30 flex items-center justify-center rounded-full bg-white/20 hover:bg-white/40 backdrop-blur-sm border border-white/30 text-white transition-all duration-200 hover:scale-110 focus:outline-none focus-visible:ring-2 focus-visible:ring-white"
+    [ngStyle]="{ width: 'clamp(28px, 4vw, 44px)', height: 'clamp(28px, 4vw, 44px)' }"
+    *ngIf="finalConfig().showControls" (click)="prev()">
+    <mat-icon>chevron_left</mat-icon>
+</button>
 
-    <button
-        class="absolute right-2 sm:right-3 top-1/2 -translate-y-1/2 z-30 flex items-center justify-center rounded-full bg-white/20 hover:bg-white/40 backdrop-blur-sm border border-white/30 text-white transition-all duration-200 hover:scale-110 focus:outline-none focus-visible:ring-2 focus-visible:ring-white"
-        [ngStyle]="{ width: 'clamp(28px, 4vw, 44px)', height: 'clamp(28px, 4vw, 44px)' }"
-        *ngIf="finalConfig().showControls" (click)="next()"
-        style="position: absolute; top: 50%; right: 10px; transform: translateY(-50%); z-index: 10;">
-        <mat-icon>chevron_right</mat-icon>
-    </button>
+<button
+    class="absolute right-2 sm:right-3 top-1/2 -translate-y-1/2 z-30 flex items-center justify-center rounded-full bg-white/20 hover:bg-white/40 backdrop-blur-sm border border-white/30 text-white transition-all duration-200 hover:scale-110 focus:outline-none focus-visible:ring-2 focus-visible:ring-white"
+    [ngStyle]="{ width: 'clamp(28px, 4vw, 44px)', height: 'clamp(28px, 4vw, 44px)' }"
+    *ngIf="finalConfig().showControls" (click)="next()">
+    <mat-icon>chevron_right</mat-icon>
+</button>
+
 
 
     <!-- ✅ INDICATORS (GLOBAL) -->
