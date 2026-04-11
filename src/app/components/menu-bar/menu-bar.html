@@ -18,7 +18,7 @@
 
                          <mat-nav-list class="mb-1">
                             @for (item of section.items; track item.label) {
-                                <mat-list-item [routerLink]="['/products', item.label.toLowerCase()]" (click)="onCategoryChange(item.label.toLowerCase())">
+                                <mat-list-item class="h-[30px]" [routerLink]="['/products', item.label.toLowerCase()]" (click)="onCategoryChange(item.label.toLowerCase())">
                                     <span matListItemTitle class="font-medium">{{ item.label | titlecase }}</span>
                                 </mat-list-item>
                             }
