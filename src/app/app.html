@@ -1,16 +1,14 @@
-
-
 @if (store.preLoader()) {
-  <app-pre-loader></app-pre-loader>
+<app-pre-loader></app-pre-loader>
 }
 
-<div class="fixed inset-0 flex items-center justify-center z-50 pointer-events-none select-none" style="z-index: 999999;"
-     [ngStyle]="{ background: myService.backdropColor }" *ngIf="myService.isBlocked === 'block'">
-     <div class="bg-white p-6 rounded-lg text-center" [ngStyle]="{ width: myService.width }">
-          <p class="text-medium">{{ myService.message }}</p>
-          <img [src]="myService.url" class="mx-auto mt-4 h-50" />
-     </div>
-</div>
+<!-- <div class="fixed inset-0 flex items-center justify-center z-50 pointer-events-none select-none"
+  [ngStyle]="{ background: myService.backdropColor() }" *ngIf="myService.isBlocked() === 'block'">
+  <div class="bg-white p-6 rounded-lg text-center" [ngStyle]="{ width: myService.width() }">
+    <p class="text-medium">{{ myService.message() }}</p>
+    <img [src]="myService.url()" class="mx-auto mt-4 h-50" />
+  </div>
+</div> -->
 
 <app-header class="z-10 relative"></app-header>
 <div class="h-[calc(100%-64px)] overflow-auto">

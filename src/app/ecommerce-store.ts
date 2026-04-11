@@ -19,6 +19,7 @@ import { orderModel } from './models/order';
 import { withStorageSync } from '@angular-architects/ngrx-toolkit';
 import { AddReviewParams, UserReviewModel } from './models/user-review';
 import { AppTitleService } from './services/app-title-strategy';
+import { SearchLoadingService } from './services/search-loading';
 
 export type EcommerceState = {
   products: ProductModel[];
@@ -31,9 +32,10 @@ export type EcommerceState = {
   selectedProductId: string | undefined;
   writeReview: boolean;
   skeleton: boolean;
-  preLoader: boolean;  
+  preLoader: boolean;
+  searchLoading: boolean;
+  searchedProduct: string;
 };
-
 
 const LOGOUT_STATE: Partial<EcommerceState> = {
   user: undefined,
@@ -43,8 +45,8 @@ const LOGOUT_STATE: Partial<EcommerceState> = {
   // selectedProductId: undefined,
   // skeleton: false,
   // preLoader: false,
+  // searchLoading: false,
 };
-
 
 export const EcommerceStore = signalStore(
   {
@@ -63,7 +65,7 @@ export const EcommerceStore = signalStore(
         rating: 4.6,
         reviewCount: 134,
         inStock: true,
-        category: 'Electronics',
+        category: 'FLOUR BATTER & BREADING',
         reviews: [
           {
             id: 'r1',
@@ -111,7 +113,7 @@ export const EcommerceStore = signalStore(
         rating: 4.4,
         reviewCount: 89,
         inStock: true,
-        category: 'Furniture',
+        category: 'FLOUR BATTER & BREADING',
         reviews: [
           {
             id: 'r1',
@@ -136,7 +138,7 @@ export const EcommerceStore = signalStore(
         rating: 4.7,
         reviewCount: 432,
         inStock: false,
-        category: 'Electronics',
+        category: 'FLOUR BATTER & BREADING',
         reviews: [
           {
             id: 'r1',
@@ -162,7 +164,7 @@ export const EcommerceStore = signalStore(
         rating: 4.8,
         reviewCount: 52,
         inStock: true,
-        category: 'Stationery',
+        category: 'CHEESE',
         reviews: [
           {
             id: 'r1',
@@ -188,7 +190,7 @@ export const EcommerceStore = signalStore(
         rating: 4.3,
         reviewCount: 210,
         inStock: true,
-        category: 'Sportswear',
+        category: 'PIZZA TOPPING',
         reviews: [
           {
             id: 'r1',
@@ -214,7 +216,7 @@ export const EcommerceStore = signalStore(
         rating: 4.5,
         reviewCount: 78,
         inStock: false,
-        category: 'Kitchenware',
+        category: 'VEGETABLES Oil & FAT',
         reviews: [
           {
             id: 'r1',
@@ -240,7 +242,7 @@ export const EcommerceStore = signalStore(
         rating: 4.9,
         reviewCount: 305,
         inStock: true,
-        category: 'Outdoor',
+        category: 'DONNER KEBAB',
         reviews: [
           {
             id: 'r1',
@@ -266,7 +268,7 @@ export const EcommerceStore = signalStore(
         rating: 4.2,
         reviewCount: 120,
         inStock: true,
-        category: 'Home',
+        category: 'CHICKEN DONNER',
         reviews: [
           {
             id: 'r1',
@@ -292,7 +294,7 @@ export const EcommerceStore = signalStore(
         rating: 4.6,
         reviewCount: 157,
         inStock: true,
-        category: 'Musical',
+        category: 'CHICKEN PRODUCTS',
         reviews: [
           {
             id: 'r1',
@@ -318,7 +320,7 @@ export const EcommerceStore = signalStore(
         rating: 4.7,
         reviewCount: 64,
         inStock: false,
-        category: 'Gardening',
+        category: 'FISH PRODUCTS',
         reviews: [
           {
             id: 'r1',
@@ -344,7 +346,7 @@ export const EcommerceStore = signalStore(
         rating: 4.7,
         reviewCount: 64,
         inStock: false,
-        category: 'Gardening',
+        category: 'SAUCES & MAYONNAISE',
         reviews: [
           {
             id: 'r1',
@@ -370,7 +372,7 @@ export const EcommerceStore = signalStore(
         rating: 4.7,
         reviewCount: 64,
         inStock: false,
-        category: 'Gardening',
+        category: 'PACKAGING',
         reviews: [
           {
             id: 'r1',
@@ -387,7 +389,8 @@ export const EcommerceStore = signalStore(
       },
     ],
     categoriesList: [
-      'FLOUR, BATTER & BREADING',
+      'all',
+      'FLOUR BATTER & BREADING',
       'CHEESE',
       'PIZZA TOPPING',
       'VEGETABLES Oil & FAT',
@@ -405,17 +408,6 @@ export const EcommerceStore = signalStore(
       'CANS FOOD',
       'SPICES',
       'SOFT DRINKS',
-      'all',
-      'New',
-      'Electronics',
-      'Furniture',
-      'stationery',
-      'sportswear',
-      'Kitchenware',
-      'Outdoor',
-      'home',
-      'Musical',
-      'Gardening',
     ],
     selectedCategory: 'all',
     wishlistItems: [],
@@ -426,7 +418,8 @@ export const EcommerceStore = signalStore(
     writeReview: false,
     skeleton: true,
     preLoader: false,
-  
+    searchLoading: false,
+    searchedProduct: '',
   } as EcommerceState),
 
   // withStorageSync({
@@ -434,13 +427,27 @@ export const EcommerceStore = signalStore(
   //   select: ({ user, wishlistItems, cartItems }) => ({ user, wishlistItems, cartItems }),
   // }),
 
-  withComputed(({ selectedCategory, products, wishlistItems, cartItems, selectedProductId }) => ({
+  withComputed(({ selectedCategory, products, wishlistItems, cartItems, selectedProductId, searchedProduct }) => ({
+
     filteredProducts: computed(() => {
-      if (selectedCategory().toLowerCase() === 'all') return products();
-      return products().filter(
-        (p) => p.category.toLowerCase() === selectedCategory().toLowerCase(),
-      );
+
+        // 1. If searching → ignore category
+        if (searchedProduct()) {
+          return products().filter((p) =>
+            p.name.toLowerCase().includes(searchedProduct().toLowerCase())
+          );
+        }
+
+        // 2. If NOT searching → use category
+        if (selectedCategory().toLowerCase() === 'all') {
+          return products();
+        }
+
+        return products().filter(
+          (p) => p.category.toLowerCase() === selectedCategory().toLowerCase()
+        );
     }),
+
 
     wishlistCount: computed(() => {
       return wishlistItems().length;
@@ -453,6 +460,7 @@ export const EcommerceStore = signalStore(
     selectedProduct: computed(() => {
       return products().find((p) => p.id === selectedProductId()) ?? undefined;
     }),
+
   })),
 
   withMethods(
@@ -461,13 +469,13 @@ export const EcommerceStore = signalStore(
       toaster = inject(HotToastService),
       matDialog = inject(MatDialog),
       router = inject(Router),
-      titleService = inject(AppTitleService)
+      titleService = inject(AppTitleService),
+      searchLoadingService = inject(SearchLoadingService),
     ) => ({
-
       
       setCategory: signalMethod<string>((selectedCategory: string) => {
         // // 1. show skeleton
-        patchState(store, { selectedCategory, skeleton: true, preLoader: false });
+        patchState(store, { selectedCategory, searchedProduct: '', skeleton: true, preLoader: false });
 
         // // 2. simulate API delay (or real API later)
         setTimeout(() => {
@@ -477,7 +485,7 @@ export const EcommerceStore = signalStore(
 
       setProductId: signalMethod<string>((productId: string) => {
         patchState(store, { selectedProductId: productId });
-        const product = store.products().find(p => p.id === productId);
+        const product = store.products().find((p) => p.id === productId);
         if (product) {
           titleService.setTitle(product.name);
         }
@@ -743,6 +751,19 @@ export const EcommerceStore = signalStore(
         await new Promise((res) => setTimeout(res, 2000));
         patchState(store, { loading: false, products: updatedProducts, writeReview: false });
       },
+
+      setSearchTerm: signalMethod<string>((term: string) => {
+        searchLoadingService.open();
+        patchState(store, { searchedProduct: term, selectedCategory: 'all', skeleton: true, preLoader: false, searchLoading: true });
+        
+        // 2. simulate delay
+        setTimeout(() => {
+          searchLoadingService.close();
+          patchState(store, { skeleton: false, searchLoading: false });
+        }, 1000);
+      }),
+
+
     }),
   ),
 );

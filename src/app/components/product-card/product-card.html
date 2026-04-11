@@ -1,7 +1,7 @@
 <div class="relative cursor-pointer rounded-xl shadow-md overflow-hidden flex flex-col h-full transition-transform hover:-translate-y-1 hover:shadow-lg"
     style="background-color: var(--app-surface); color: var(--app-text)">
 
-    <img [src]="product().imageUrl" [alt]="product().name" class="w-full aspect-square object-cover"
+    <img [src]="product().imageUrl" loading="lazy" [alt]="product().name" class="w-full aspect-square object-cover"
         [routerLink]="['/product', product().id]" [style.view-transition-name]="'product-image-' + product().id">
 
     <ng-content></ng-content>

@@ -1,7 +1,7 @@
-<mat-toolbar class="w-full elevated py-2">
+<mat-toolbar class="w-full elevated py-2" style="height: 55px;">
     <div class="grid w-full grid-cols-12 items-center gap-4">
         <!-- Left: menu + title -->
-        <div class="col-span-6 md:col-span-3 flex items-center gap-1">
+        <div class="col-span-6 md:col-span-9 flex items-center gap-1">
             <button matButton (click)="sidenavService.toggle()" class="">
             <mat-icon class="!text-2xl">menu</mat-icon>
             </button>
@@ -10,10 +10,6 @@
             </div>
         </div>
 
-        <!-- Center: search (hidden on mobile, shown on md+) -->
-        <div class="hidden md:flex md:col-span-6 justify-center px-4">
-            <app-search-bar class="w-full max-w-[600px]"></app-search-bar>
-        </div>
 
         <!-- Right: actions -->
         <div class="col-span-6 md:col-span-3 flex items-center justify-end">
@@ -22,6 +18,10 @@
     </div>
 </mat-toolbar>
 
-@if (searchService.showProgressBar()) {
-    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
-}
+
+
+<div class="">
+    @if (searchLoadingService.showProgressBar()) {
+        <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+    }
+</div>

@@ -5,7 +5,7 @@
 
     @if(store.selectedProduct(); as product) {
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8 mb-8 items-start">
-        <img [src]="product.imageUrl" alt="Product Image"
+        <img [src]="product.imageUrl" alt="Product Image" loading="lazy"
             class="w-full h-[320px] sm:h-[420px] lg:h-[550px] object-cover rounded-lg"
             [style.view-transition-name]="'product-image-' + product.id" />
 

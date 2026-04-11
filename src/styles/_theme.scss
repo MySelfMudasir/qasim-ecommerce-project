@@ -11,12 +11,14 @@
   --app-bg-muted-2: #E5E7EB;
   --app-surface: #ffffff;
   --app-text: #1c1b1f;
+  --app-search-text: #6b7280;
   --app-text-muted: #6b7280;
   --app-text-danger: #dc2626;
   --app-text-success: #16a34a;
   --app-border: #e5e7eb;
   --app-border-danger: #dc2626;
   --app-border-success: #16a34a;
+  --app-icon-color: #6b7280;
 
   @include mat.theme((
     color: mat.$violet-palette,
@@ -51,6 +53,7 @@
   --app-bg-muted: #1e1e1e;
   --app-surface: #1e1e1e;
   --app-text: #e2e2e2;
+  --app-search-text: #e2e2e2;
   --app-text-muted: #9ca3af;
   --app-text-danger: #f87171;
   --app-text-success: #34d399;
@@ -58,6 +61,7 @@
   --app-border: #374151;
   --app-border-danger: #dc2626;
   --app-border-success: #16a34a;
+  --app-icon-color: #dbd0d0;
 
 
   @include mat.theme-overrides((

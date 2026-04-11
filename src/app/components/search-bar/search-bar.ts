@@ -1,44 +1,41 @@
 import { Component, inject } from '@angular/core';
-import { MatButton } from '@angular/material/button';
+import { MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
-import { MatInput, MatInputModule } from '@angular/material/input';
-import { ViewPanel } from '../../directives/view-panel';
+import { MatInputModule } from '@angular/material/input';
 import { MatRippleModule } from '@angular/material/core';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { MatFormField, MatFormFieldModule } from '@angular/material/form-field';
-import { SearchService } from '../../services/search';
+import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
+import { SearchLoadingService } from '../../services/search-loading';
+import { EcommerceStore } from '../../ecommerce-store';
+
 @Component({
   selector: 'app-search-bar',
-  imports: [
-    MatButton,
-    MatIcon,
-    MatInputModule,
-    MatRippleModule,
-    ReactiveFormsModule,
-    MatFormFieldModule,
-    ViewPanel,
-  ],
+  imports: [MatIconButton, MatIcon, MatInputModule, MatRippleModule],
   templateUrl: './search-bar.html',
   styleUrl: './search-bar.scss',
 })
 export class SearchBar {
-  searchSservice = inject(SearchService);
-  fb = inject(FormBuilder);
+  searchLoadingService = inject(SearchLoadingService);
+  store = inject(EcommerceStore);
 
-  searchForm = this.fb.group({
-    searchInput: ['', [Validators.required]],
-  });
+  private searchSubject = new Subject<string>();
 
-  searchQuery() {
-    if (this.searchForm.invalid) {
-      this.searchForm.markAllAsTouched();
-      return;
-    }
-    this.searchSservice.open();
+  ngOnInit() {
+    this.searchSubject
+      .pipe(debounceTime(300), distinctUntilChanged())
+      .subscribe((value: string) => {
+        const trimmed = value.trim().toLowerCase();
+        this.store.setSearchTerm(trimmed);
+      });
   }
-  
+
+  applyFilter(event: Event) {
+    const value = (event.target as HTMLInputElement).value;
+    this.searchSubject.next(value.trim().toLowerCase());
+  }
+
   clearSearch() {
-    this.searchSservice.close();
-    this.searchForm.reset();
+    this.searchSubject.next(''); // reset stream
+    this.store.setSearchTerm('');
+    this.searchLoadingService.close();
   }
 }

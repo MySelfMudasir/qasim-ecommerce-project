@@ -13,10 +13,11 @@ import { SidenavService } from '../../services/sidenav';
 import { ViewPanel } from '../../directives/view-panel';
 import { Carousel, CarouselConfig } from '../../components/carousel/carousel';
 import { Carousel2 } from '../../components/carousel2/carousel2';
-import { MenuBar } from "../../components/menu-bar/menu-bar";
-import { LoadMoreProducts } from "../../components/load-more-products/load-more-products";
-import { SkeletonCard } from "../../shared/skeleton-card/skeleton-card";
+import { MenuBar } from '../../components/menu-bar/menu-bar';
+import { LoadMoreProducts } from '../../components/load-more-products/load-more-products';
+import { SkeletonCard } from '../../shared/skeleton-card/skeleton-card';
 import { AppTitleService } from '../../services/app-title-strategy';
+import { SearchBar } from '../../components/search-bar/search-bar';
 
 @Component({
   selector: 'app-products-grid',
@@ -35,10 +36,11 @@ import { AppTitleService } from '../../services/app-title-strategy';
     MenuBar,
     ViewPanel,
     Carousel,
+    SearchBar,
     MenuBar,
     LoadMoreProducts,
-    SkeletonCard
-],
+    SkeletonCard,
+  ],
   templateUrl: './products-grid.html',
   styleUrl: './products-grid.scss',
 })
@@ -49,10 +51,10 @@ export class ProductsGrid {
   mySlides: any[];
   titleService = inject(AppTitleService);
 
-
   constructor() {
     this.titleService.resetTitle();
-    this.store.setCategory(this.selectedCategory);
+    this.store.setCategory(this.selectedCategory());
+
     this.mySlides = [
       {
         image:
@@ -81,11 +83,9 @@ export class ProductsGrid {
     ];
   }
 
-
   onCategoryChange(category: string) {
-  this.store.setCategory(category); // updates store immediately
+    this.store.setCategory(category); // updates store immediately
   }
-
 
   carouselConfig: CarouselConfig = {
     autoPlay: true,
@@ -95,9 +95,7 @@ export class ProductsGrid {
     showControls: true,
   };
 
-
   isMobileView() {
     return window.innerWidth < 768; // Example breakpoint for mobile view
   }
-  
 }

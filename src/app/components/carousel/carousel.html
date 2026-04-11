@@ -5,7 +5,7 @@
     <div *ngIf="finalConfig().animation === 'slide'" class="flex transition-transform duration-700 ease-in-out"
         [style.transform]="'translateX(-' + currentIndex() * 100 + '%)'">
         <div *ngFor="let s of slides()" class="w-full flex-shrink-0 relative">
-            <img [src]="s.image" class="w-full object-cover" />
+            <img [src]="s.image" loading="lazy" class="w-full object-cover" />
             <!-- overlay -->
             <div class="absolute inset-0 bg-black/8 z-10"></div>
             <!-- text -->
@@ -25,7 +25,7 @@
         <div *ngFor="let s of slides(); let i = index" class="absolute inset-0 transition-opacity duration-700"
             [class.opacity-100]="i === currentIndex()" [class.opacity-0]="i !== currentIndex()"
             [class.z-10]="i === currentIndex()" [class.z-0]="i !== currentIndex()">
-            <img [src]="s.image" class="w-full h-full object-cover" />
+            <img [src]="s.image" loading="lazy" class="w-full h-full object-cover" />
             <!-- overlay -->
             <div class="absolute inset-0 bg-black/8 z-10"></div>
             <!-- text -->
@@ -46,7 +46,7 @@
         <div *ngFor="let s of slides(); let i = index" class="absolute inset-0 transition-all duration-700"
             [class.scale-100]="i === currentIndex()" [class.scale-110]="i !== currentIndex()"
             [class.opacity-100]="i === currentIndex()" [class.opacity-0]="i !== currentIndex()">
-            <img [src]="s.image" class="w-full h-full object-cover" />
+            <img [src]="s.image" loading="lazy" class="w-full h-full object-cover" />
             <!-- overlay -->
             <div class="absolute inset-0 bg-black/8 z-10"></div>
             <!-- text -->

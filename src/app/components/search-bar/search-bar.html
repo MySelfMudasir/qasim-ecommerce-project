@@ -1,22 +1,21 @@
-<form [formGroup]="searchForm" (ngSubmit)="searchQuery()">
-    <div appViewPanel class="flex items-center w-full px-4 py-1">
+    <div class="flex items-center w-full border rounded-xl my-4" style="background-color: var(--app-surface); border-color: var(--app-border);">
 
         <!-- Search icon -->
-        <button matIconButton class="mt-2 pr-2" type="submit" (click)="searchQuery()">
-            <mat-icon class="text-gray-500">search</mat-icon>
+        <button matIconButton class="ml-2">
+            <mat-icon class="" style="color: var(--app-icon-color);">search</mat-icon>
         </button>
 
 
         <!-- Input -->
-        <input matInput autofocus type="text" placeholder="Search products..." formControlName="searchInput"
-            class="flex-1 outline-none text-sm text-gray-700 placeholder-gray-400" />
+        <input matInput autofocus type="text" placeholder="Search products..."
+            class="flex-1 outline-none text-sm placeholder-gray-400" style="color: var(--app-search-text);"
+            (keyup)="applyFilter($event)"/>
 
 
 
         <!-- Clear button (optional like in image) -->
-        <button matIconButton class="mt-2 p-0" (click)="clearSearch()">
-            <mat-icon class="text-gray-500">close</mat-icon>
+        <button matIconButton type="button" class="mr-2" (click)="clearSearch()">
+        <mat-icon style="color: var(--app-icon-color);">close</mat-icon>
         </button>
 
     </div>
-</form>

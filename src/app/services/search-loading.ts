@@ -3,7 +3,7 @@ import { Injectable, signal } from '@angular/core';
 @Injectable({
   providedIn: 'root',
 })
-export class SearchService {
+export class SearchLoadingService {
   private _showProgressBar = signal(false);
 
   showProgressBar = this._showProgressBar.asReadonly();

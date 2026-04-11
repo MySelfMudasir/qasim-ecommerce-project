@@ -16,9 +16,13 @@
                     <div *ngFor="let section of menu.sections">
                         <h1 class="font-bold mb-2">{{ section.title }}</h1>
 
-                        <div *ngFor="let item of section.items" class="flex justify-between items-center">
-                            <a href="" class="p-2">{{ item.label }}</a>
-                        </div>
+                         <mat-nav-list class="mb-1">
+                            @for (item of section.items; track item.label) {
+                                <mat-list-item [routerLink]="['/products', item.label.toLowerCase()]" (click)="onCategoryChange(item.label.toLowerCase())">
+                                    <span matListItemTitle class="font-medium">{{ item.label | titlecase }}</span>
+                                </mat-list-item>
+                            }
+                         </mat-nav-list>
                     </div>
 
                 </div>
@@ -34,13 +38,13 @@
                     </button>
 
                     <!-- SIMPLE ITEM -->
-                    <button mat-menu-item *ngIf="!item.children">
+                    <button mat-menu-item *ngIf="!item.children" (click)="onCategoryChange(item.label.toLowerCase())" [routerLink]="['/products', item.label.toLowerCase()]">
                         {{ item.label }}
                     </button>
 
                     <!-- CHILD MENU -->
                     <mat-menu #childMenu="matMenu">
-                        <button mat-menu-item *ngFor="let child of item.children">
+                        <button mat-menu-item *ngFor="let child of item.children" (click)="onCategoryChange(child.label.toLowerCase())" [routerLink]="['/products', child.label.toLowerCase()]">
                             {{ child.label }}
                         </button>
                     </mat-menu>

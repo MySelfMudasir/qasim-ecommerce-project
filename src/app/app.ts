@@ -31,10 +31,10 @@ export class App {
 
 
 
+  // myService = inject(MyService);
   titleService = inject(AppTitleService);
   store = inject(EcommerceStore);
   themeService = inject(ThemeService);
-  myService = inject(MyService);
 
   
   

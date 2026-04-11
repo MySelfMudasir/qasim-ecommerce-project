@@ -1,8 +1,7 @@
 <div class="grid grid-cols-2 gap-x-4 gap-y-5 sm:grid-cols-3 sm:items-center">
     <div class="col-span-2 flex items-center gap-4 sm:col-span-1">
-        <img [src]="item().product.imageUrl"
-             class="w-20 h-20 sm:w-24 sm:h-24 rounded-lg object-cover"
-             [style.view-transition-name]="'product-image-' + item().product.id">
+        <img [src]="item().product.imageUrl" loading="lazy" class="w-20 h-20 sm:w-24 sm:h-24 rounded-lg object-cover"
+            [style.view-transition-name]="'product-image-' + item().product.id">
         <div class="min-w-0">
             <div class="text-xs sm:text-sm md:text-lg line-clamp-1 font-semibold" style="color: var(--app-text);">
                 {{ item().product.name }}
@@ -14,8 +13,7 @@
     </div>
 
     <div class="col-span-1 flex items-center justify-start sm:justify-center">
-        <app-quantity-selector
-            [quantity]="item().quantity"
+        <app-quantity-selector [quantity]="item().quantity"
             (quantityUpdate)="store.setItemQuantity({ productId: item().product.id, quantity: $event})">
         </app-quantity-selector>
     </div>
