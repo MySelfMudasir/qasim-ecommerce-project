@@ -1,0 +1,339 @@
+<div class="mx-auto max-w-[1200px] px-4 py-6 sm:px-6 lg:px-0">
+    <app-back-button class="mb-6" navigateTo="/products/all"> Continue Shopping </app-back-button>
+
+    <div appViewPanel class="signup-shell">
+        <div class="signup-header">
+            <p class="signup-eyebrow">Create your account</p>
+            <h1>Fill your details in nine steps</h1>
+            <p>Move through each section to set up your account, verify the email OTP, and review the final setup.</p>
+        </div>
+
+        <mat-stepper #stepper linear="false" [orientation]="(stepperOrientation | async)!" labelPosition="bottom"
+            animationDuration="300" class="signup-stepper">
+            <mat-step [stepControl]="accountFormGroup">
+                <form [formGroup]="accountFormGroup" class="step-form">
+                    <ng-template matStepLabel>Account</ng-template>
+
+                    <div class="step-grid">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Email</mat-label>
+                            <input matInput formControlName="email" placeholder="jane@store.com" required>
+                            @if (accountFormGroup.get('email')?.hasError('required')) {
+                            <mat-error>Email is required</mat-error>
+                            }
+                        </mat-form-field>
+
+                        <mat-form-field appearance="outline">
+                            <mat-label>Password</mat-label>
+                            <input matInput [type]="passwordVisible() ? 'text' : 'password'" formControlName="password" placeholder="Enter secure password" required>
+                            <button mat-icon-button matSuffix class="mr-2"
+                                (click)="passwordVisible.set(!passwordVisible())" type="button">
+                                <mat-icon [fontIcon]="passwordVisible() ? 'visibility_off' : 'visibility'"></mat-icon>
+                            </button>
+                            @if (accountFormGroup.get('password')?.hasError('required')) {
+                            <mat-error>Password is required</mat-error>
+                            }
+                            @if (accountFormGroup.get('password')?.hasError('minlength')) {
+                            <mat-error>Password must be at least 8 characters</mat-error>
+                            }
+                        </mat-form-field>
+                    </div>
+
+                    <div class="step-actions">
+                        <span></span>
+                        <button mat-flat-button color="primary" matStepperNext>Next</button>
+                    </div>
+                </form>
+            </mat-step>
+
+            <mat-step [stepControl]="emailFormGroup">
+                <form [formGroup]="emailFormGroup" class="step-form">
+                    <ng-template matStepLabel>Verify Email</ng-template>
+
+                    <div class="notifications-panel">
+                        <p class="m-0">We will verify the email below with an OTP before continuing.</p>
+                        <p class="m-0 font-medium text-slate-900">{{ accountFormGroup.value.email }}</p>
+                    </div>
+
+                    <div class="step-grid">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Verification code</mat-label>
+                            <input matInput formControlName="verificationCode" placeholder="6-digit code" required>
+                            @if (emailFormGroup.get('verificationCode')?.hasError('required')) {
+                            <mat-error>Verification code is required</mat-error>
+                            }
+                            @if (emailFormGroup.get('verificationCode')?.hasError('minlength')) {
+                            <mat-error>Verification code must be at least 6 characters</mat-error>
+                            }
+                        </mat-form-field>
+                    </div>
+
+                    <div class="step-actions">
+                        <button mat-stroked-button matStepperPrevious>Back</button>
+                        <button mat-flat-button color="primary" matStepperNext>Next</button>
+                    </div>
+                </form>
+            </mat-step>
+
+            <mat-step [stepControl]="profileFormGroup">
+                <form [formGroup]="profileFormGroup" class="step-form">
+                    <ng-template matStepLabel>Profile</ng-template>
+
+                    <div class="step-grid">
+                        <mat-form-field appearance="outline">
+                            <mat-label>First name</mat-label>
+                            <input matInput formControlName="firstName" placeholder="Jane" required>
+                            @if (profileFormGroup.get('firstName')?.hasError('required')) {
+                            <mat-error>First name is required</mat-error>
+                            }
+                        </mat-form-field>
+
+                        <mat-form-field appearance="outline">
+                            <mat-label>Last name</mat-label>
+                            <input matInput formControlName="lastName" placeholder="Smith" required>
+                            @if (profileFormGroup.get('lastName')?.hasError('required')) {
+                            <mat-error>Last name is required</mat-error>
+                            }
+                        </mat-form-field>
+
+                        <mat-form-field appearance="outline">
+                            <mat-label>Display name</mat-label>
+                            <input matInput formControlName="displayName" placeholder="Jane Store" required>
+                            @if (profileFormGroup.get('displayName')?.hasError('required')) {
+                            <mat-error>Display name is required</mat-error>
+                            }
+                        </mat-form-field>
+                    </div>
+
+                    <div class="step-actions">
+                        <button mat-stroked-button matStepperPrevious>Back</button>
+                        <button mat-flat-button color="primary" matStepperNext>Next</button>
+                    </div>
+                </form>
+            </mat-step>
+
+            <mat-step [stepControl]="phoneFormGroup">
+                <form [formGroup]="phoneFormGroup" class="step-form">
+                    <ng-template matStepLabel>Verify Phone</ng-template>
+
+                    <div class="step-grid">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Phone number</mat-label>
+                            <input matInput formControlName="phoneNumber" placeholder="+1 555 012 3456" required>
+                            @if (phoneFormGroup.get('phoneNumber')?.hasError('required')) {
+                            <mat-error>Phone number is required</mat-error>
+                            }
+                        </mat-form-field>
+
+                        <mat-form-field appearance="outline">
+                            <mat-label>SMS code</mat-label>
+                            <input matInput formControlName="phoneCode" placeholder="6-digit code" required>
+                            @if (phoneFormGroup.get('phoneCode')?.hasError('required')) {
+                            <mat-error>SMS code is required</mat-error>
+                            }
+                            @if (phoneFormGroup.get('phoneCode')?.hasError('minlength')) {
+                            <mat-error>SMS code must be at least 6 characters</mat-error>
+                            }
+                        </mat-form-field>
+                    </div>
+
+                    <div class="step-actions">
+                        <button mat-stroked-button matStepperPrevious>Back</button>
+                        <button mat-flat-button color="primary" matStepperNext>Next</button>
+                    </div>
+                </form>
+            </mat-step>
+
+            <mat-step [stepControl]="businessFormGroup">
+                <form [formGroup]="businessFormGroup" class="step-form">
+                    <ng-template matStepLabel>Business</ng-template>
+
+                    <div class="step-grid">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Business name</mat-label>
+                            <input matInput formControlName="businessName" placeholder="Qasim Trading Co." required>
+                            @if (businessFormGroup.get('businessName')?.hasError('required')) {
+                            <mat-error>Business name is required</mat-error>
+                            }
+                        </mat-form-field>
+
+                        <mat-form-field appearance="outline">
+                            <mat-label>Business type</mat-label>
+                            <mat-select formControlName="businessType" required>
+                                @for (type of businessTypes; track type) {
+                                <mat-option [value]="type">{{ type }}</mat-option>
+                                }
+                            </mat-select>
+                            @if (businessFormGroup.get('businessType')?.hasError('required')) {
+                            <mat-error>Business type is required</mat-error>
+                            }
+                        </mat-form-field>
+                    </div>
+
+                    <div class="step-actions">
+                        <button mat-stroked-button matStepperPrevious>Back</button>
+                        <button mat-flat-button color="primary" matStepperNext>Next</button>
+                    </div>
+                </form>
+            </mat-step>
+
+            <mat-step [stepControl]="addressFormGroup">
+                <form [formGroup]="addressFormGroup" class="step-form">
+                    <ng-template matStepLabel>Address</ng-template>
+
+                    <div class="step-grid">
+                        <mat-form-field appearance="outline" class="step-span-2">
+                            <mat-label>Street address</mat-label>
+                            <input matInput formControlName="streetAddress" placeholder="123 Main Street" required>
+                            @if (addressFormGroup.get('streetAddress')?.hasError('required')) {
+                            <mat-error>Street address is required</mat-error>
+                            }
+                        </mat-form-field>
+
+                        <mat-form-field appearance="outline">
+                            <mat-label>City</mat-label>
+                            <input matInput formControlName="city" placeholder="New York" required>
+                            @if (addressFormGroup.get('city')?.hasError('required')) {
+                            <mat-error>City is required</mat-error>
+                            }
+                        </mat-form-field>
+                        
+                        <mat-form-field appearance="outline">
+                            <mat-label>State</mat-label>
+                            <input matInput formControlName="state" placeholder="NY" required>
+                            @if (addressFormGroup.get('state')?.hasError('required')) {
+                            <mat-error>State is required</mat-error>
+                            }
+                        </mat-form-field>
+
+                        <mat-form-field appearance="outline">
+                            <mat-label>Zip code</mat-label>
+                            <input matInput formControlName="zipCode" placeholder="10001" required>
+                            @if (addressFormGroup.get('zipCode')?.hasError('required')) {
+                            <mat-error>Zip code is required</mat-error>
+                            }
+                        </mat-form-field>
+
+                        <mat-form-field appearance="outline">
+                            <mat-label>Country</mat-label>
+                            <input matInput formControlName="country" placeholder="United States" required>
+                            @if (addressFormGroup.get('country')?.hasError('required')) {
+                            <mat-error>Country is required</mat-error>
+                            }
+                        </mat-form-field>
+                    </div>
+
+                    <div class="step-actions">
+                        <button mat-stroked-button matStepperPrevious>Back</button>
+                        <button mat-flat-button color="primary" matStepperNext>Next</button>
+                    </div>
+                </form>
+            </mat-step>
+
+            <mat-step [stepControl]="productsFormGroup">
+                <form [formGroup]="productsFormGroup" class="step-form">
+                    <ng-template matStepLabel>Products</ng-template>
+
+                    <div class="step-grid">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Primary category</mat-label>
+                            <mat-select formControlName="primaryCategory" required>
+                                @for (category of productCategories; track category) {
+                                <mat-option [value]="category">{{ category }}</mat-option>
+                                }
+                            </mat-select>
+                            @if (productsFormGroup.get('primaryCategory')?.hasError('required')) {
+                            <mat-error>Primary category is required</mat-error>
+                            }
+                        </mat-form-field>
+
+                        <mat-form-field appearance="outline">
+                            <mat-label>Monthly order volume</mat-label>
+                            <input matInput type="number" min="1" formControlName="monthlyOrders" placeholder="250"
+                                required>
+                            @if (productsFormGroup.get('monthlyOrders')?.hasError('required')) {
+                            <mat-error>Monthly order volume is required</mat-error>
+                            }
+                        </mat-form-field>
+                    </div>
+
+                    <div class="step-actions">
+                        <button mat-stroked-button matStepperPrevious>Back</button>
+                        <button mat-flat-button color="primary" matStepperNext>Next</button>
+                    </div>
+                </form>
+            </mat-step>
+
+            <mat-step [stepControl]="notificationsFormGroup">
+                <form [formGroup]="notificationsFormGroup" class="step-form">
+                    <ng-template matStepLabel>Notifications</ng-template>
+
+                    <div class="notifications-panel">
+                        <p>Choose how you want to hear from us after signup.</p>
+                        <mat-checkbox formControlName="emailUpdates">Email updates</mat-checkbox>
+                        <mat-checkbox formControlName="smsUpdates">SMS updates</mat-checkbox>
+                        <mat-checkbox formControlName="marketingUpdates">Marketing messages</mat-checkbox>
+                    </div>
+
+                    <div class="step-actions">
+                        <button mat-stroked-button matStepperPrevious>Back</button>
+                        <button mat-flat-button color="primary" matStepperNext>Next</button>
+                    </div>
+                </form>
+            </mat-step>
+
+            <mat-step>
+                <ng-template matStepLabel>Complete</ng-template>
+
+                <div class="complete-panel">
+                    <h2>Review your signup details</h2>
+                    <p>Confirm everything below, then submit to finish account creation.</p>
+
+                    <dl class="summary-grid">
+                        <div>
+                            <dt>Account</dt>
+                            <dd>{{ accountFormGroup.value.email }}</dd>
+                        </div>
+                        <div>
+                            <dt>Profile</dt>
+                            <dd>{{ profileFormGroup.value.displayName }}</dd>
+                        </div>
+                        <div>
+                            <dt>Phone</dt>
+                            <dd>{{ phoneFormGroup.value.phoneNumber }}</dd>
+                        </div>
+                        <div>
+                            <dt>Business</dt>
+                            <dd>{{ businessFormGroup.value.businessName }} · {{ businessFormGroup.value.businessType }}
+                            </dd>
+                        </div>
+                        <div>
+                            <dt>Address</dt>
+                            <dd>{{ addressFormGroup.value.streetAddress }}, {{ addressFormGroup.value.city }}, {{
+                                addressFormGroup.value.state }} {{ addressFormGroup.value.zipCode }}, {{
+                                addressFormGroup.value.country }}</dd>
+                        </div>
+                        <div>
+                            <dt>Products</dt>
+                            <dd>{{ productsFormGroup.value.primaryCategory }} · {{ productsFormGroup.value.monthlyOrders
+                                }} orders</dd>
+                        </div>
+                        <div>
+                            <dt>Notifications</dt>
+                            <dd>
+                                Email: {{ notificationsFormGroup.value.emailUpdates ? 'On' : 'Off' }},
+                                SMS: {{ notificationsFormGroup.value.smsUpdates ? 'On' : 'Off' }},
+                                Marketing: {{ notificationsFormGroup.value.marketingUpdates ? 'On' : 'Off' }}
+                            </dd>
+                        </div>
+                    </dl>
+
+                    <div class="step-actions">
+                        <button mat-stroked-button matStepperPrevious>Back</button>
+                        <button mat-flat-button color="primary" (click)="onSubmit()">Submit</button>
+                    </div>
+                </div>
+            </mat-step>
+        </mat-stepper>
+    </div>
+</div>

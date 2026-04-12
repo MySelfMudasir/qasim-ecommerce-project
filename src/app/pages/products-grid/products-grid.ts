@@ -18,6 +18,7 @@ import { LoadMoreProducts } from '../../components/load-more-products/load-more-
 import { SkeletonCard } from '../../shared/skeleton-card/skeleton-card';
 import { AppTitleService } from '../../services/app-title-strategy';
 import { SearchBar } from '../../components/search-bar/search-bar';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-products-grid',
@@ -50,10 +51,14 @@ export class ProductsGrid {
   sidenavService = inject(SidenavService);
   mySlides: any[];
   titleService = inject(AppTitleService);
+  route = inject(ActivatedRoute);
 
   constructor() {
     this.titleService.resetTitle();
-    this.store.setCategory(this.selectedCategory());
+    this.route.paramMap.subscribe(params => {
+    const category = params.get('selectedCategory') ?? 'all';
+    this.store.setCategory(category);
+  });
 
     this.mySlides = [
       {

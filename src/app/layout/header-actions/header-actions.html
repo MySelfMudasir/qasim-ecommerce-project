@@ -34,20 +34,24 @@
 
     <!-- Hidden on mobile -->
     <div class="hidden md:inline">
-      <button matButton class="hidden md:inline" (click)="openSignInDialog()">
+      <button matButton class="" (click)="openSignInDialog()">
         Sign In
       </button>
 
-      <button matButton="filled" class="hidden md:inline" (click)="openSignUpDialog()">
+      <!-- <button matButton="filled" class="hidden md:inline" (click)="openSignUpDialog()">
+        Sign Up
+      </button> -->
+
+      <button matBadge="new" matButton="filled" class="hidden md:inline animate-bounce" routerLink="/multi-step-sign-up">
         Sign Up
       </button>
     </div>
-    }
-
+  }
+  
 
   </div>
 
-  <div class="md:flex-1 md:justify-center md:px-4">
+  <div class="hidden md:flex md:flex-1 md:justify-center md:px-4">
     <app-theme-button></app-theme-button>
   </div>
 

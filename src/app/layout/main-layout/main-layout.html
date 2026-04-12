@@ -1,1 +1,23 @@
-<p>main-layout works!</p>
+<mat-sidenav-container class="h-full">
+    <!-- Sidebar -->
+    <mat-sidenav [mode]="sidenavService.mode()" [opened]="sidenavService.opened()" class="h-full">
+        <div class="p-6">
+            <h2 class="text-lg">Categories</h2>
+
+            <mat-nav-list>
+                @for (cat of store.categoriesList(); track cat) {
+                <mat-list-item class="my-2" [activated]="cat.toLowerCase() === store.selectedCategory().toLowerCase()"
+                    [routerLink]="['/products', cat.toLowerCase()]" (click)="store.setCategory(cat.toLowerCase())">
+                    <span matListItemTitle class="font-medium" [class]="cat.toLowerCase() === store.selectedCategory().toLowerCase() ? '!text-white' : null">
+            {{ cat | titlecase }}</span>
+                </mat-list-item>
+                }
+            </mat-nav-list>
+        </div>
+    </mat-sidenav>
+
+    <!-- Main Content -->
+    <mat-sidenav-content class="p-2 md:p-6 h-full" style="background-color: var(--app-bg)">
+        <router-outlet></router-outlet>
+    </mat-sidenav-content>
+</mat-sidenav-container>

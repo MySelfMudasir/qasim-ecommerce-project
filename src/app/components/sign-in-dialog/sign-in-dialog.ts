@@ -21,7 +21,7 @@ import { MatInputModule } from '@angular/material/input';
 import { EcommerceStore } from '../../ecommerce-store';
 import { SignUpDialog } from '../sign-up-dialog/sign-up-dialog';
 import { SignInParams } from '../../models/user';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-sign-in-dialog',
@@ -34,7 +34,8 @@ import { Router } from '@angular/router';
     MatInputModule,
     MatPrefix,
     MatSuffix,
-  ],
+    RouterLink
+],
   templateUrl: './sign-in-dialog.html',
   styleUrl: './sign-in-dialog.scss',
 })
@@ -70,10 +71,11 @@ export class SignInDialog {
 
   openSignUpDialog() {
     this.dialogRef.close();
-    this.matDialog.open(SignUpDialog, {
-      disableClose: true,
-      data: { checkout: this.router.url === '/cart' ? true : false, redirectUrl: this.data.redirectUrl },
-      
-    });
+    // this.matDialog.open(SignUpDialog, {
+    //   disableClose: true,
+    //   data: { checkout: this.router.url === '/cart' ? true : false, redirectUrl: this.data.redirectUrl },
+    // });
+
+    this.router.navigate(['/multi-step-sign-up']);
   }
 }

@@ -1,5 +1,5 @@
-<mat-sidenav-container class="h-full">
-  <mat-sidenav [mode]="sidenavService.mode()" [opened]="sidenavService.opened()" class="h-full">
+<!-- <mat-sidenav-container class="h-full"> -->
+<!-- <mat-sidenav [mode]="sidenavService.mode()" [opened]="sidenavService.opened()" class="h-full">
     <div class="p-6">
       <h2 class="text-lg">Categories</h2>
 
@@ -14,74 +14,76 @@
       </mat-nav-list>
 
     </div>
-  </mat-sidenav>
-  <mat-sidenav-content class="p-2 md:p-6 h-full" style="background-color: var(--app-bg)">
+  </mat-sidenav> -->
+<!-- <mat-sidenav-content class="p-2 md:p-6 h-full" style="background-color: var(--app-bg)"> -->
 
 
 
-        <!-- Center: search (hidden on mobile, shown on md+) -->
-        <div class="px-4">
-            <app-search-bar class="w-full max-w-[600px]"></app-search-bar>
-        </div>
+<!-- Center: search (hidden on mobile, shown on md+) -->
+<div class="px-4">
+  <app-search-bar class="w-full max-w-[600px]"></app-search-bar>
+</div>
 
 
 
-    <div class="hidden md:flex p-2">
-      <app-menu-bar class=""></app-menu-bar>
-    </div>
+<div class="hidden md:flex p-2">
+  <app-menu-bar class=""></app-menu-bar>
+</div>
 
-    <div appViewPanel class="mb-4 mt-2">
+<!-- <div appViewPanel class="mb-4 mt-2">
       <app-carousel [slides]="mySlides" [config]="carouselConfig"></app-carousel>
-    </div>
+    </div> -->
 
-    <!-- <div appViewPanel class="mb-4">
+<!-- <div appViewPanel class="mb-4">
       <app-carousel2></app-carousel2>
     </div> -->
 
 
 
-    <div class="p-2" style="background-color: var(--app-bg)">
+<div class="p-2" style="background-color: var(--app-bg)">
 
-    <div class="flex justify-between items-center mb-6">
-        <h1 class="text-2xl font-bold">{{ selectedCategory() | titlecase }}</h1>
-        <span class="text-xl" style="color: var(--app-text-muted);">{{ store.filteredProducts().length > 99 ? '99+' : store.filteredProducts().length }} products found</span>
-    </div>
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+    <h1 class="text-sm md:text-2xl font-bold text-wrap" style="color: var(--app-text)">{{ selectedCategory() | titlecase }}</h1>
+    <span class="text-sm md:text-xl text-left md:text-right" style="color: var(--app-text-muted);">
+      {{ store.filteredProducts().length > 99 ? '99+' : store.filteredProducts().length }} products found
+    </span>
+  </div>
 
 
-      <!-- <h1 class="text-2xl font-bold" style="color: var(--app-text)">{{ selectedCategory() | titlecase }}</h1>
+  <!-- <h1 class="text-2xl font-bold" style="color: var(--app-text)">{{ selectedCategory() | titlecase }}</h1>
       <p class="text-base mb-6" style="background-color: var(--app-bg); color: var(--app-text-muted)">
         {{ store.filteredProducts().length }} products found
       </p> -->
 
-      <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-3 md:gap-6">
-        @if (store.skeleton()) {
-        @for (item of [1,2,3,4,5,6]; track item) {
-        <app-skeleton-card></app-skeleton-card>
-        }
-        }
-        @else if (store.filteredProducts().length === 0) {
-        <div class="col-span-full flex flex-col items-center justify-center py-16" style="background-color: var(--app-bg)">
-          <h2 class="text-xl font-semibold mb-2" style="color: var(--app-text)">No products found</h2>
-          <p class="text-sm" style="color: var(--app-text-muted)">Try selecting a different category.</p>
-        </div>
-        }
-        @else {
-        @for (product of store.filteredProducts(); track product.id) {
-        <app-product-card [product]="product">
-          <app-toggle-wishlist-button class="!absolute top-3 right-3" [product]="product"
-            [style.view-transition-name]="'wishlist-button-' + product.id">
-          </app-toggle-wishlist-button>
-        </app-product-card>
-        }
-        }
-      </div>
-    </div>
-
-
-    @if(store.filteredProducts().length !== 0) {
-    <div class="pt-4">
-      <app-load-more-products></app-load-more-products>
+  <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-3 md:gap-6">
+    @if (store.skeleton()) {
+    @for (item of [1,2,3,4,5,6]; track item) {
+    <app-skeleton-card></app-skeleton-card>
+    }
+    }
+    @else if (store.filteredProducts().length === 0) {
+    <div class="col-span-full flex flex-col items-center justify-center py-16" style="background-color: var(--app-bg)">
+      <h2 class="text-xl font-semibold mb-2" style="color: var(--app-text)">No products found</h2>
+      <p class="text-sm" style="color: var(--app-text-muted)">Try selecting a different category.</p>
     </div>
     }
-  </mat-sidenav-content>
-</mat-sidenav-container>
+    @else {
+    @for (product of store.filteredProducts(); track product.id) {
+    <app-product-card [product]="product">
+      <app-toggle-wishlist-button class="!absolute top-3 right-3" [product]="product"
+        [style.view-transition-name]="'wishlist-button-' + product.id">
+      </app-toggle-wishlist-button>
+    </app-product-card>
+    }
+    }
+  </div>
+</div>
+
+
+@if(store.filteredProducts().length !== 0) {
+<div class="pt-4">
+  <app-load-more-products></app-load-more-products>
+</div>
+}
+<!-- </mat-sidenav-content>
+</mat-sidenav-container> -->
