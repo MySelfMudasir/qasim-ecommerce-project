@@ -1,12 +1,14 @@
 <mat-toolbar class="w-full elevated py-2" style="height: 55px;">
     <div class="grid w-full grid-cols-12 items-center gap-4">
+
+
         <!-- Left: menu + title -->
         <div class="col-span-6 md:col-span-9 flex items-center gap-1">
-            <button matButton (click)="sidenavService.toggle()" class="">
-            <mat-icon class="!text-2xl">menu</mat-icon>
+            <button matIconButton (click)="sidenavService.toggle()" class="">
+                <mat-icon class="">menu</mat-icon>
             </button>
             <div class="cursor-pointer" routerLink="/">
-            <span class="text-lg font-medium">Modern Store</span>
+                <span class="text-lg font-medium">Modern Store</span>
             </div>
         </div>
 
@@ -22,6 +24,6 @@
 
 <div class="">
     @if (searchLoadingService.showProgressBar()) {
-        <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
     }
 </div>
