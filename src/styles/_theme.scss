@@ -19,6 +19,16 @@
   --app-border-danger: #dc2626;
   --app-border-success: #16a34a;
   --app-icon-color: #6b7280;
+  --app-footer-bg-1: #003527;
+  --app-footer-bg-2: #004d3a;
+  --app-footer-bg-3: #003d2d;
+  --app-footer-text: #e2e2e2;
+  --app-footer-text-muted: #E5E7EB;
+  --app-footer-divider: #E5E7EB;
+  --app-footer-card-bg: #004d3a;
+  --app-footer-card-border: #E5E7EB;
+  --app--footer-badge-button-bg: #E5E7EB;
+  --app--footer-badge-button-text: #121212;
 
   @include mat.theme((
     color: mat.$violet-palette,
@@ -62,6 +72,17 @@
   --app-border-danger: #dc2626;
   --app-border-success: #16a34a;
   --app-icon-color: #dbd0d0;
+  --app-footer-bg-1: #003527;
+  --app-footer-bg-2: #004d3a;
+  --app-footer-bg-3: #003d2d;
+  --app-footer-text: #e2e2e2;
+  --app-footer-text-muted: #E5E7EB;
+  --app-footer-divider: #374151;
+  --app-footer-card-bg: #004d3a;
+  --app-footer-card-border: #E5E7EB;
+  --app--footer-badge-button-bg: #E5E7EB;
+  --app--footer-badge-button-text: #121212;
+
 
 
   @include mat.theme-overrides((

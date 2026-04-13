@@ -537,10 +537,15 @@ export const EcommerceStore = signalStore(
       },
 
       loadMoreProducts: () => {
+        const activeSearchTerm = store.searchedProduct().trim();
+        const loadedProductName = activeSearchTerm
+          ? `${activeSearchTerm} product ${store.products().length + 1}`
+          : 'New Product';
+
         const moreProducts = [
           {
             id: crypto.randomUUID(),
-            name: 'New Product',
+            name: loadedProductName,
             price: 50,
             category: store.selectedCategory(),
             imageUrl: 'https://placehold.co/600x400',

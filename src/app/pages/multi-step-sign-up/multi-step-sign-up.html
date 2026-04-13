@@ -1,4 +1,4 @@
-<div class="mx-auto max-w-[1200px] px-4 py-6 sm:px-6 lg:px-0">
+<div class="mx-auto max-w-[1200px]">
     <app-back-button class="mb-6" navigateTo="/products/all"> Continue Shopping </app-back-button>
 
     <div appViewPanel class="signup-shell">
@@ -9,7 +9,7 @@
         </div>
 
         <mat-stepper #stepper linear="false" [orientation]="(stepperOrientation | async)!" labelPosition="bottom"
-            animationDuration="300" class="signup-stepper">
+            animationDuration="800" class="signup-stepper">
             <mat-step [stepControl]="accountFormGroup">
                 <form [formGroup]="accountFormGroup" class="step-form">
                     <ng-template matStepLabel>Account</ng-template>
@@ -286,8 +286,10 @@
                 <ng-template matStepLabel>Complete</ng-template>
 
                 <div class="complete-panel">
-                    <h2>Review your signup details</h2>
-                    <p>Confirm everything below, then submit to finish account creation.</p>
+                    <div class="complete-panel-header">
+                        <h2>Review your signup details</h2>
+                        <p>Confirm everything below, then submit to finish account creation.</p>
+                    </div>
 
                     <dl class="summary-grid">
                         <div>

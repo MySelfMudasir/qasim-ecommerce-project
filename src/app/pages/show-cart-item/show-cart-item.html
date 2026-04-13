@@ -3,7 +3,7 @@
         <img [src]="item().product.imageUrl" loading="lazy" class="w-20 h-20 sm:w-24 sm:h-24 rounded-lg object-cover"
             [style.view-transition-name]="'product-image-' + item().product.id">
         <div class="min-w-0">
-            <div class="text-xs sm:text-sm md:text-lg line-clamp-1 font-semibold" style="color: var(--app-text);">
+            <div class="text-sm md:text-lg line-clamp-2 font-semibold" style="color: var(--app-text);">
                 {{ item().product.name }}
             </div>
             <div class="text-sm sm:text-base md:text-lg font-bold" style="color: var(--app-text-muted);">

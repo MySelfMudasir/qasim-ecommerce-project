@@ -11,10 +11,11 @@ import { Router, NavigationStart, NavigationEnd, NavigationCancel, NavigationErr
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { log } from 'node:console';
 import { MyService } from './services/my-service';
+import { Footer } from "./layout/footer/footer";
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, Header, ViewPanel, CommonModule, PreLoader],
+  imports: [RouterOutlet, Header, ViewPanel, CommonModule, PreLoader, Footer],
   templateUrl: './app.html',
   styleUrl: './app.scss',
 })

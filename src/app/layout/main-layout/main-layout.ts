@@ -5,6 +5,7 @@ import { RouterOutlet, RouterLink } from '@angular/router';
 import { EcommerceStore } from '../../ecommerce-store';
 import { SidenavService } from '../../services/sidenav';
 import { CommonModule } from '@angular/common';
+import { Footer } from "../footer/footer";
 
 @Component({
   selector: 'app-main-layout',
@@ -15,7 +16,8 @@ import { CommonModule } from '@angular/common';
     RouterOutlet,
     CommonModule,
     RouterLink,
-  ],
+    Footer
+],
   templateUrl: './main-layout.html',
 })
 export class MainLayout {

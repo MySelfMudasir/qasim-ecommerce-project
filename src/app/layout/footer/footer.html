@@ -1,0 +1,70 @@
+<footer class="store-footer">
+  <div class="footer-inner">
+    <div class="footer-links-grid">
+      <section class="footer-column footer-column-categories">
+        <h3>Categories</h3>
+        <div class="categories-columns">
+          @for (column of categoryColumns; track $index) {
+            <ul>
+              @for (item of column; track item) {
+                <li>{{ item }}</li>
+              }
+            </ul>
+          }
+        </div>
+      </section>
+
+      <section class="footer-column">
+        <h3>Company Information</h3>
+        <ul>
+          @for (item of companyInfo; track item) {
+            <li>{{ item }}</li>
+          }
+        </ul>
+      </section>
+
+      <section class="footer-column">
+        <h3>Purchasing</h3>
+        <ul>
+          @for (item of purchasing; track item) {
+            <li>{{ item }}</li>
+          }
+        </ul>
+      </section>
+    </div>
+
+    <div class="footer-divider"></div>
+
+    <div class="footer-bottom-row">
+      <div class="footer-brands" aria-label="Partner brands">
+        <div class="brand-lockup">
+          <span class="brand-mark">MS</span>
+          <div>
+            <p class="brand-title">MODERN STORE</p>
+            <p class="brand-subtitle">FOODSERVICE</p>
+          </div>
+        </div>
+
+        <div class="brand-lockup second">
+          <span class="brand-mark">BW</span>
+          <div>
+            <p class="brand-title">BESTWAY</p>
+            <p class="brand-subtitle">WHOLESALE</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-apps">
+        <p>Download Modern Store App</p>
+        <div class="app-badges">
+          <button type="button" class="badge-button">Download on the App Store</button>
+          <button type="button" class="badge-button">Get it on Google Play</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-divider"></div>
+
+    <p class="footer-copy">© {{ currentYear }} Modern Store. All rights reserved.</p>
+  </div>
+</footer>
