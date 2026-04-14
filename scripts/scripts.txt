@@ -27,6 +27,9 @@ npm uninstall @angular/ssr
 npm uninstall @angular/platform-browser
 
 
+ng build --configuration=production
+"build": "ng build --configuration=production"
+
 ng serve
 npm run dev:ssr
 npm run build

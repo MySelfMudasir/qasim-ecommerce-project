@@ -1,5 +1,11 @@
 import { ApplicationConfig, inject, provideBrowserGlobalErrorListeners } from '@angular/core';
-import { provideRouter, withComponentInputBinding, withViewTransitions } from '@angular/router';
+import {
+  PreloadAllModules,
+  provideRouter,
+  withComponentInputBinding,
+  withPreloading,
+  withViewTransitions,
+} from '@angular/router';
 import { routes } from './app.routes';
 import { provideHotToastConfig } from '@ngxpert/hot-toast';
 // import { provideFirebaseApp, initializeApp } from '@angular/fire/app';
@@ -8,25 +14,32 @@ import { environment } from '../environments/environment.development';
 import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
 import { ThemeService } from './services/theme';
 import { APP_INITIALIZER } from '@angular/core';
-
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
+// import { cacheInterceptor } from './interceptors/cache.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
-    provideRouter(routes, withComponentInputBinding(), withViewTransitions()),
+    provideRouter(
+      routes,
+      // withPreloading(PreloadAllModules),
+      withComponentInputBinding(),
+      withViewTransitions(),
+    ),
+
+    // provideHttpClient(withInterceptors([cacheInterceptor])),
+
     provideHotToastConfig(),
     provideHotToastConfig({
       style: {
-        marginTop: '70px'
+        marginTop: '70px',
       },
       stacking: 'depth',
       duration: 1000,
     }),
 
-
     // provideFirebaseApp(() => initializeApp(environment.firebase)),
     // provideDatabase(() => getDatabase()), provideClientHydration(withEventReplay())
-
 
     provideClientHydration(withEventReplay()),
     // THEME INIT (CORRECT PLACE)
@@ -37,9 +50,7 @@ export const appConfig: ApplicationConfig = {
         return () => themeService.initTheme();
       },
       multi: true,
-    }, provideClientHydration(withEventReplay())
-
-
-
-  ]
+    },
+    provideClientHydration(withEventReplay()),
+  ],
 };
