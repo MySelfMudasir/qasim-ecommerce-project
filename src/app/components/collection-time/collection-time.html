@@ -1,6 +1,7 @@
 <mat-form-field appearance="outline">
   <mat-label>Pick a time</mat-label>
-  <input matInput [matTimepicker]="picker" required>
-  <mat-timepicker-toggle matIconSuffix [for]="picker"></mat-timepicker-toggle>
+  <input matInput [matTimepicker]="picker" [value]="collectionTime()" (valueChange)="onChange($event)" required />
+    <mat-timepicker-toggle matIconSuffix [for]="picker"></mat-timepicker-toggle>
   <mat-timepicker #picker></mat-timepicker>
 </mat-form-field>
+

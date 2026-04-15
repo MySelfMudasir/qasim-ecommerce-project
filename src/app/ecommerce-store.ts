@@ -20,6 +20,7 @@ import { withStorageSync } from '@angular-architects/ngrx-toolkit';
 import { AddReviewParams, UserReviewModel } from './models/user-review';
 import { AppTitleService } from './services/app-title-strategy';
 import { SearchLoadingService } from './services/search-loading';
+import { CollectionDate } from './components/collection-date/collection-date';
 
 export type EcommerceState = {
   products: ProductModel[];
@@ -35,6 +36,9 @@ export type EcommerceState = {
   preLoader: boolean;
   searchLoading: boolean;
   searchedProduct: string;
+  collectionLocation: string | null;
+  collectionDate: Date | null;
+  collectionTime: string | null;
 };
 
 const LOGOUT_STATE: Partial<EcommerceState> = {
@@ -420,6 +424,9 @@ export const EcommerceStore = signalStore(
     preLoader: false,
     searchLoading: false,
     searchedProduct: '',
+    collectionLocation: 'Khyber Foods LTD',
+    collectionDate: null,
+    collectionTime: null,
   } as EcommerceState),
 
   // withStorageSync({
@@ -427,14 +434,20 @@ export const EcommerceStore = signalStore(
   //   select: ({ user, wishlistItems, cartItems }) => ({ user, wishlistItems, cartItems }),
   // }),
 
-  withComputed(({ selectedCategory, products, wishlistItems, cartItems, selectedProductId, searchedProduct }) => ({
-
-    filteredProducts: computed(() => {
-
+  withComputed(
+    ({
+      selectedCategory,
+      products,
+      wishlistItems,
+      cartItems,
+      selectedProductId,
+      searchedProduct,
+    }) => ({
+      filteredProducts: computed(() => {
         // 1. If searching → ignore category
         if (searchedProduct()) {
           return products().filter((p) =>
-            p.name.toLowerCase().includes(searchedProduct().toLowerCase())
+            p.name.toLowerCase().includes(searchedProduct().toLowerCase()),
           );
         }
 
@@ -444,24 +457,23 @@ export const EcommerceStore = signalStore(
         }
 
         return products().filter(
-          (p) => p.category.toLowerCase() === selectedCategory().toLowerCase()
+          (p) => p.category.toLowerCase() === selectedCategory().toLowerCase(),
         );
+      }),
+
+      wishlistCount: computed(() => {
+        return wishlistItems().length;
+      }),
+
+      cartCount: computed(() => {
+        return cartItems().length;
+      }),
+
+      selectedProduct: computed(() => {
+        return products().find((p) => p.id === selectedProductId()) ?? undefined;
+      }),
     }),
-
-
-    wishlistCount: computed(() => {
-      return wishlistItems().length;
-    }),
-
-    cartCount: computed(() => {
-      return cartItems().length;
-    }),
-
-    selectedProduct: computed(() => {
-      return products().find((p) => p.id === selectedProductId()) ?? undefined;
-    }),
-
-  })),
+  ),
 
   withMethods(
     (
@@ -472,10 +484,14 @@ export const EcommerceStore = signalStore(
       titleService = inject(AppTitleService),
       searchLoadingService = inject(SearchLoadingService),
     ) => ({
-      
       setCategory: signalMethod<string>((selectedCategory: string) => {
         // // 1. show skeleton
-        patchState(store, { selectedCategory, searchedProduct: '', skeleton: true, preLoader: false });
+        patchState(store, {
+          selectedCategory,
+          searchedProduct: '',
+          skeleton: true,
+          preLoader: false,
+        });
 
         // // 2. simulate API delay (or real API later)
         setTimeout(() => {
@@ -618,17 +634,36 @@ export const EcommerceStore = signalStore(
       },
 
       proceedToCheckout: () => {
+        console.log('proceed to checkout', store.cartItems());
         if (!store.user()) {
           matDialog.open(SignInDialog, {
             disableClose: true,
             data: {
-              checkout: true,
+              checkout: false,
             },
           });
           return;
         }
+        if(store.cartCount() === 0) {
+          toaster.error('Your cart is empty');
+          patchState(store, { loading: false });
+          return;
+        }
+
         router.navigate(['/checkout']);
       },
+
+      setCollectionLocation: signalMethod<string>((location) => {
+        patchState(store, { collectionLocation: location });
+      }),
+
+      setCollectionDate: signalMethod<Date>((date) => {
+        patchState(store, { collectionDate: date });
+      }),
+
+      setCollectionTime: signalMethod<string>((time) => {
+        patchState(store, { collectionTime: time });
+      }),
 
       placeOrder: async () => {
         patchState(store, { loading: true });
@@ -638,6 +673,16 @@ export const EcommerceStore = signalStore(
           patchState(store, { loading: false });
           return;
         }
+        if(store.collectionDate() === null || store.collectionTime() === null) {
+          toaster.error('Please select collection date and time');
+          patchState(store, { loading: false });
+          return;
+        }
+
+        const date = store.collectionDate();
+        const formattedDate = date
+          ? `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`
+          : '';
 
         const order: orderModel = {
           id: crypto.randomUUID(),
@@ -647,6 +692,9 @@ export const EcommerceStore = signalStore(
           ),
           items: store.cartItems(),
           shippingAddress: '123 Main St, Anytown, USA',
+          collectionLocation: store.collectionLocation()!,
+          collectionDate: formattedDate,
+          collectionTime: store.collectionTime() || '',
           paymentStatus: 'success',
         };
 
@@ -759,16 +807,20 @@ export const EcommerceStore = signalStore(
 
       setSearchTerm: signalMethod<string>((term: string) => {
         searchLoadingService.open();
-        patchState(store, { searchedProduct: term, selectedCategory: 'all', skeleton: true, preLoader: false, searchLoading: true });
-        
+        patchState(store, {
+          searchedProduct: term,
+          selectedCategory: 'all',
+          skeleton: true,
+          preLoader: false,
+          searchLoading: true,
+        });
+
         // 2. simulate delay
         setTimeout(() => {
           searchLoadingService.close();
           patchState(store, { skeleton: false, searchLoading: false });
         }, 1000);
       }),
-
-
     }),
   ),
 );

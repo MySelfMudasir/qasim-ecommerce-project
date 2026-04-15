@@ -63,8 +63,6 @@ export class SignInDialog {
     this.store.signIn({
       email,
       password,
-      checkout: this.router.url === '/cart' ? true : false,
-      redirectUrl: this.data.redirectUrl,
       dialogId: this.dialogRef.id,
     } as SignInParams);
   }

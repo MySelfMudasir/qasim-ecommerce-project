@@ -1,6 +1,6 @@
 <mat-form-field appearance="outline" class="example-full-width">
     <mat-label>Choose a date</mat-label>
-    <input matInput [matDatepicker]="picker" [value]="date()" [min]="minDate" [max]="maxDate" (dateChange)="date.set($event.value)" disabled required>
+    <input matInput [matDatepicker]="picker" [value]="collectionDate()" [min]="minDate" [max]="maxDate" (dateChange)="onChange($event.value)" disabled required>
     <mat-datepicker-toggle matIconSuffix [for]="picker" disabled="false"></mat-datepicker-toggle>
     <mat-datepicker touchUi #picker disabled="false"></mat-datepicker>
 </mat-form-field>

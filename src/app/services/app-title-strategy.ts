@@ -5,7 +5,7 @@ import { Title } from '@angular/platform-browser';
 @Injectable({ providedIn: 'root' })
 export class AppTitleService {
 
-  private appName = 'Modern Store';
+  private appName = 'Khyber Foods LTD';
 
   constructor(private title: Title) {}
 

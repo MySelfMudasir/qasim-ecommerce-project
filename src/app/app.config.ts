@@ -32,10 +32,12 @@ export const appConfig: ApplicationConfig = {
     provideHotToastConfig(),
     provideHotToastConfig({
       style: {
+        cursor: 'not-allowed',
+        pointerEvents: 'none !important',
         marginTop: '70px',
       },
       stacking: 'depth',
-      duration: 1000,
+      duration: 500,
     }),
 
     // provideFirebaseApp(() => initializeApp(environment.firebase)),

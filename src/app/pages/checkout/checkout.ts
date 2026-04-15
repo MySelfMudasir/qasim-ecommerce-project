@@ -19,4 +19,5 @@ import { CollectionDetails } from "../../components/collection-details/collectio
 })
 export class Checkout {
 store = inject(EcommerceStore);
+
 }

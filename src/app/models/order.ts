@@ -6,5 +6,8 @@ export type orderModel = {
     total: number;
     items: cartModel[];
     shippingAddress: string;
+    collectionLocation: string,
+    collectionDate: string,
+    collectionTime: string,
     paymentStatus: 'pending' | 'success' | 'failed';
 };
