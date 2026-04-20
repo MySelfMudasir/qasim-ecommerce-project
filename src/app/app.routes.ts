@@ -42,9 +42,19 @@ export const routes: Routes = [
           import('./pages/order-success/order-success').then(m => m.OrderSuccess),
       },
       {
+        path: 'signup-success',
+        loadComponent: () =>
+          import('./pages/signup-success/signup-success').then(m => m.SignupSuccess),
+      },
+      {
         path: 'multi-step-sign-up',
         loadComponent: () =>
           import('./pages/multi-step-sign-up/multi-step-sign-up').then(m => m.MultiStepSignUp),
+      },
+      // invalid route - redirect to products
+      {
+        path: '**',
+        redirectTo: 'products/all'
       },
     ],
   },

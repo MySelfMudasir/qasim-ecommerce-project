@@ -14,6 +14,9 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { STEPPER_GLOBAL_OPTIONS } from '@angular/cdk/stepper';
 import { MatIconModule } from '@angular/material/icon';
+import { Router } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
+import { SignInDialog } from '../../components/sign-in-dialog/sign-in-dialog';
 
 @Component({
   selector: 'app-multi-step-sign-up',
@@ -36,13 +39,15 @@ import { MatIconModule } from '@angular/material/icon';
   providers: [
     {
       provide: STEPPER_GLOBAL_OPTIONS,
-      useValue: {displayDefaultIndicatorType: false},
+      useValue: { displayDefaultIndicatorType: false },
     },
   ],
 })
 export class MultiStepSignUp {
   private _formBuilder = inject(FormBuilder);
   passwordVisible = signal(false);
+  submitButtonDisabled = signal(false);
+  router = inject(Router);
 
   accountFormGroup = this._formBuilder.group({
     email: ['test@gmail.com', [Validators.required, Validators.email]],
@@ -50,28 +55,22 @@ export class MultiStepSignUp {
   });
   emailFormGroup = this._formBuilder.group({
     verificationCode: ['123456', [Validators.required, Validators.minLength(6)]],
+    phoneNumber: ['123-456-7890', Validators.required],
+    phoneCode: ['123456'],
   });
   profileFormGroup = this._formBuilder.group({
     firstName: ['Jane', Validators.required],
     lastName: ['Doe', Validators.required],
-    displayName: ['Jane Doe', Validators.required],
-  });
-  phoneFormGroup = this._formBuilder.group({
-    phoneNumber: ['123-456-7890', Validators.required],
-    phoneCode: ['123456', [Validators.required, Validators.minLength(6)]],
-  });
-  businessFormGroup = this._formBuilder.group({
-    businessName: ['Test Business', Validators.required],
-    businessType: ['Retail', Validators.required],
-  });
-  addressFormGroup = this._formBuilder.group({
+    displayName: ['Jane Doe'],
     streetAddress: ['123 Main St', Validators.required],
     city: ['New York', Validators.required],
     state: ['NY', Validators.required],
     zipCode: ['10001', Validators.required],
     country: ['USA', Validators.required],
   });
-  productsFormGroup = this._formBuilder.group({
+  businessFormGroup = this._formBuilder.group({
+    businessName: ['Test Business', Validators.required],
+    businessType: ['Retail', Validators.required],
     primaryCategory: ['Fashion', Validators.required],
     monthlyOrders: ['100', Validators.required],
   });
@@ -90,10 +89,7 @@ export class MultiStepSignUp {
     this.accountFormGroup,
     this.emailFormGroup,
     this.profileFormGroup,
-    this.phoneFormGroup,
     this.businessFormGroup,
-    this.addressFormGroup,
-    this.productsFormGroup,
     this.notificationsFormGroup,
   ];
 
@@ -103,23 +99,29 @@ export class MultiStepSignUp {
     this.stepperOrientation = breakpointObserver
       .observe('(min-width: 800px)')
       .pipe(map(({ matches }) => (matches ? 'horizontal' : 'vertical')));
+
+    this.emailFormGroup.controls['phoneCode'].disable();
   }
 
   onSubmit() {
-    if (this.formGroups.every(group => group.valid)) {
+    if (this.formGroups.every((group) => group.valid)) {
+      this.submitButtonDisabled.set(true);
       console.log('Form submitted successfully!', {
         account: this.accountFormGroup.getRawValue(),
         email: this.emailFormGroup.getRawValue(),
         profile: this.profileFormGroup.getRawValue(),
-        phone: this.phoneFormGroup.getRawValue(),
         business: this.businessFormGroup.getRawValue(),
-        address: this.addressFormGroup.getRawValue(),
-        products: this.productsFormGroup.getRawValue(),
         notifications: this.notificationsFormGroup.getRawValue(),
       });
-      return;
     }
+    this.router.navigate(['/signup-success']);
 
-    this.formGroups.forEach(group => group.markAllAsTouched());
+    this.formGroups.forEach((group) => group.markAllAsTouched());
   }
+
+
+
+
+
+
 }

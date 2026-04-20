@@ -4,7 +4,7 @@
     <div appViewPanel class="signup-shell">
         <div class="signup-header">
             <p class="signup-eyebrow">Create your account</p>
-            <h1>Fill your details in nine steps</h1>
+            <h1>Fill your details in six steps</h1>
             <p>Move through each section to set up your account, verify the email OTP, and review the final setup.</p>
         </div>
 
@@ -25,7 +25,8 @@
 
                         <mat-form-field appearance="outline">
                             <mat-label>Password</mat-label>
-                            <input matInput [type]="passwordVisible() ? 'text' : 'password'" formControlName="password" placeholder="Enter secure password" required>
+                            <input matInput [type]="passwordVisible() ? 'text' : 'password'" formControlName="password"
+                                placeholder="Enter secure password" required>
                             <button mat-icon-button matSuffix class="mr-2"
                                 (click)="passwordVisible.set(!passwordVisible())" type="button">
                                 <mat-icon [fontIcon]="passwordVisible() ? 'visibility_off' : 'visibility'"></mat-icon>
@@ -58,12 +59,32 @@
                     <div class="step-grid">
                         <mat-form-field appearance="outline">
                             <mat-label>Verification code</mat-label>
-                            <input matInput formControlName="verificationCode" placeholder="6-digit code" required>
+                            <input matInput autofocus formControlName="verificationCode" placeholder="6-digit code"
+                                required>
                             @if (emailFormGroup.get('verificationCode')?.hasError('required')) {
                             <mat-error>Verification code is required</mat-error>
                             }
                             @if (emailFormGroup.get('verificationCode')?.hasError('minlength')) {
                             <mat-error>Verification code must be at least 6 characters</mat-error>
+                            }
+                        </mat-form-field>
+
+                        <mat-form-field appearance="outline">
+                            <mat-label>Phone number</mat-label>
+                            <input matInput formControlName="phoneNumber" placeholder="+1 555 012 3456" required>
+                            @if (emailFormGroup.get('phoneNumber')?.hasError('required')) {
+                            <mat-error>Phone number is required</mat-error>
+                            }
+                        </mat-form-field>
+
+                        <mat-form-field appearance="outline">
+                            <mat-label>SMS code</mat-label>
+                            <input matInput formControlName="phoneCode" placeholder="6-digit code">
+                            @if (emailFormGroup.get('phoneCode')?.hasError('required')) {
+                            <mat-error>SMS code is required</mat-error>
+                            }
+                            @if (emailFormGroup.get('phoneCode')?.hasError('minlength')) {
+                            <mat-error>SMS code must be at least 6 characters</mat-error>
                             }
                         </mat-form-field>
                     </div>
@@ -103,36 +124,44 @@
                             <mat-error>Display name is required</mat-error>
                             }
                         </mat-form-field>
-                    </div>
 
-                    <div class="step-actions">
-                        <button mat-stroked-button matStepperPrevious>Back</button>
-                        <button mat-flat-button color="primary" matStepperNext>Next</button>
-                    </div>
-                </form>
-            </mat-step>
-
-            <mat-step [stepControl]="phoneFormGroup">
-                <form [formGroup]="phoneFormGroup" class="step-form">
-                    <ng-template matStepLabel>Verify Phone</ng-template>
-
-                    <div class="step-grid">
-                        <mat-form-field appearance="outline">
-                            <mat-label>Phone number</mat-label>
-                            <input matInput formControlName="phoneNumber" placeholder="+1 555 012 3456" required>
-                            @if (phoneFormGroup.get('phoneNumber')?.hasError('required')) {
-                            <mat-error>Phone number is required</mat-error>
+                        <mat-form-field appearance="outline" class="step-span-2">
+                            <mat-label>Street address</mat-label>
+                            <input matInput formControlName="streetAddress" placeholder="123 Main Street" required>
+                            @if (profileFormGroup.get('streetAddress')?.hasError('required')) {
+                            <mat-error>Street address is required</mat-error>
                             }
                         </mat-form-field>
 
                         <mat-form-field appearance="outline">
-                            <mat-label>SMS code</mat-label>
-                            <input matInput formControlName="phoneCode" placeholder="6-digit code" required>
-                            @if (phoneFormGroup.get('phoneCode')?.hasError('required')) {
-                            <mat-error>SMS code is required</mat-error>
+                            <mat-label>City</mat-label>
+                            <input matInput formControlName="city" placeholder="New York" required>
+                            @if (profileFormGroup.get('city')?.hasError('required')) {
+                            <mat-error>City is required</mat-error>
                             }
-                            @if (phoneFormGroup.get('phoneCode')?.hasError('minlength')) {
-                            <mat-error>SMS code must be at least 6 characters</mat-error>
+                        </mat-form-field>
+
+                        <mat-form-field appearance="outline">
+                            <mat-label>State</mat-label>
+                            <input matInput formControlName="state" placeholder="NY" required>
+                            @if (profileFormGroup.get('state')?.hasError('required')) {
+                            <mat-error>State is required</mat-error>
+                            }
+                        </mat-form-field>
+
+                        <mat-form-field appearance="outline">
+                            <mat-label>Zip code</mat-label>
+                            <input matInput formControlName="zipCode" placeholder="10001" required>
+                            @if (profileFormGroup.get('zipCode')?.hasError('required')) {
+                            <mat-error>Zip code is required</mat-error>
+                            }
+                        </mat-form-field>
+
+                        <mat-form-field appearance="outline">
+                            <mat-label>Country</mat-label>
+                            <input matInput formControlName="country" placeholder="United States" required>
+                            @if (profileFormGroup.get('country')?.hasError('required')) {
+                            <mat-error>Country is required</mat-error>
                             }
                         </mat-form-field>
                     </div>
@@ -168,73 +197,7 @@
                             <mat-error>Business type is required</mat-error>
                             }
                         </mat-form-field>
-                    </div>
 
-                    <div class="step-actions">
-                        <button mat-stroked-button matStepperPrevious>Back</button>
-                        <button mat-flat-button color="primary" matStepperNext>Next</button>
-                    </div>
-                </form>
-            </mat-step>
-
-            <mat-step [stepControl]="addressFormGroup">
-                <form [formGroup]="addressFormGroup" class="step-form">
-                    <ng-template matStepLabel>Address</ng-template>
-
-                    <div class="step-grid">
-                        <mat-form-field appearance="outline" class="step-span-2">
-                            <mat-label>Street address</mat-label>
-                            <input matInput formControlName="streetAddress" placeholder="123 Main Street" required>
-                            @if (addressFormGroup.get('streetAddress')?.hasError('required')) {
-                            <mat-error>Street address is required</mat-error>
-                            }
-                        </mat-form-field>
-
-                        <mat-form-field appearance="outline">
-                            <mat-label>City</mat-label>
-                            <input matInput formControlName="city" placeholder="New York" required>
-                            @if (addressFormGroup.get('city')?.hasError('required')) {
-                            <mat-error>City is required</mat-error>
-                            }
-                        </mat-form-field>
-                        
-                        <mat-form-field appearance="outline">
-                            <mat-label>State</mat-label>
-                            <input matInput formControlName="state" placeholder="NY" required>
-                            @if (addressFormGroup.get('state')?.hasError('required')) {
-                            <mat-error>State is required</mat-error>
-                            }
-                        </mat-form-field>
-
-                        <mat-form-field appearance="outline">
-                            <mat-label>Zip code</mat-label>
-                            <input matInput formControlName="zipCode" placeholder="10001" required>
-                            @if (addressFormGroup.get('zipCode')?.hasError('required')) {
-                            <mat-error>Zip code is required</mat-error>
-                            }
-                        </mat-form-field>
-
-                        <mat-form-field appearance="outline">
-                            <mat-label>Country</mat-label>
-                            <input matInput formControlName="country" placeholder="United States" required>
-                            @if (addressFormGroup.get('country')?.hasError('required')) {
-                            <mat-error>Country is required</mat-error>
-                            }
-                        </mat-form-field>
-                    </div>
-
-                    <div class="step-actions">
-                        <button mat-stroked-button matStepperPrevious>Back</button>
-                        <button mat-flat-button color="primary" matStepperNext>Next</button>
-                    </div>
-                </form>
-            </mat-step>
-
-            <mat-step [stepControl]="productsFormGroup">
-                <form [formGroup]="productsFormGroup" class="step-form">
-                    <ng-template matStepLabel>Products</ng-template>
-
-                    <div class="step-grid">
                         <mat-form-field appearance="outline">
                             <mat-label>Primary category</mat-label>
                             <mat-select formControlName="primaryCategory" required>
@@ -242,7 +205,7 @@
                                 <mat-option [value]="category">{{ category }}</mat-option>
                                 }
                             </mat-select>
-                            @if (productsFormGroup.get('primaryCategory')?.hasError('required')) {
+                            @if (businessFormGroup.get('primaryCategory')?.hasError('required')) {
                             <mat-error>Primary category is required</mat-error>
                             }
                         </mat-form-field>
@@ -251,7 +214,7 @@
                             <mat-label>Monthly order volume</mat-label>
                             <input matInput type="number" min="1" formControlName="monthlyOrders" placeholder="250"
                                 required>
-                            @if (productsFormGroup.get('monthlyOrders')?.hasError('required')) {
+                            @if (businessFormGroup.get('monthlyOrders')?.hasError('required')) {
                             <mat-error>Monthly order volume is required</mat-error>
                             }
                         </mat-form-field>
@@ -263,6 +226,8 @@
                     </div>
                 </form>
             </mat-step>
+
+
 
             <mat-step [stepControl]="notificationsFormGroup">
                 <form [formGroup]="notificationsFormGroup" class="step-form">
@@ -302,7 +267,7 @@
                         </div>
                         <div>
                             <dt>Phone</dt>
-                            <dd>{{ phoneFormGroup.value.phoneNumber }}</dd>
+                            <dd>{{ emailFormGroup.value.phoneNumber }}</dd>
                         </div>
                         <div>
                             <dt>Business</dt>
@@ -311,13 +276,13 @@
                         </div>
                         <div>
                             <dt>Address</dt>
-                            <dd>{{ addressFormGroup.value.streetAddress }}, {{ addressFormGroup.value.city }}, {{
-                                addressFormGroup.value.state }} {{ addressFormGroup.value.zipCode }}, {{
-                                addressFormGroup.value.country }}</dd>
+                            <dd>{{ profileFormGroup.value.streetAddress }}, {{ profileFormGroup.value.city }}, {{
+                                profileFormGroup.value.state }} {{ profileFormGroup.value.zipCode }}, {{
+                                profileFormGroup.value.country }}</dd>
                         </div>
                         <div>
                             <dt>Products</dt>
-                            <dd>{{ productsFormGroup.value.primaryCategory }} · {{ productsFormGroup.value.monthlyOrders
+                            <dd>{{ businessFormGroup.value.primaryCategory }} · {{ businessFormGroup.value.monthlyOrders
                                 }} orders</dd>
                         </div>
                         <div>
@@ -332,7 +297,7 @@
 
                     <div class="step-actions">
                         <button mat-stroked-button matStepperPrevious>Back</button>
-                        <button mat-flat-button color="primary" (click)="onSubmit()">Submit</button>
+                        <button mat-flat-button color="primary" [disabled]="!formGroups.every((group) => group.valid)" (click)="onSubmit()">Submit</button>
                     </div>
                 </div>
             </mat-step>

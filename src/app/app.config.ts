@@ -22,7 +22,7 @@ export const appConfig: ApplicationConfig = {
     provideBrowserGlobalErrorListeners(),
     provideRouter(
       routes,
-      // withPreloading(PreloadAllModules),
+      withPreloading(PreloadAllModules),
       withComponentInputBinding(),
       withViewTransitions(),
     ),
