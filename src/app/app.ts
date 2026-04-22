@@ -4,7 +4,6 @@ import { Header } from './layout/header/header';
 import { ViewPanel } from './directives/view-panel';
 import { EcommerceStore } from './ecommerce-store';
 import { PreLoader } from './shared/pre-loader/pre-loader';
-import { AppTitleService } from './services/app-title-strategy';
 import { ThemeService } from './services/theme';
 // import { Database, ref, set, onValue } from '@angular/fire/database';
 import { Router, NavigationStart, NavigationEnd, NavigationCancel, NavigationError } from '@angular/router';
@@ -33,7 +32,6 @@ export class App {
 
 
   // myService = inject(MyService);
-  titleService = inject(AppTitleService);
   store = inject(EcommerceStore);
   themeService = inject(ThemeService);
 

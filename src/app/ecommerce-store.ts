@@ -18,9 +18,9 @@ import { Router, RouterLink } from '@angular/router';
 import { orderModel } from './models/order';
 import { withStorageSync } from '@angular-architects/ngrx-toolkit';
 import { AddReviewParams, UserReviewModel } from './models/user-review';
-import { AppTitleService } from './services/app-title-strategy';
 import { SearchLoadingService } from './services/search-loading';
 import { CollectionDate } from './components/collection-date/collection-date';
+import { SeoManager } from './services/seo-manager';
 
 export type EcommerceState = {
   products: ProductModel[];
@@ -481,7 +481,7 @@ export const EcommerceStore = signalStore(
       toaster = inject(HotToastService),
       matDialog = inject(MatDialog),
       router = inject(Router),
-      titleService = inject(AppTitleService),
+      seoManager = inject(SeoManager),
       searchLoadingService = inject(SearchLoadingService),
     ) => ({
       setCategory: signalMethod<string>((selectedCategory: string) => {
@@ -499,12 +499,38 @@ export const EcommerceStore = signalStore(
         }, 1000);
       }),
 
+      setProductsListSeoTags: signalMethod<string | undefined>((category) => {
+        const selectedCategory = category
+          ? category.charAt(0).toUpperCase() + category.slice(1)
+          : undefined;
+        const description = selectedCategory
+          ? `Browse our collection of ${selectedCategory} products`
+          : 'Browse our collection of products';
+        seoManager.updateSeoTags({
+          title: selectedCategory ? `${selectedCategory}` : 'All',
+          description,
+        });
+      }),
+
       setProductId: signalMethod<string>((productId: string) => {
         patchState(store, { selectedProductId: productId });
         const product = store.products().find((p) => p.id === productId);
         if (product) {
-          titleService.setTitle(product.name);
+          seoManager.updateSeoTags({
+            title: product.name,
+            description: product.description,
+          });
         }
+      }),
+
+      setProductSeoTags: signalMethod<ProductModel | undefined>((product) => {
+        if (!product) return;
+        seoManager.updateSeoTags({
+          title: product.name,
+          description: product.description,
+          image: product.imageUrl,
+          type: 'product',
+        });
       }),
 
       openWishlist: () => {
@@ -644,7 +670,7 @@ export const EcommerceStore = signalStore(
           });
           return;
         }
-        if(store.cartCount() === 0) {
+        if (store.cartCount() === 0) {
           toaster.error('Your cart is empty');
           patchState(store, { loading: false });
           return;
@@ -673,7 +699,7 @@ export const EcommerceStore = signalStore(
           patchState(store, { loading: false });
           return;
         }
-        if(store.collectionDate() === null || store.collectionTime() === null) {
+        if (store.collectionDate() === null || store.collectionTime() === null) {
           toaster.error('Please select collection date and time');
           patchState(store, { loading: false });
           return;

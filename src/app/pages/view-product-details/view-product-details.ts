@@ -20,6 +20,7 @@ export class ViewProductDetails {
 
   constructor() {
     this.store.setProductId(this.productId);
+    this.store.setProductSeoTags(this.store.selectedProduct);
   }
 
 

@@ -16,7 +16,6 @@ import { Carousel2 } from '../../components/carousel2/carousel2';
 import { MenuBar } from '../../components/menu-bar/menu-bar';
 import { LoadMoreProducts } from '../../components/load-more-products/load-more-products';
 import { SkeletonCard } from '../../shared/skeleton-card/skeleton-card';
-import { AppTitleService } from '../../services/app-title-strategy';
 import { SearchBar } from '../../components/search-bar/search-bar';
 import { ActivatedRoute } from '@angular/router';
 
@@ -50,14 +49,13 @@ export class ProductsGrid {
   store = inject(EcommerceStore);
   sidenavService = inject(SidenavService);
   mySlides: any[];
-  titleService = inject(AppTitleService);
   route = inject(ActivatedRoute);
 
   constructor() {
-    this.titleService.resetTitle();
     this.route.paramMap.subscribe(params => {
     const category = params.get('selectedCategory') ?? 'all';
     this.store.setCategory(category);
+    this.store.setProductsListSeoTags(this.selectedCategory);
   });
 
     this.mySlides = [
@@ -103,4 +101,7 @@ export class ProductsGrid {
   isMobileView() {
     return window.innerWidth < 768; // Example breakpoint for mobile view
   }
+
+
+
 }

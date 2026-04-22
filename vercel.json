@@ -1,0 +1,16 @@
+{
+  "version": 2,
+  "public": true,
+  "name": "khyber-foods-ecommerce",
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/api"
+    }
+  ],
+  "functions": {
+    "api/index.js": {
+      "includeFiles": "dist/ngx-fullstack-ecommerce/**"
+    }
+  }
+}

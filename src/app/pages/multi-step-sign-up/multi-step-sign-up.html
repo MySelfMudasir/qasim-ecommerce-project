@@ -8,7 +8,7 @@
             <p>Move through each section to set up your account, verify the email OTP, and review the final setup.</p>
         </div>
 
-        <mat-stepper #stepper linear="false" [orientation]="(stepperOrientation | async)!" labelPosition="bottom"
+        <mat-stepper #stepper linear="true" [orientation]="(stepperOrientation | async)!" labelPosition="bottom"
             animationDuration="800" class="signup-stepper">
             <mat-step [stepControl]="accountFormGroup">
                 <form [formGroup]="accountFormGroup" class="step-form">
