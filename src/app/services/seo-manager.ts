@@ -17,7 +17,8 @@ export class SeoManager {
   private readonly siteName = 'Khyber Foods LTD';
   private defaultDescription =
     'Welcome to Khyber Foods LTD, your one-stop shop for delicious and authentic food products. Explore our wide range of offerings and enjoy the taste of quality.';
-  private defaultImage = 'https://dummyimage.com/600x400/ffffff/030003.png&text=Mudasir';
+  // private defaultImage = 'https://dummyimage.com/600x400/ffffff/030003.png&text=Mudasir';
+  private defaultImage = 'https://qasim-ecommerce-project.onrender.com/icons/og-image.jpg';
 
   updateSeoTags(seoData: SeoData) {
     this.title.setTitle(`${seoData.title} | ${this.siteName}`);
