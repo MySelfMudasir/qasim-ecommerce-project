@@ -60,6 +60,11 @@ export class SeoManager {
     this.meta.updateTag({ property: 'og:locale', content: 'en_US' });
 
 
+    this.meta.updateTag({ name: 'twitter:card', content: 'summary_large_image' });
+    this.meta.updateTag({ name: 'twitter:title', content: seoData.title });
+    this.meta.updateTag({ name: 'twitter:description', content: seoData.description });
+    this.meta.updateTag({ name: 'twitter:image', content: imageUrl });
+
   }
 
   
