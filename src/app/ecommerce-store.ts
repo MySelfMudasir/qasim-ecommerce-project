@@ -519,6 +519,8 @@ export const EcommerceStore = signalStore(
           seoManager.updateSeoTags({
             title: product.name,
             description: product.description,
+            image: product.imageUrl,  // ← ADD THIS — was missing!
+            type: 'product',
           });
         }
       }),
