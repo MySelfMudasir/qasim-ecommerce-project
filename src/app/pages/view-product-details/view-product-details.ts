@@ -1,8 +1,8 @@
-import { Component, computed, inject, input } from '@angular/core';
+import { Component, computed, effect, inject, input } from '@angular/core';
 import { EcommerceStore } from '../../ecommerce-store';
-import { BackButton } from "../../components/back-button/back-button";
+import { BackButton } from '../../components/back-button/back-button';
 import { MatIcon } from '@angular/material/icon';
-import { ToggleWishlistButton } from "../../components/toggle-wishlist-button/toggle-wishlist-button";
+import { ToggleWishlistButton } from '../../components/toggle-wishlist-button/toggle-wishlist-button';
 import { ProductInfo } from '../product-info/product-info';
 import { ViewReviews } from '../view-reviews/view-reviews';
 import { QuantitySelector } from '../../components/quantity-selector/quantity-selector';
@@ -14,19 +14,21 @@ import { QuantitySelector } from '../../components/quantity-selector/quantity-se
   styleUrl: './view-product-details.scss',
 })
 export class ViewProductDetails {
-  
   productId = input.required<string>();
   store = inject(EcommerceStore);
 
   constructor() {
     this.store.setProductId(this.productId);
-    this.store.setProductSeoTags(this.store.selectedProduct);
+
+    effect(() => {
+      const product = this.store.selectedProduct();
+      if (product) {
+        this.store.setProductSeoTags(product);
+      }
+    });
   }
 
-
   backRoute = computed(() => {
-    return `/products/${this.store.selectedCategory()}`
-  })
-
-
+    return `/products/${this.store.selectedCategory()}`;
+  });
 }
