@@ -1,4 +1,4 @@
-import { Component, computed, effect, inject, input, OnInit } from '@angular/core';
+import { Component, computed, effect, inject, input } from '@angular/core';
 import { EcommerceStore } from '../../ecommerce-store';
 import { BackButton } from '../../components/back-button/back-button';
 import { MatIcon } from '@angular/material/icon';
@@ -13,11 +13,12 @@ import { QuantitySelector } from '../../components/quantity-selector/quantity-se
   templateUrl: './view-product-details.html',
   styleUrl: './view-product-details.scss',
 })
-export class ViewProductDetails implements OnInit {
+export class ViewProductDetails {
   productId = input.required<string>();
   store = inject(EcommerceStore);
 
   constructor() {
+    this.store.setProductId(this.productId);
 
     effect(() => {
       const product = this.store.selectedProduct();
@@ -25,10 +26,6 @@ export class ViewProductDetails implements OnInit {
         this.store.setProductSeoTags(product);
       }
     });
-  }
-
-  ngOnInit(): void {
-    this.store.setProductId(this.productId());
   }
 
   backRoute = computed(() => {

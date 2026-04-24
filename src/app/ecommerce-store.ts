@@ -506,16 +506,9 @@ export const EcommerceStore = signalStore(
         const description = selectedCategory
           ? `Browse our collection of ${selectedCategory} products`
           : 'Browse our collection of products';
-
-        const listImage =
-          category && category.toLowerCase() !== 'all'
-            ? store.products().find((p) => p.category.toLowerCase() === category.toLowerCase())?.imageUrl
-            : store.products()[0]?.imageUrl;
-
         seoManager.updateSeoTags({
-          title: selectedCategory ? `${selectedCategory}` : 'All Products',
+          title: selectedCategory ? `${selectedCategory}` : 'All',
           description,
-          image: listImage,
         });
       }),
 

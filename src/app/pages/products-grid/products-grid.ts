@@ -55,7 +55,7 @@ export class ProductsGrid {
     this.route.paramMap.subscribe(params => {
     const category = params.get('selectedCategory') ?? 'all';
     this.store.setCategory(category);
-    this.store.setProductsListSeoTags(category);
+    this.store.setProductsListSeoTags(this.selectedCategory);
   });
 
     this.mySlides = [
