@@ -20,7 +20,7 @@ import { Footer } from "./layout/footer/footer";
 })
 export class App {
   protected readonly title = signal('ecommerce');
-  // private isBrowser: boolean;
+  private readonly platformId = inject(PLATFORM_ID);
 
   isBlocked: string = '';
   width: string = '';
@@ -94,13 +94,14 @@ export class App {
 //   }
 
   ngOnInit() {    
-    // ONLY run in browser
-    // if (this.isBrowser) {
-      const loader = document.getElementById('global-loader');
-      if (loader) {
-        loader.remove();
-      }
-    // }
+    if (!isPlatformBrowser(this.platformId)) {
+      return;
+    }
+
+    const loader = document.getElementById('global-loader');
+    if (loader) {
+      loader.remove();
+    }
   }
 
 
