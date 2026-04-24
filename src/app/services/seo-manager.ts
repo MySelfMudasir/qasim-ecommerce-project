@@ -1,4 +1,4 @@
-import { inject, Injectable, REQUEST } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 import { Meta, Title } from '@angular/platform-browser';
 import { SeoData } from '../models/seo-data';
@@ -12,7 +12,7 @@ export class SeoManager {
   meta = inject(Meta);
   router = inject(Router);
   document = inject(DOCUMENT);
-  request = inject(REQUEST, { optional: true });
+  request = inject(Request, { optional: true });
 
   private readonly siteName = 'Khyber Foods LTD';
   private defaultDescription =
