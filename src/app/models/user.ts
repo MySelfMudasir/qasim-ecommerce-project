@@ -3,6 +3,7 @@ export type UserModel = {
     email: string;
     name: string;
     imageUrl: string;
+    delivery?: boolean;
 }
 
 export type SignUpParams = {
@@ -12,6 +13,7 @@ export type SignUpParams = {
     checkout?: boolean;
     dialogId: string;
     redirectUrl?: string;
+    delivery?: boolean;
 }
 
 export type SignInParams =  {
@@ -21,4 +23,5 @@ export type SignInParams =  {
     checkout?: boolean;
     dialogId: string;
     redirectUrl?: string;
+    delivery?: boolean;
 }

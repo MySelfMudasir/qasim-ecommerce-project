@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, effect, inject, signal, Signal } from '@angular/core';
 import { BackButton } from '../../components/back-button/back-button';
 import { ShippingForm } from '../shipping-form/shipping-form';
 import { PaymentForm } from '../payment-form/payment-form';
@@ -19,5 +19,13 @@ import { CollectionDetails } from "../../components/collection-details/collectio
 })
 export class Checkout {
 store = inject(EcommerceStore);
+delivery = signal<boolean>(false);
+
+constructor() {
+  effect(() => {
+    this.delivery.set(this.store.user()?.delivery ?? false);
+  })
+}
+
 
 }

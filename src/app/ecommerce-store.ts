@@ -19,7 +19,6 @@ import { orderModel } from './models/order';
 import { withStorageSync } from '@angular-architects/ngrx-toolkit';
 import { AddReviewParams, UserReviewModel } from './models/user-review';
 import { SearchLoadingService } from './services/search-loading';
-import { CollectionDate } from './components/collection-date/collection-date';
 import { SeoManager } from './services/seo-manager';
 
 export type EcommerceState = {
@@ -733,14 +732,15 @@ export const EcommerceStore = signalStore(
         toaster.success('Order placed successfully!');
       },
 
-      signUp: ({ email, checkout, dialogId, redirectUrl }: SignInParams) => {
-        // console.log('Signing in with', { email, checkout, dialogId, redirectUrl });
+      signUp: ({ email, checkout, dialogId, redirectUrl, delivery }: SignInParams) => {
+        // console.log('Signing in with', { email, checkout, dialogId, redirectUrl, delivery });
         patchState(store, {
           user: {
             id: crypto.randomUUID(),
             name: email.split('@')[0],
             email,
             imageUrl: 'https://randomuser.me/api/portraits/men/1.jpg',
+            delivery: delivery ?? false,
           },
         });
 
@@ -754,14 +754,15 @@ export const EcommerceStore = signalStore(
         }
       },
 
-      signIn: ({ email, checkout, dialogId, redirectUrl }: SignInParams) => {
-        // console.log('Signing in with', { email, checkout, dialogId, redirectUrl });
+      signIn: ({ email, checkout, dialogId, redirectUrl, delivery }: SignInParams) => {
+        // console.log('Signing in with', { email, checkout, dialogId, redirectUrl, delivery });
         patchState(store, {
           user: {
             id: '1',
             name: 'John Doe',
             email: email,
             imageUrl: 'https://randomuser.me/api/portraits/men/1.jpg',
+            delivery: delivery ?? false,
           },
         });
         toaster.success(`Signed in as ${email}`);

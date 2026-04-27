@@ -1,43 +1,67 @@
 <div class="mx-auto max-w-[1200px] py-6 px-4 sm:px-6 lg:px-0">
-    <app-back-button class="mb-6 block" navigateTo="/cart">Back to Cart</app-back-button>
+  <app-back-button class="mb-6 block" navigateTo="/cart">Back to Cart</app-back-button>
   <h1 class="text-3xl font-extrabold mb-4">Checkout</h1>
 
+  @if (delivery()) {
+  <div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 mb-6" role="alert">
+    <p class="font-bold">Delivery Notice</p>
+    <p>Since you have delivery enabled, please ensure your address is correct. Delivery times may vary based on your
+      location.</p>
+  </div>
+  }
   <div class="grid grid-cols-1 md:grid-cols-5 gap-6">
-
+    @if (delivery()) {
     <div class="md:col-span-3 flex flex-col gap-6">
       <div class="">
-        <!-- <app-shipping-form></app-shipping-form> -->
-        <!-- <app-payment-form class="mx-4"></app-payment-form> -->
-        <app-location class=""></app-location>
+        <app-shipping-form></app-shipping-form>
+        <app-payment-form class="mx-4"></app-payment-form>
       </div>
     </div>
-    
     <div class="md:col-span-2 flex flex-col gap-5">
-
-      <app-collection-details class=""></app-collection-details>
-
       <app-summarize-order>
         <ng-container actionButtons>
           @for (item of store.cartItems(); track item.product.id) {
-            <div class="flex text-sm justify-between">
-              <span>{{ item.product.name }} x {{ item.quantity }}</span>
-              <span>{{ (item.product.price * item.quantity) | currency }}</span>
-            </div>
-            
+          <div class="flex text-sm justify-between">
+            <span>{{ item.product.name }} x {{ item.quantity }}</span>
+            <span>{{ (item.product.price * item.quantity) | currency }}</span>
+          </div>
           }
         </ng-container>
 
         <ng-container actionButtons>
-          
-          <button matButton="filled" class="w-full mt-6 py-3"
-            [disabled]="store.loading()"
-            (click)="store.placeOrder()">
+          <button matButton="filled" class="w-full mt-6 py-3" [disabled]="store.loading()" (click)="store.placeOrder()">
             {{ store.loading() ? 'Processing...' : 'Place Order' }}
           </button>
         </ng-container>
       </app-summarize-order>
-
     </div>
+    }
+    @else {
+    <div class="md:col-span-3 flex flex-col gap-6">
+      <div class="">
+        <app-location class=""></app-location>
+      </div>
+    </div>
+    <div class="md:col-span-2 flex flex-col gap-5">
+      <app-collection-details class=""></app-collection-details>
+      <app-summarize-order>
+        <ng-container actionButtons>
+          @for (item of store.cartItems(); track item.product.id) {
+          <div class="flex text-sm justify-between">
+            <span>{{ item.product.name }} x {{ item.quantity }}</span>
+            <span>{{ (item.product.price * item.quantity) | currency }}</span>
+          </div>
+          }
+        </ng-container>
+
+        <ng-container actionButtons>
+          <button matButton="filled" class="w-full mt-6 py-3" [disabled]="store.loading()" (click)="store.placeOrder()">
+            {{ store.loading() ? 'Processing...' : 'Place Order' }}
+          </button>
+        </ng-container>
+      </app-summarize-order>
+    </div>
+    }
 
   </div>
 

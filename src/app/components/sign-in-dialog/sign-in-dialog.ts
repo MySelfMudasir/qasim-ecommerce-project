@@ -64,6 +64,7 @@ export class SignInDialog {
       email,
       password,
       dialogId: this.dialogRef.id,
+      delivery: true
     } as SignInParams);
   }
 
