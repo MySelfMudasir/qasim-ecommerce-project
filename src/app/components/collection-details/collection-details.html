@@ -9,14 +9,13 @@
 
         <div class="border rounded-xl p-3" style="background-color: var(--app-surface); border-color: var(--app-border);">
             <h2 class="text-sm md:text-xl font-bold mb-3">Choose your collection date</h2>
-            <app-collection-date></app-collection-date>
+            <app-collection-date [control]="collectionDateControl"></app-collection-date>
         </div>
 
         <div class="border rounded-xl p-3" style="background-color: var(--app-surface); border-color: var(--app-border);">
             <h2 class="text-sm md:text-xl font-bold mb-3">Choose your collection time</h2>
-            <app-collection-time></app-collection-time>
+            <app-collection-time [control]="collectionTimeControl"></app-collection-time>
         </div>
     </div>
-
 
 </div>

@@ -3,32 +3,30 @@
         <mat-icon>local_shipping</mat-icon>
         Shipping Information
     </h2>
-    <form class="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <mat-form-field appearance="outline" class="col-span-2 md:col-span-1">
-            <input matInput type="text" placeholder="First Name" />
+    <div [formGroup]="group()" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <mat-form-field appearance="outline">
+            <mat-label>First Name</mat-label>
+            <input matInput formControlName="firstName">
         </mat-form-field>
-        <mat-form-field appearance="outline" class="col-span-2 md:col-span-1">
-            <input matInput type="text" placeholder="Last Name" />
+
+        <mat-form-field appearance="outline">
+            <mat-label>Last Name</mat-label>
+            <input matInput formControlName="lastName">
         </mat-form-field>
-        <mat-form-field class="col-span-2" appearance="outline">
-            <input matInput type="text" placeholder="Address" />
+
+        <mat-form-field appearance="outline" class="md:col-span-2">
+            <mat-label>Address</mat-label>
+            <input matInput formControlName="address">
         </mat-form-field>
-        <mat-form-field appearance="outline" class="col-span-2 md:col-span-1">
+
+        <mat-form-field appearance="outline">
             <mat-label>City</mat-label>
-            <mat-select>
-                <mat-option value="lahore">Lahore</mat-option>
-                <mat-option value="karachi">Karachi</mat-option>
-                <mat-option value="islamabad">Islamabad</mat-option>
-                <mat-option value="faisalabad">Faisalabad</mat-option>
-                <mat-option value="multan">Multan</mat-option>
-                <mat-option value="rawalpindi">Rawalpindi</mat-option>
-            </mat-select>
+            <input matInput formControlName="city">
         </mat-form-field>
-        <mat-form-field appearance="outline" class="col-span-2 md:col-span-1">
-            <input matInput type="text" placeholder="State" />
+
+        <mat-form-field appearance="outline">
+            <mat-label>Zip Code</mat-label>
+            <input matInput formControlName="zipCode">
         </mat-form-field>
-        <mat-form-field class="col-span-2" appearance="outline">
-            <input matInput type="text" placeholder="Zip" />
-        </mat-form-field>
-    </form>
+    </div>
 </div>

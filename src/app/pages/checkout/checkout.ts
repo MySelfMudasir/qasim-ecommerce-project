@@ -1,8 +1,8 @@
-import { Component, computed, inject, signal, effect, untracked } from '@angular/core';
-import { CommonModule, formatDate } from '@angular/common';
-import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Component, inject, signal } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { NonNullableFormBuilder, ReactiveFormsModule, Validators, FormControl } from '@angular/forms';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { skip } from 'rxjs';
+import { merge } from 'rxjs';
 
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -13,9 +13,10 @@ import { MatSelectModule } from '@angular/material/select';
 import { EcommerceStore } from '../../ecommerce-store';
 import { BackButton } from '../../components/back-button/back-button';
 import { SummarizeOrder } from '../../components/summarize-order/summarize-order';
-import { Location } from "../../components/location/location";
 import { CollectionDate } from '../../components/collection-date/collection-date';
 import { CollectionTime } from '../../components/collection-time/collection-time';
+import { ShippingForm } from '../shipping-form/shipping-form';
+import { ShippingModel } from '../../models/checkout';
 
 @Component({
   selector: 'app-checkout',
@@ -30,121 +31,128 @@ import { CollectionTime } from '../../components/collection-time/collection-time
     MatInputModule,
     MatSelectModule,
     SummarizeOrder,
-    Location,
     CollectionDate,
     CollectionTime,
+    ShippingForm,
   ],
   templateUrl: './checkout.html',
   styleUrl: './checkout.scss',
 })
 export class Checkout {
-  private readonly defaultLocation = 'Khyber Foods LTD, Unit C Doris Rd, Birmingham B9 4SJ, UK';
-  
+  readonly defaultLocation = 'Khyber Foods LTD, Unit C Doris Rd, Birmingham B9 4SJ, UK';
+
   store = inject(EcommerceStore);
   fb = inject(NonNullableFormBuilder);
 
-  // Local signal to track UI state, initialized from store
-  checkoutMode = signal<'delivery' | 'collection'>(this.store.checkout().mode || 'collection');
+  checkoutMode = signal<'delivery' | 'collection'>(
+    this.store.checkout().mode || 'collection'
+  );
 
-  // Define Form Groups
+  // ── Shipping group — mirrors ShippingModel exactly ────────────────────────
   shippingGroup = this.fb.group({
-    firstName: ['1234', Validators.required],
-    lastName: ['123', Validators.required],
-    address: ['123', Validators.required],
-    city: ['123', Validators.required],
-    state: ['123', Validators.required],
-    zipCode: ['1234', [Validators.required, Validators.minLength(4)]],
+    firstName:     ['', Validators.required],
+    lastName:      ['', Validators.required],
+    address:       ['', Validators.required],
+    city:          ['', Validators.required],
+    state:         ['', Validators.required],
+    zipCode:       ['', [Validators.required, Validators.minLength(4)]],
+    paymentMethod: ['cashOnDelivery' as ShippingModel['paymentMethod'], Validators.required],
   });
 
+  // ── Collection group ──────────────────────────────────────────────────────
   collectionGroup = this.fb.group({
     collectionLocation: [this.defaultLocation, Validators.required],
-    collectionDate: ['', Validators.required],
-    collectionTime: ['', Validators.required],
+    collectionDate:     new FormControl<Date | null>(null, Validators.required),
+    collectionTime:     new FormControl<Date | null>(null, Validators.required),
   });
 
+  // ── Payment group ─────────────────────────────────────────────────────────
   checkoutForm = this.fb.group({
-    shipping: this.shippingGroup,
-    collection: this.collectionGroup,
     paymentMethod: ['cashOnDelivery', Validators.required],
   });
 
+  // Typed control accessors for template
+  get collectionDateControl(): FormControl {
+    return this.collectionGroup.controls.collectionDate as FormControl;
+  }
 
-constructor() {
-  this.applyMode(this.checkoutMode());
+  get collectionTimeControl(): FormControl {
+    return this.collectionGroup.controls.collectionTime as FormControl;
+  }
 
-  // 1. Sync Store -> Form (One-way)
-  effect(() => {
-    const checkoutData = this.store.checkout();
-    
-    // We use untracked to ensure we don't accidentally subscribe to 
-    // form-related signals if there were any
-    untracked(() => {
-      this.collectionGroup.patchValue({
-        collectionDate: checkoutData.collectionDate ? 
-          (checkoutData.collectionDate instanceof Date ? 
-            checkoutData.collectionDate.toISOString() : 
-            new Date(checkoutData.collectionDate).toISOString()) 
-          : '',
-        collectionTime: checkoutData.collectionTime || ''
-      }, { emitEvent: false }); // CRITICAL: emitEvent false breaks the loop
-      
-      // Update validity manually since we suppressed the event
-      this.collectionGroup.get('collectionDate')?.updateValueAndValidity({ emitEvent: false });
-      this.collectionGroup.get('collectionTime')?.updateValueAndValidity({ emitEvent: false });
+  constructor() {
+    // 1. Restore persisted state
+    const saved = this.store.checkout();
+
+    this.shippingGroup.patchValue({
+      ...(saved.shipping ?? {}),
     });
-  });
 
-  // 2. Sync Form -> Store
-  this.checkoutForm.valueChanges
-    .pipe(takeUntilDestroyed(), skip(1))
-    .subscribe(() => {
-      this.syncStoreFromForm();
+    this.collectionGroup.patchValue({
+      collectionLocation: saved.collectionLocation ?? this.defaultLocation,
+      collectionDate: saved.collectionDate ? new Date(saved.collectionDate) : null,
+      collectionTime: saved.collectionTime ? new Date(saved.collectionTime as string) : null,
     });
-}
+
+    // 2. Apply initial mode
+    this.applyMode(this.checkoutMode());
+
+    // 3. Form → store sync
+    merge(
+      this.shippingGroup.valueChanges,
+      this.collectionGroup.valueChanges,
+      this.checkoutForm.valueChanges,
+    )
+      .pipe(takeUntilDestroyed())
+      .subscribe(() => this.syncStoreFromForm());
+  }
 
   get isDeliveryMode(): boolean {
     return this.checkoutMode() === 'delivery';
   }
 
-  toggleCheckoutMode() {
+  toggleCheckoutMode(): void {
     const newMode = this.isDeliveryMode ? 'collection' : 'delivery';
     this.checkoutMode.set(newMode);
     this.applyMode(newMode);
     this.store.updateCheckout({ mode: newMode });
   }
 
-private applyMode(mode: 'delivery' | 'collection') {
-  if (mode === 'delivery') {
-    this.shippingGroup.enable({ emitEvent: false });
-    this.collectionGroup.disable({ emitEvent: false });
-    // Clear collection errors so they don't block the parent form
-    this.collectionGroup.reset(this.collectionGroup.getRawValue(), {emitEvent: false});
-  } else {
-    this.shippingGroup.disable({ emitEvent: false });
-    this.collectionGroup.enable({ emitEvent: false });
-    this.shippingGroup.reset(this.shippingGroup.getRawValue(), {emitEvent: false});
+  private applyMode(mode: 'delivery' | 'collection'): void {
+    if (mode === 'delivery') {
+      this.shippingGroup.enable();
+      this.collectionGroup.disable();
+    } else {
+      this.shippingGroup.disable();
+      this.collectionGroup.enable();
+    }
   }
-  this.checkoutForm.updateValueAndValidity(); // Force parent to re-check
-}
 
-  private syncStoreFromForm() {
-    const rawValues = this.checkoutForm.getRawValue();
+  private syncStoreFromForm(): void {
+    const mode = this.checkoutMode();
+    const collectionRaw = this.collectionGroup.getRawValue();
+    const shippingRaw   = this.shippingGroup.getRawValue();
+
     this.store.updateCheckout({
-      mode: this.checkoutMode(),
-      shipping: this.isDeliveryMode ? {
-        ...rawValues.shipping,
-        paymentMethod: rawValues.paymentMethod as any
-      } : undefined,
-      collectionLocation: !this.isDeliveryMode ? rawValues.collection.collectionLocation : undefined,
-      collectionDate: !this.isDeliveryMode ? new Date(rawValues.collection.collectionDate) : undefined,
-      collectionTime: !this.isDeliveryMode ? rawValues.collection.collectionTime : undefined
+      mode,
+      shipping:           mode === 'delivery'   ? (shippingRaw as ShippingModel) : null,
+      collectionDate:     mode === 'collection' ? (collectionRaw.collectionDate as unknown as Date) : null,
+      collectionTime:     mode === 'collection' ? (collectionRaw.collectionTime as unknown as string) : null,
+      collectionLocation: collectionRaw.collectionLocation,
     });
   }
 
-  submitCheckout() {
-    this.checkoutForm.markAllAsTouched();
-    if (this.checkoutForm.valid) {
+  submitCheckout(): void {
+    const activeGroupValid = this.isDeliveryMode
+      ? this.shippingGroup.valid
+      : this.collectionGroup.valid;
+
+    if (this.checkoutForm.valid && activeGroupValid) {
       this.store.placeOrder();
+    } else {
+      this.checkoutForm.markAllAsTouched();
+      this.shippingGroup.markAllAsTouched();
+      this.collectionGroup.markAllAsTouched();
     }
   }
 }

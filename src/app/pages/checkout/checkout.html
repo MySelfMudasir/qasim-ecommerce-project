@@ -13,48 +13,45 @@
     </button>
   </div>
 
-  <form [formGroup]="checkoutForm" (ngSubmit)="submitCheckout()" class="grid grid-cols-1 gap-6 lg:grid-cols-5">
+  <form (ngSubmit)="submitCheckout()" class="grid grid-cols-1 gap-6 lg:grid-cols-5">
     <div class="lg:col-span-3 flex flex-col gap-6">
 
+      <!-- ── DELIVERY ──────────────────────────────────────────────────── -->
       @if (isDeliveryMode) {
-      <section class="rounded-xl border border-slate-200 p-6">
-        <div class="flex items-center gap-2 mb-4">
-          <mat-icon>local_shipping</mat-icon>
-          <h2 class="text-2xl font-bold">Shipping Information</h2>
-        </div>
+        <section class="rounded-xl border border-slate-200 p-6">
+          <div class="flex items-center gap-2 mb-4">
+            <mat-icon>local_shipping</mat-icon>
+            <h2 class="text-2xl font-bold">Shipping Information</h2>
+          </div>
+          <app-shipping-form [group]="shippingGroup"></app-shipping-form>
+        </section>
 
-        <div formGroupName="shipping" class="grid gap-4 sm:grid-cols-2">
-          <mat-form-field appearance="outline">
-            <mat-label>First Name</mat-label>
-            <input matInput formControlName="firstName">
-          </mat-form-field>
+      <!-- ── COLLECTION ────────────────────────────────────────────────── -->
+      } @else {
+        <section class="rounded-xl border border-slate-200 p-6">
+          <div class="flex items-center gap-2 mb-4">
+            <mat-icon>storefront</mat-icon>
+            <h2 class="text-2xl font-bold">Collection Details</h2>
+          </div>
 
-          <mat-form-field appearance="outline">
-            <mat-label>Last Name</mat-label>
-            <input matInput formControlName="lastName">
-          </mat-form-field>
+          <div class="grid gap-4">
+            <!-- Read-only location -->
+            <mat-form-field appearance="outline" class="w-full">
+              <mat-label>Location</mat-label>
+              <input matInput [value]="defaultLocation" readonly>
+            </mat-form-field>
 
-          <mat-form-field appearance="outline" class="sm:col-span-2">
-            <mat-label>Street Address</mat-label>
-            <input matInput formControlName="address">
-          </mat-form-field>
+            <!-- Date & Time side by side on md+ -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <app-collection-date [control]="collectionDateControl"></app-collection-date>
+              <app-collection-time [control]="collectionTimeControl"></app-collection-time>
+            </div>
+          </div>
+        </section>
+      }
 
-          <mat-form-field appearance="outline">
-            <mat-label>City</mat-label>
-            <mat-select formControlName="city">
-              <mat-option value="Lahore">Lahore</mat-option>
-              <mat-option value="Birmingham">Birmingham</mat-option>
-            </mat-select>
-          </mat-form-field>
-
-          <mat-form-field appearance="outline">
-            <mat-label>Zip Code</mat-label>
-            <input matInput formControlName="zipCode">
-          </mat-form-field>
-        </div>
-      </section>
-
-      <section class="rounded-xl border border-slate-200 p-6">
+      <!-- ── PAYMENT ────────────────────────────────────────────────────── -->
+      <section class="rounded-xl border border-slate-200 p-6" [formGroup]="checkoutForm">
         <h2 class="text-xl font-bold mb-4">Payment</h2>
         <mat-form-field appearance="outline" class="w-full">
           <mat-label>Payment Method</mat-label>
@@ -64,47 +61,16 @@
           </mat-select>
         </mat-form-field>
       </section>
-      }
-
-      @else {
-      <section class="rounded-xl border border-slate-200 p-6">
-        <div class="flex items-center gap-2 mb-4">
-          <mat-icon>storefront</mat-icon>
-          <h2 class="text-2xl font-bold">Collection Details</h2>
-        </div>
-
-        <div [formGroup]="collectionGroup" class="grid gap-4">
-          <mat-form-field appearance="outline" class="w-full">
-            <mat-label>Collection Location</mat-label>
-            <input matInput formControlName="collectionLocation" readonly class="bg-gray-50">
-          </mat-form-field>
-
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <app-collection-date></app-collection-date>
-            <app-collection-time></app-collection-time>
-          </div>
-
-          <input type="hidden" formControlName="collectionDate">
-          <input type="hidden" formControlName="collectionTime">
-        </div>
-      </section>
-
-      <section class="rounded-xl border border-slate-200 p-6">
-        <div class="flex items-center gap-2 mb-4">
-          <mat-icon>location_on</mat-icon>
-          <h2 class="text-xl font-bold">Map View</h2>
-        </div>
-        <app-location></app-location>
-      </section>
-      }
     </div>
 
+    <!-- ── ORDER SUMMARY ─────────────────────────────────────────────────── -->
     <div class="lg:col-span-2">
       <app-summarize-order>
         <ng-container actionButtons>
-          <button mat-flat-button color="primary" class="mt-6 w-full py-6 text-lg" type="submit" [disabled]="store.loading() || 
-             (isDeliveryMode ? shippingGroup.invalid : collectionGroup.invalid) || 
-             checkoutForm.get('paymentMethod')?.invalid">
+          <button mat-flat-button color="primary"
+            class="mt-6 w-full py-6 text-lg"
+            type="submit"
+            [disabled]="store.loading() || (isDeliveryMode ? shippingGroup.invalid : collectionGroup.invalid)">
             {{ store.loading() ? 'Processing...' : 'Place Order' }}
           </button>
         </ng-container>
