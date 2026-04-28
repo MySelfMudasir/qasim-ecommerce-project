@@ -1,77 +1,114 @@
 <div class="mx-auto w-full max-w-300 px-4 py-6 sm:px-6 lg:px-8">
   <app-back-button class="mb-6 block" navigateTo="/cart">Back to Cart</app-back-button>
-  <h1 class="mb-4 text-3xl font-extrabold">Checkout</h1>
 
- @if (store.checkout().mode === 'delivery') {
-    <div class="mb-6 rounded border-l-4 border-yellow-500 bg-yellow-100 p-4 text-yellow-700" role="alert">
-      <p class="font-bold">Delivery Notice</p>
-      <p>
-        Since you have delivery enabled, please ensure your address is correct. Delivery times may vary based on your
-        location.
-      </p>
+  <div class="mb-6 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+    <div>
+      <h1 class="text-3xl font-extrabold">Checkout</h1>
+      <p class="mt-1 text-sm text-slate-500">Select how you want to receive your order.</p>
     </div>
-  }
 
-  <div class="grid grid-cols-1 gap-6 lg:grid-cols-5">
-    @if (store.checkout().mode === 'delivery') {
-      <div class="lg:col-span-3 flex flex-col gap-6">
-        <app-shipping-form></app-shipping-form>
-        <app-payment-form></app-payment-form>
-      </div>
-
-      <div class="lg:col-span-2 flex flex-col gap-5">
-        <app-summarize-order>
-          <ng-container actionButtons>
-            @for (item of store.cartItems(); track item.product.id) {
-              <div class="flex justify-between text-sm">
-                <span>{{ item.product.name }} x {{ item.quantity }}</span>
-                <span>{{ (item.product.price * item.quantity) | currency }}</span>
-              </div>
-            }
-          </ng-container>
-
-          <ng-container actionButtons>
-            <button
-              matButton="filled"
-              class="mt-6 w-full py-3"
-              [disabled]="store.loading()"
-              (click)="store.placeOrder()"
-            >
-              {{ store.loading() ? 'Processing...' : 'Place Order' }}
-            </button>
-          </ng-container>
-        </app-summarize-order>
-      </div>
-    } @else {
-      <div class="lg:col-span-3 flex flex-col gap-6">
-        <app-location></app-location>
-      </div>
-
-      <div class="lg:col-span-2 flex flex-col gap-5">
-        <app-collection-details></app-collection-details>
-
-        <app-summarize-order>
-          <ng-container actionButtons>
-            @for (item of store.cartItems(); track item.product.id) {
-              <div class="flex justify-between text-sm">
-                <span>{{ item.product.name }} x {{ item.quantity }}</span>
-                <span>{{ (item.product.price * item.quantity) | currency }}</span>
-              </div>
-            }
-          </ng-container>
-
-          <ng-container actionButtons>
-            <button
-              matButton="filled"
-              class="mt-6 w-full py-3"
-              [disabled]="store.loading()"
-              (click)="store.placeOrder()"
-            >
-              {{ store.loading() ? 'Processing...' : 'Place Order' }}
-            </button>
-          </ng-container>
-        </app-summarize-order>
-      </div>
-    }
+    <button type="button" (click)="toggleCheckoutMode()" mat-stroked-button class="flex items-center gap-2">
+      <mat-icon>swap_horiz</mat-icon>
+      Switch to {{ isDeliveryMode ? 'Collection' : 'Delivery' }}
+    </button>
   </div>
+
+  <form [formGroup]="checkoutForm" (ngSubmit)="submitCheckout()" class="grid grid-cols-1 gap-6 lg:grid-cols-5">
+    <div class="lg:col-span-3 flex flex-col gap-6">
+
+      @if (isDeliveryMode) {
+      <section class="rounded-xl border border-slate-200 p-6">
+        <div class="flex items-center gap-2 mb-4">
+          <mat-icon>local_shipping</mat-icon>
+          <h2 class="text-2xl font-bold">Shipping Information</h2>
+        </div>
+
+        <div formGroupName="shipping" class="grid gap-4 sm:grid-cols-2">
+          <mat-form-field appearance="outline">
+            <mat-label>First Name</mat-label>
+            <input matInput formControlName="firstName">
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Last Name</mat-label>
+            <input matInput formControlName="lastName">
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="sm:col-span-2">
+            <mat-label>Street Address</mat-label>
+            <input matInput formControlName="address">
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>City</mat-label>
+            <mat-select formControlName="city">
+              <mat-option value="Lahore">Lahore</mat-option>
+              <mat-option value="Birmingham">Birmingham</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Zip Code</mat-label>
+            <input matInput formControlName="zipCode">
+          </mat-form-field>
+        </div>
+      </section>
+
+      <section class="rounded-xl border border-slate-200 p-6">
+        <h2 class="text-xl font-bold mb-4">Payment</h2>
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label>Payment Method</mat-label>
+          <mat-select formControlName="paymentMethod">
+            <mat-option value="cashOnDelivery">Cash on Delivery</mat-option>
+            <mat-option value="creditCard">Credit Card</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </section>
+      }
+
+      @else {
+      <section class="rounded-xl border border-slate-200 p-6">
+        <div class="flex items-center gap-2 mb-4">
+          <mat-icon>storefront</mat-icon>
+          <h2 class="text-2xl font-bold">Collection Details</h2>
+        </div>
+
+        <div [formGroup]="collectionGroup" class="grid gap-4">
+          <mat-form-field appearance="outline" class="w-full">
+            <mat-label>Collection Location</mat-label>
+            <input matInput formControlName="collectionLocation" readonly class="bg-gray-50">
+          </mat-form-field>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <app-collection-date></app-collection-date>
+            <app-collection-time></app-collection-time>
+          </div>
+
+          <input type="hidden" formControlName="collectionDate">
+          <input type="hidden" formControlName="collectionTime">
+        </div>
+      </section>
+
+      <section class="rounded-xl border border-slate-200 p-6">
+        <div class="flex items-center gap-2 mb-4">
+          <mat-icon>location_on</mat-icon>
+          <h2 class="text-xl font-bold">Map View</h2>
+        </div>
+        <app-location></app-location>
+      </section>
+      }
+    </div>
+
+    <div class="lg:col-span-2">
+      <app-summarize-order>
+        <ng-container actionButtons>
+          <button mat-flat-button color="primary" class="mt-6 w-full py-6 text-lg" type="submit" [disabled]="store.loading() || 
+             (isDeliveryMode ? shippingGroup.invalid : collectionGroup.invalid) || 
+             checkoutForm.get('paymentMethod')?.invalid">
+            {{ store.loading() ? 'Processing...' : 'Place Order' }}
+          </button>
+        </ng-container>
+      </app-summarize-order>
+    </div>
+  </form>
 </div>

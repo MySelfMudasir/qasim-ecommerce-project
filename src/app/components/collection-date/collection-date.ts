@@ -21,17 +21,24 @@ export class CollectionDate {
   store = inject(EcommerceStore);
   
   ngOnInit() {
-    this.store.updateCheckout({
-      collectionDate: this.collectionDate() || new Date(),
-    });
+    // Initialize from store if available
+    const existing = this.store.checkout().collectionDate;
+    console.log('CollectionDate ngOnInit, store value:', existing);
+    if (existing) {
+      this.collectionDate.set(existing instanceof Date ? existing : new Date(existing));
+    } else {
+      // persist default date
+      this.store.updateCheckout({ collectionDate: this.collectionDate() });
+    }
   }
 
-  onChange(date: Date | null) {
-    if (!date) return;
-    this.store.updateCheckout({
-      collectionDate: date,
-    });
-  }
+
+onChange(date: Date | null) {
+  if (!date) return;
+  this.collectionDate.set(date);
+  // This updates the global store
+  this.store.updateCheckout({ collectionDate: date });
+}
 
 
 
