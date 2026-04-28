@@ -64,7 +64,7 @@ export class SignInDialog {
       email,
       password,
       dialogId: this.dialogRef.id,
-      delivery: true
+      checkoutmode: this.store.user()?.checkoutMode ?? { mode: 'collection' },
     } as SignInParams);
   }
 

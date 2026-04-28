@@ -9,6 +9,7 @@ import { CommonModule } from '@angular/common';
 import { Location } from "../../components/location/location";
 import { ViewPanel } from "../../directives/view-panel";
 import { CollectionDetails } from "../../components/collection-details/collection-details";
+import { CheckoutModel } from '../../models/checkout';
 
 @Component({
   selector: 'app-checkout',
@@ -19,12 +20,9 @@ import { CollectionDetails } from "../../components/collection-details/collectio
 })
 export class Checkout {
 store = inject(EcommerceStore);
-delivery = signal<boolean>(false);
 
 constructor() {
-  effect(() => {
-    this.delivery.set(this.store.user()?.delivery ?? false);
-  })
+  // console.log(this.store.checkout());
 }
 
 

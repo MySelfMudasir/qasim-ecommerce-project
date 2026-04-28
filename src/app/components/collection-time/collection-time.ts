@@ -20,7 +20,9 @@ export class CollectionTime {
   onChange(value: unknown) {
     if (!(value instanceof Date)) return;
     const time = value.toTimeString().slice(0, 5); // "HH:mm"
-    this.store.setCollectionTime(time);
+    this.store.updateCheckout({
+      collectionTime: time,
+    });
   }
 
 

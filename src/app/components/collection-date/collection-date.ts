@@ -21,12 +21,16 @@ export class CollectionDate {
   store = inject(EcommerceStore);
   
   ngOnInit() {
-    this.store.setCollectionDate(this.collectionDate() || new Date());
+    this.store.updateCheckout({
+      collectionDate: this.collectionDate() || new Date(),
+    });
   }
 
   onChange(date: Date | null) {
     if (!date) return;
-    this.store.setCollectionDate(date);
+    this.store.updateCheckout({
+      collectionDate: date,
+    });
   }
 
 

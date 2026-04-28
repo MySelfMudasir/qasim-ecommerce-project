@@ -2,7 +2,7 @@
   <app-back-button class="mb-6 block" navigateTo="/cart">Back to Cart</app-back-button>
   <h1 class="mb-4 text-3xl font-extrabold">Checkout</h1>
 
-  @if (delivery()) {
+ @if (store.checkout().mode === 'delivery') {
     <div class="mb-6 rounded border-l-4 border-yellow-500 bg-yellow-100 p-4 text-yellow-700" role="alert">
       <p class="font-bold">Delivery Notice</p>
       <p>
@@ -13,7 +13,7 @@
   }
 
   <div class="grid grid-cols-1 gap-6 lg:grid-cols-5">
-    @if (delivery()) {
+    @if (store.checkout().mode === 'delivery') {
       <div class="lg:col-span-3 flex flex-col gap-6">
         <app-shipping-form></app-shipping-form>
         <app-payment-form></app-payment-form>

@@ -20,6 +20,9 @@ import { withStorageSync } from '@angular-architects/ngrx-toolkit';
 import { AddReviewParams, UserReviewModel } from './models/user-review';
 import { SearchLoadingService } from './services/search-loading';
 import { SeoManager } from './services/seo-manager';
+import { Checkout } from './pages/checkout/checkout';
+import { CheckoutModel } from './models/checkout';
+import { formatDate } from '@angular/common';
 
 export type EcommerceState = {
   products: ProductModel[];
@@ -35,9 +38,7 @@ export type EcommerceState = {
   preLoader: boolean;
   searchLoading: boolean;
   searchedProduct: string;
-  collectionLocation: string | null;
-  collectionDate: Date | null;
-  collectionTime: string | null;
+  checkout: CheckoutModel;
 };
 
 const LOGOUT_STATE: Partial<EcommerceState> = {
@@ -423,9 +424,13 @@ export const EcommerceStore = signalStore(
     preLoader: false,
     searchLoading: false,
     searchedProduct: '',
-    collectionLocation: 'Khyber Foods LTD',
-    collectionDate: null,
-    collectionTime: null,
+    checkout: {
+      mode: 'collection', // default
+      collectionLocation: 'Khyber Foods LTD',
+      collectionDate: null,
+      collectionTime: null,
+      shipping: null,
+    } as CheckoutModel,
   } as EcommerceState),
 
   // withStorageSync({
@@ -518,7 +523,7 @@ export const EcommerceStore = signalStore(
           seoManager.updateSeoTags({
             title: product.name,
             description: product.description,
-            image: product.imageUrl,  // ← ADD THIS — was missing!
+            image: product.imageUrl, // ← ADD THIS — was missing!
             type: 'product',
           });
         }
@@ -680,35 +685,49 @@ export const EcommerceStore = signalStore(
         router.navigate(['/checkout']);
       },
 
-      setCollectionLocation: signalMethod<string>((location) => {
-        patchState(store, { collectionLocation: location });
-      }),
-
-      setCollectionDate: signalMethod<Date>((date) => {
-        patchState(store, { collectionDate: date });
-      }),
-
-      setCollectionTime: signalMethod<string>((time) => {
-        patchState(store, { collectionTime: time });
+      updateCheckout: signalMethod<Partial<CheckoutModel>>((payload) => {
+        patchState(store, {
+          checkout: {
+            ...store.checkout(),
+            ...payload,
+          },
+        });
       }),
 
       placeOrder: async () => {
         patchState(store, { loading: true });
+
         const user = store.user();
+        const checkout = store.checkout();
+
         if (!user) {
           toaster.error('Please sign in to place the order');
           patchState(store, { loading: false });
           return;
         }
-        if (store.collectionDate() === null || store.collectionTime() === null) {
-          toaster.error('Please select collection date and time');
-          patchState(store, { loading: false });
-          return;
+
+        console.log(checkout);
+        
+        // DELIVERY
+        if (checkout.mode === 'delivery') {
+          if (!checkout.shipping) {
+            toaster.error('Please fill shipping details');
+            patchState(store, { loading: false });
+            return;
+          }
+        } else {
+          if (!checkout.collectionDate || !checkout.collectionTime) {
+            toaster.error('Please select collection date and time');
+            patchState(store, { loading: false });
+            return;
+          }
         }
 
-        const date = store.collectionDate();
+        const date = checkout.collectionDate;
         const formattedDate = date
-          ? `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`
+          ? `${date.getFullYear()}-${(date.getMonth() + 1)
+              .toString()
+              .padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`
           : '';
 
         const order: orderModel = {
@@ -718,29 +737,38 @@ export const EcommerceStore = signalStore(
             store.cartItems().reduce((acc, item) => acc + item.product.price * item.quantity, 0),
           ),
           items: store.cartItems(),
-          shippingAddress: '123 Main St, Anytown, USA',
-          collectionLocation: store.collectionLocation()!,
-          collectionDate: formattedDate,
-          collectionTime: store.collectionTime() || '',
+
+          shippingAddress: checkout.mode === 'delivery' ? checkout.shipping?.address || '' : '',
+
+          collectionLocation:
+            checkout.mode === 'collection' ? checkout.collectionLocation || '' : '',
+
+          collectionDate:
+            checkout.mode === 'collection' && checkout.collectionDate
+              ? formatDate(checkout.collectionDate, 'yyyy-MM-dd', 'en-US')
+              : '',
+
+          collectionTime: checkout.mode === 'collection' ? checkout.collectionTime || '' : '',
+
           paymentStatus: 'success',
         };
 
         await new Promise((res) => setTimeout(res, 2000));
-        console.log('Order placed:', order);
+
         patchState(store, { loading: false, cartItems: [] });
         router.navigate(['/order-success']);
         toaster.success('Order placed successfully!');
       },
 
-      signUp: ({ email, checkout, dialogId, redirectUrl, delivery }: SignInParams) => {
-        // console.log('Signing in with', { email, checkout, dialogId, redirectUrl, delivery });
+      signUp: ({ email, checkout, dialogId, redirectUrl }: SignInParams) => {
+        // console.log('Signing up with', { email, checkout, dialogId, redirectUrl });
         patchState(store, {
           user: {
             id: crypto.randomUUID(),
             name: email.split('@')[0],
             email,
             imageUrl: 'https://randomuser.me/api/portraits/men/1.jpg',
-            delivery: delivery ?? false,
+            checkoutMode: { mode: 'delivery' },
           },
         });
 
@@ -754,19 +782,27 @@ export const EcommerceStore = signalStore(
         }
       },
 
-      signIn: ({ email, checkout, dialogId, redirectUrl, delivery }: SignInParams) => {
-        // console.log('Signing in with', { email, checkout, dialogId, redirectUrl, delivery });
+      signIn: ({ email, checkout, dialogId, redirectUrl }: SignInParams) => {
+      // console.log('Signing in with', { email, checkout, dialogId, redirectUrl });  
+        const mode: CheckoutModel['mode'] = 'collection';
+
         patchState(store, {
           user: {
             id: '1',
             name: 'John Doe',
             email: email,
             imageUrl: 'https://randomuser.me/api/portraits/men/1.jpg',
-            delivery: delivery ?? false,
+            checkoutMode: { mode: 'collection' },
+          },
+          checkout: {
+            ...store.checkout(),
+            mode,
           },
         });
+
         toaster.success(`Signed in as ${email}`);
-        const dialog = matDialog.getDialogById(dialogId)?.close();
+        matDialog.getDialogById(dialogId)?.close();
+
         if (checkout) {
           router.navigate(['/checkout']);
         } else if (redirectUrl) {

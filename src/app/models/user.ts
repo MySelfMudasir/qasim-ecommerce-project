@@ -1,9 +1,11 @@
+import { CheckoutModel } from "./checkout";
+
 export type UserModel = {
     id: string;
     email: string;
     name: string;
     imageUrl: string;
-    delivery?: boolean;
+    checkoutMode: CheckoutModel;
 }
 
 export type SignUpParams = {
@@ -13,7 +15,7 @@ export type SignUpParams = {
     checkout?: boolean;
     dialogId: string;
     redirectUrl?: string;
-    delivery?: boolean;
+    checkoutmode: CheckoutModel;
 }
 
 export type SignInParams =  {
@@ -23,5 +25,5 @@ export type SignInParams =  {
     checkout?: boolean;
     dialogId: string;
     redirectUrl?: string;
-    delivery?: boolean;
+    checkoutmode: CheckoutModel;
 }
