@@ -41,6 +41,17 @@ import { ShippingModel } from '../../models/checkout';
 export class Checkout {
   readonly defaultLocation = 'Khyber Foods LTD, Unit C Doris Rd, Birmingham B9 4SJ, UK';
 
+  // Pre-fill defaults so the form is valid as soon as it's enabled
+  private readonly defaultShipping = {
+    firstName:     'John',
+    lastName:      'Doe',
+    address:       '123 Main St',
+    city:          'Birmingham',
+    state:         'West Midlands',
+    zipCode:       'B9 4SJ',
+    paymentMethod: 'cashOnDelivery' as ShippingModel['paymentMethod'],
+  };
+
   store = inject(EcommerceStore);
   fb = inject(NonNullableFormBuilder);
 
@@ -48,15 +59,15 @@ export class Checkout {
     this.store.checkout().mode || 'collection'
   );
 
-  // ── Shipping group — mirrors ShippingModel exactly ────────────────────────
+  // ── Shipping group — pre-filled with defaults so it's valid on enable ─────
   shippingGroup = this.fb.group({
-    firstName:     ['', Validators.required],
-    lastName:      ['', Validators.required],
-    address:       ['', Validators.required],
-    city:          ['', Validators.required],
-    state:         ['', Validators.required],
-    zipCode:       ['', [Validators.required, Validators.minLength(4)]],
-    paymentMethod: ['cashOnDelivery' as ShippingModel['paymentMethod'], Validators.required],
+    firstName:     [this.defaultShipping.firstName,     Validators.required],
+    lastName:      [this.defaultShipping.lastName,      Validators.required],
+    address:       [this.defaultShipping.address,       Validators.required],
+    city:          [this.defaultShipping.city,          Validators.required],
+    state:         [this.defaultShipping.state,         Validators.required],
+    zipCode:       [this.defaultShipping.zipCode,       [Validators.required, Validators.minLength(4)]],
+    // paymentMethod: [this.defaultShipping.paymentMethod, Validators.required],
   });
 
   // ── Collection group ──────────────────────────────────────────────────────
@@ -68,7 +79,7 @@ export class Checkout {
 
   // ── Payment group ─────────────────────────────────────────────────────────
   checkoutForm = this.fb.group({
-    paymentMethod: ['cashOnDelivery', Validators.required],
+    // paymentMethod: ['cashOnDelivery', Validators.required],
   });
 
   // Typed control accessors for template
@@ -81,12 +92,12 @@ export class Checkout {
   }
 
   constructor() {
-    // 1. Restore persisted state
+    // 1. Restore persisted state (overrides defaults if saved data exists)
     const saved = this.store.checkout();
 
-    this.shippingGroup.patchValue({
-      ...(saved.shipping ?? {}),
-    });
+    if (saved.shipping) {
+      this.shippingGroup.patchValue(saved.shipping);
+    }
 
     this.collectionGroup.patchValue({
       collectionLocation: saved.collectionLocation ?? this.defaultLocation,
@@ -94,7 +105,7 @@ export class Checkout {
       collectionTime: saved.collectionTime ? new Date(saved.collectionTime as string) : null,
     });
 
-    // 2. Apply initial mode
+    // 2. Apply initial mode — runs after values are set so validity is correct
     this.applyMode(this.checkoutMode());
 
     // 3. Form → store sync
@@ -126,6 +137,9 @@ export class Checkout {
       this.shippingGroup.disable();
       this.collectionGroup.enable();
     }
+    // Force Angular to re-evaluate validity immediately after enable/disable
+    this.shippingGroup.updateValueAndValidity();
+    this.collectionGroup.updateValueAndValidity();
   }
 
   private syncStoreFromForm(): void {
@@ -142,7 +156,8 @@ export class Checkout {
     });
   }
 
-  submitCheckout(): void {
+  submitCheckout() {
+    // console.log('Submitting checkout. Check console for form values and validity.');
     const activeGroupValid = this.isDeliveryMode
       ? this.shippingGroup.valid
       : this.collectionGroup.valid;

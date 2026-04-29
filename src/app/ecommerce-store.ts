@@ -753,6 +753,13 @@ export const EcommerceStore = signalStore(
           paymentStatus: 'success',
         };
 
+        // --- NEW: LOGGING THE ORDER DETAILS BEFORE SUBMIT ---
+        console.group('📦 Order Submitted');
+        console.log('👤 User:', user);
+        console.log('🚚 Mode:', checkout.mode.toUpperCase());
+        console.log('📝 Full Order Payload:', order);
+        console.groupEnd();
+
         await new Promise((res) => setTimeout(res, 2000));
 
         patchState(store, { loading: false, cartItems: [] });

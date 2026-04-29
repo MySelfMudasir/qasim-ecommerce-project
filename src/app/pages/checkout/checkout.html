@@ -13,7 +13,7 @@
     </button>
   </div>
 
-  <form (ngSubmit)="submitCheckout()" class="grid grid-cols-1 gap-6 lg:grid-cols-5">
+  <div class="grid grid-cols-1 gap-6 lg:grid-cols-5">
     <div class="lg:col-span-3 flex flex-col gap-6">
 
       <!-- ── DELIVERY ──────────────────────────────────────────────────── -->
@@ -51,7 +51,7 @@
       }
 
       <!-- ── PAYMENT ────────────────────────────────────────────────────── -->
-      <section class="rounded-xl border border-slate-200 p-6" [formGroup]="checkoutForm">
+      <!-- <section class="rounded-xl border border-slate-200 p-6" [formGroup]="checkoutForm">
         <h2 class="text-xl font-bold mb-4">Payment</h2>
         <mat-form-field appearance="outline" class="w-full">
           <mat-label>Payment Method</mat-label>
@@ -60,7 +60,7 @@
             <mat-option value="creditCard">Credit Card</mat-option>
           </mat-select>
         </mat-form-field>
-      </section>
+      </section> -->
     </div>
 
     <!-- ── ORDER SUMMARY ─────────────────────────────────────────────────── -->
@@ -69,12 +69,12 @@
         <ng-container actionButtons>
           <button mat-flat-button color="primary"
             class="mt-6 w-full py-6 text-lg"
-            type="submit"
+            (click)="submitCheckout()"
             [disabled]="store.loading() || (isDeliveryMode ? shippingGroup.invalid : collectionGroup.invalid)">
             {{ store.loading() ? 'Processing...' : 'Place Order' }}
           </button>
         </ng-container>
       </app-summarize-order>
     </div>
-  </form>
+  </div>
 </div>
