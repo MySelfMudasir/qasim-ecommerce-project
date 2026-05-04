@@ -5,6 +5,7 @@ import {
   withComponentInputBinding,
   withPreloading,
   withViewTransitions,
+  withInMemoryScrolling,
 } from '@angular/router';
 import { routes } from './app.routes';
 import { provideHotToastConfig } from '@ngxpert/hot-toast';
@@ -15,6 +16,7 @@ import { provideClientHydration, withEventReplay } from '@angular/platform-brows
 import { ThemeService } from './services/theme';
 import { APP_INITIALIZER } from '@angular/core';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import { ScrollToTopGuard } from './guards/scroll-to-top.guard';
 // import { cacheInterceptor } from './interceptors/cache.interceptor';
 
 export const appConfig: ApplicationConfig = {
@@ -25,6 +27,7 @@ export const appConfig: ApplicationConfig = {
       withPreloading(PreloadAllModules),
       withComponentInputBinding(),
       withViewTransitions(),
+      withInMemoryScrolling({ scrollPositionRestoration: 'disabled' }),
     ),
 
     // provideHttpClient(withInterceptors([cacheInterceptor])),
@@ -50,6 +53,14 @@ export const appConfig: ApplicationConfig = {
       useFactory: () => {
         const themeService = inject(ThemeService);
         return () => themeService.initTheme();
+      },
+      multi: true,
+    },
+    {
+      provide: APP_INITIALIZER,
+      useFactory: () => {
+        inject(ScrollToTopGuard);
+        return () => undefined;
       },
       multi: true,
     },
