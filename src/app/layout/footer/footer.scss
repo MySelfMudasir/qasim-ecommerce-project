@@ -26,7 +26,7 @@ h3 {
 }
 
 .footer-column h3 {
-  font-size: clamp(1.34rem, 1.6vw, 2rem);
+  font-size: clamp(1rem, 1vw, 1.5rem);
   font-weight: 700;
   letter-spacing: 0.01em;
   line-height: 1.15;
@@ -47,7 +47,7 @@ h3 {
 
 .footer-column li {
   color: var(--app-footer-text-muted);
-  font-size: clamp(1.01rem, 1.2vw, 1.28rem);
+  // font-size: clamp(1.01rem, 1.2vw, 1.28rem);
   line-height: 1.35;
   margin-bottom: 10px;
 }
