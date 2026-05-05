@@ -1,15 +1,88 @@
 <footer class="store-footer">
   <div class="footer-inner">
-    <div class="footer-links-grid">
+
+
+    <div class="footer-links-grid mobile-footer">
+
+      <mat-accordion class="example-headers-align" hideToggle>
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title> Categories </mat-panel-title>
+            <mat-icon>add</mat-icon>
+          </mat-expansion-panel-header>
+          <mat-panel-description>
+            <div class="categories-columns">
+              @for (column of categoryColumns; track $index) {
+              <ul>
+                @for (item of column; track item) {
+                <li>
+                  <a [routerLink]="['/products', item.toLowerCase()]" class="category-link">
+                    {{ item }}
+                  </a>
+                </li>
+                }
+              </ul>
+              }
+            </div>
+          </mat-panel-description>
+        </mat-expansion-panel>
+
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title> Company Information </mat-panel-title>
+            <mat-icon>add</mat-icon>
+          </mat-expansion-panel-header>
+          <mat-panel-description>
+            <ul>
+              @for (item of companyInfo; track item) {
+              <li>
+                <a [routerLink]="['/products', item.toLowerCase()]" class="category-link">
+                  {{ item }}
+                </a>
+              </li>
+              }
+            </ul>
+          </mat-panel-description>
+        </mat-expansion-panel>
+
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title> Purchasing </mat-panel-title>
+            <mat-icon>add</mat-icon>
+          </mat-expansion-panel-header>
+          <mat-panel-description>
+            <ul>
+              @for (item of purchasing; track item) {
+              <li>
+                <a [routerLink]="['/products', item.toLowerCase()]" class="category-link">
+                  {{ item }}
+                </a>
+              </li>
+              }
+            </ul>
+          </mat-panel-description>
+        </mat-expansion-panel>
+      </mat-accordion>
+
+    </div>
+
+
+
+
+    <div class="footer-links-grid desktop-footer">
       <section class="footer-column footer-column-categories">
         <h3>Categories</h3>
         <div class="categories-columns">
           @for (column of categoryColumns; track $index) {
-            <ul>
-              @for (item of column; track item) {
-                <li>{{ item }}</li>
-              }
-            </ul>
+          <ul>
+            @for (item of column; track item) {
+            <li>
+              <a [routerLink]="['/products', item.toLowerCase()]" class="category-link">
+                {{ item }}
+              </a>
+            </li>
+            }
+          </ul>
           }
         </div>
       </section>
@@ -18,7 +91,11 @@
         <h3>Company Information</h3>
         <ul>
           @for (item of companyInfo; track item) {
-            <li>{{ item }}</li>
+          <li>
+            <a [routerLink]="['/products', item.toLowerCase()]" class="category-link">
+              {{ item }}
+            </a>
+          </li>
           }
         </ul>
       </section>
@@ -27,11 +104,18 @@
         <h3>Purchasing</h3>
         <ul>
           @for (item of purchasing; track item) {
-            <li>{{ item }}</li>
+          <li>
+            <a [routerLink]="['/products', item.toLowerCase()]" class="category-link">
+              {{ item }}
+            </a>
+          </li>
           }
         </ul>
       </section>
     </div>
+
+
+
 
     <div class="footer-divider"></div>
 

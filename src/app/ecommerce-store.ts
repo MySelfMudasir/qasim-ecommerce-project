@@ -500,7 +500,7 @@ export const EcommerceStore = signalStore(
         // // 2. simulate API delay (or real API later)
         setTimeout(() => {
           patchState(store, { skeleton: false });
-        }, 1000);
+        }, 500);
       }),
 
       setProductsListSeoTags: signalMethod<string | undefined>((category) => {
@@ -544,7 +544,7 @@ export const EcommerceStore = signalStore(
 
         setTimeout(() => {
           patchState(store, { skeleton: false });
-        }, 2000);
+        }, 500);
       },
 
       openCart: () => {
@@ -552,7 +552,7 @@ export const EcommerceStore = signalStore(
 
         setTimeout(() => {
           patchState(store, { skeleton: false });
-        }, 2000);
+        }, 500);
       },
 
       setSkeleton: signalMethod<boolean>((value: boolean) => {
@@ -891,7 +891,7 @@ export const EcommerceStore = signalStore(
         setTimeout(() => {
           searchLoadingService.close();
           patchState(store, { skeleton: false, searchLoading: false });
-        }, 1000);
+        }, 500);
       }),
     }),
   ),

@@ -30,20 +30,21 @@
   <app-menu-bar class=""></app-menu-bar>
 </div>
 
-<!-- <div appViewPanel class="mb-4 mt-2">
-      <app-carousel [slides]="mySlides" [config]="carouselConfig"></app-carousel>
-    </div> -->
+<div appViewPanel class="mb-4 mt-2">
+  <app-carousel [slides]="mySlides" [config]="carouselConfig"></app-carousel>
+</div>
 
 <!-- <div appViewPanel class="mb-4">
-      <app-carousel2></app-carousel2>
-    </div> -->
+  <app-carousel2></app-carousel2>
+</div> -->
 
 
 
 <div class="p-2" style="background-color: var(--app-bg)">
 
   <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-    <h1 class="text-sm md:text-2xl font-bold text-wrap" style="color: var(--app-text)">{{ selectedCategory() | titlecase }}</h1>
+    <h1 class="text-sm md:text-2xl font-bold text-wrap" style="color: var(--app-text)">{{ selectedCategory() | titlecase
+      }}</h1>
     <span class="text-sm md:text-xl text-left md:text-right" style="color: var(--app-text-muted);">
       {{ store.filteredProducts().length > 99 ? '99+' : store.filteredProducts().length }} products found
     </span>
