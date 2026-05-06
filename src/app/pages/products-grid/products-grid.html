@@ -26,11 +26,11 @@
 
 
 
-<div class="hidden md:flex p-2">
+<div class="hidden md:flex py-2">
   <app-menu-bar class=""></app-menu-bar>
 </div>
 
-<div appViewPanel class="mb-4 mt-2">
+<div class="mb-4 p-2">
   <app-carousel [slides]="mySlides" [config]="carouselConfig"></app-carousel>
 </div>
 
@@ -82,7 +82,7 @@
 
 
 @if(store.filteredProducts().length !== 0) {
-<div class="pt-4">
+<div class="py-4">
   <app-load-more-products></app-load-more-products>
 </div>
 }

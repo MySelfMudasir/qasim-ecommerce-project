@@ -18,6 +18,7 @@ import { LoadMoreProducts } from '../../components/load-more-products/load-more-
 import { SkeletonCard } from '../../shared/skeleton-card/skeleton-card';
 import { SearchBar } from '../../components/search-bar/search-bar';
 import { ActivatedRoute } from '@angular/router';
+import { link } from 'fs';
 
 @Component({
   selector: 'app-products-grid',
@@ -52,32 +53,43 @@ export class ProductsGrid {
   route = inject(ActivatedRoute);
 
   constructor() {
-    this.route.paramMap.subscribe(params => {
-    const category = params.get('selectedCategory') ?? 'all';
-    this.store.setCategory(category);
-    this.store.setProductsListSeoTags(this.selectedCategory);
-  });
+    this.route.paramMap.subscribe((params) => {
+      const category = params.get('selectedCategory') ?? 'all';
+      this.store.setCategory(category);
+      this.store.setProductsListSeoTags(this.selectedCategory);
+    });
 
     this.mySlides = [
       {
+        link: 'https://www.google.com/',
+        image:
+          'https://cdn.sanity.io/images/ge071mlp/production/026ea48ab32640bbebf949d12532d37d75b37e68-2861x982.webp',
+        title: 'Fresh',
+        subtitle: 'Up to 50% Off',
+      },
+      {
+        link: 'https://www.google.com/',
         image:
           'https://cdn.sanity.io/images/ge071mlp/production/5bc020192e25207ae66165e4d2501b85b43c5340-2862x982.jpg',
         title: 'Fresh',
         subtitle: 'Up to 50% Off',
       },
       {
+        link: 'https://www.google.com/',
         image:
           'https://cdn.sanity.io/images/ge071mlp/production/a8b4381ad4df433a0ad5006d0dd0bb1136b8a9c2-1280x438.gif',
         title: 'Cake',
         subtitle: 'Up to 50% Off',
       },
       {
+        link: 'https://www.google.com/',
         image:
           'https://cdn.sanity.io/images/ge071mlp/production/aee9ad853be7f090e494dbbc94b83a60bdfbbeab-2862x982.jpg',
         title: 'Pizzas',
         subtitle: 'Up to 50% Off',
       },
       {
+        link: 'https://www.google.com/',
         image:
           'https://cdn.sanity.io/images/ge071mlp/production/338b067ba0639904c36c9a2a11b9c006f1b472eb-2862x982.webp',
         title: 'Burgers',
@@ -91,7 +103,7 @@ export class ProductsGrid {
   }
 
   carouselConfig: CarouselConfig = {
-    autoPlay: true,
+    autoPlay: false,
     interval: 3000,
     animation: 'slide',
     showIndicators: true,
@@ -101,7 +113,4 @@ export class ProductsGrid {
   isMobileView() {
     return window.innerWidth < 768; // Example breakpoint for mobile view
   }
-
-
-
 }

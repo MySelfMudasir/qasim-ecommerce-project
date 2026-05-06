@@ -6,10 +6,11 @@ import { ToggleWishlistButton } from '../../components/toggle-wishlist-button/to
 import { ProductInfo } from '../product-info/product-info';
 import { ViewReviews } from '../view-reviews/view-reviews';
 import { QuantitySelector } from '../../components/quantity-selector/quantity-selector';
+import { ProductImageGallery } from '../../components/product-image-gallery/product-image-gallery';
 
 @Component({
   selector: 'app-view-product-details',
-  imports: [BackButton, MatIcon, QuantitySelector, ToggleWishlistButton, ProductInfo, ViewReviews],
+  imports: [BackButton, MatIcon, QuantitySelector, ToggleWishlistButton, ProductInfo, ViewReviews, ProductImageGallery],
   templateUrl: './view-product-details.html',
   styleUrl: './view-product-details.scss',
 })

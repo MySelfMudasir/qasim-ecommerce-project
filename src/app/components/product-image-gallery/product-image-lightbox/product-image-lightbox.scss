@@ -1,0 +1,282 @@
+.lightbox-container {
+  display: flex;
+  flex-direction: column;
+  width: 100vw;
+  height: 100vh;
+  background: var(--app-surface);
+  color: var(--app-text);
+  outline: none;
+
+  .main-display {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    background: var(--app-bg);
+    min-height: calc(100vh - 112px);
+
+    @media (max-width: 640px) {
+      min-height: calc(100vh - 96px);
+    }
+  }
+
+  .image-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    max-width: 100%;
+    max-height: 100%;
+    overflow: auto;
+    padding: 12px;
+
+    &.zoomed {
+      .lightbox-image {
+        transform: none;
+        max-width: none;
+        max-height: none;
+        width: 170%;
+        height: auto;
+        cursor: grab;
+
+        &:active {
+          cursor: grabbing;
+        }
+      }
+    }
+  }
+
+  .lightbox-image {
+    max-width: 96%;
+    max-height: calc(100vh - 160px);
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    transition: transform 300ms ease;
+    user-select: none;
+  }
+
+  /* Navigation Buttons */
+  .nav-button {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: color-mix(in srgb, var(--app-surface) 85%, transparent);
+    border: 1px solid var(--app-border);
+    color: var(--app-text);
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 200ms ease;
+    z-index: 10;
+
+    &:hover:not(:disabled) {
+      background: rgba(255, 255, 255, 0.25);
+      border-color: rgba(255, 255, 255, 0.5);
+      transform: translateY(-50%) scale(1.1);
+    }
+
+    &:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+    }
+
+    &.prev-button {
+      left: 20px;
+
+      @media (max-width: 640px) {
+        left: 10px;
+        width: 40px;
+        height: 40px;
+
+        mat-icon {
+          font-size: 20px;
+          width: 20px;
+          height: 20px;
+        }
+      }
+    }
+
+    &.next-button {
+      right: 20px;
+
+      @media (max-width: 640px) {
+        right: 10px;
+        width: 40px;
+        height: 40px;
+
+        mat-icon {
+          font-size: 20px;
+          width: 20px;
+          height: 20px;
+        }
+      }
+    }
+  }
+
+  /* Control Buttons (Top Right) */
+  .close-button,
+  .zoom-button {
+    position: absolute;
+    top: 15px;
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid var(--app-border);
+    color: var(--app-text);
+    border-radius: 8px;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 200ms ease;
+    z-index: 10;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.25);
+      border-color: rgba(255, 255, 255, 0.5);
+      transform: scale(1.05);
+    }
+  }
+
+  .close-button {
+    right: 15px;
+
+    @media (max-width: 640px) {
+      right: 10px;
+      width: 38px;
+      height: 38px;
+
+      mat-icon {
+        font-size: 18px;
+        width: 18px;
+        height: 18px;
+      }
+    }
+  }
+
+  .zoom-button {
+    right: 65px;
+
+    @media (max-width: 640px) {
+      right: 55px;
+      width: 38px;
+      height: 38px;
+
+      mat-icon {
+        font-size: 18px;
+        width: 18px;
+        height: 18px;
+      }
+    }
+  }
+
+  /* Image Counter */
+  .image-counter {
+    position: absolute;
+    bottom: 15px;
+    left: 15px;
+    background: color-mix(in srgb, var(--app-surface) 80%, transparent);
+    color: var(--app-text);
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    z-index: 10;
+    border: 1px solid var(--app-border);
+    backdrop-filter: blur(10px);
+
+    @media (max-width: 640px) {
+      bottom: 10px;
+      left: 10px;
+      font-size: 12px;
+      padding: 6px 10px;
+    }
+  }
+
+  /* Thumbnail Strip */
+  .thumbnail-strip {
+    background: color-mix(in srgb, var(--app-surface) 90%, transparent);
+    border-top: 1px solid var(--app-border);
+    padding: 12px;
+    max-height: 110px;
+    overflow-y: hidden;
+
+    @media (max-width: 640px) {
+      padding: 8px;
+      max-height: 90px;
+    }
+  }
+
+  .thumbnails-container {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+
+    @media (max-width: 640px) {
+      gap: 6px;
+    }
+
+    &::-webkit-scrollbar {
+      height: 6px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: var(--app-bg-muted);
+      border-radius: 3px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: var(--app-text-muted);
+      border-radius: 3px;
+
+      &:hover {
+        background: var(--app-primary);
+      }
+    }
+  }
+
+  .thumbnail {
+    flex-shrink: 0;
+    width: 80px;
+    height: 80px;
+    border: 2px solid var(--app-border);
+    border-radius: 6px;
+    padding: 0;
+    background: transparent;
+    cursor: pointer;
+    overflow: hidden;
+    transition: all 200ms ease;
+
+    @media (max-width: 640px) {
+      width: 65px;
+      height: 65px;
+    }
+
+    &:hover {
+      border-color: var(--app-primary);
+      transform: scale(0.95);
+    }
+
+    &.active {
+      border-color: var(--app-primary);
+      box-shadow: 0 0 8px color-mix(in srgb, var(--app-primary) 40%, transparent);
+    }
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+  }
+}

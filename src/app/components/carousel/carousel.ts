@@ -5,6 +5,7 @@ import { MatIcon } from '@angular/material/icon';
 
 export interface Slide {
   image: string;
+  link?: string;
   title?: string;
   subtitle?: string;
 }
@@ -27,14 +28,14 @@ export interface CarouselConfig {
   }
 })
 export class Carousel implements OnDestroy {
-  // ✅ Inputs
+  // Inputs
   slides = input<Slide[]>([]);
   config = input<CarouselConfig>({});
 
-  // ✅ Signals
+  // Signals
   currentIndex = signal(0);
 
-  // ✅ Defaults
+  // Defaults
   finalConfig = computed(() => {
     const cfg = this.config();
 

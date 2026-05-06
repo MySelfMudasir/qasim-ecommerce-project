@@ -1,0 +1,89 @@
+.product-gallery {
+  .main-image-container {
+    position: relative;
+    overflow: hidden;
+    background-color: var(--app-bg-muted);
+    border: 1px solid var(--app-border);
+
+    img {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+  }
+
+  .gallery-control-button {
+    background: color-mix(in srgb, var(--app-surface) 90%, transparent);
+    border: 1px solid var(--app-border);
+    color: var(--app-text);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+
+    &:hover {
+      background: var(--app-surface);
+      color: var(--app-primary);
+    }
+
+    mat-icon {
+      color: inherit;
+    }
+  }
+
+  .gallery-counter {
+    background: color-mix(in srgb, var(--app-surface) 18%, transparent);
+    color: var(--app-text);
+    border: 1px solid var(--app-border);
+    backdrop-filter: blur(10px);
+  }
+
+  .thumbnail-strip {
+    color: var(--app-text);
+
+    .thumbnail-button {
+      background: var(--app-surface);
+      border-color: var(--app-border);
+      cursor: pointer;
+      transition: all 200ms ease;
+
+      &:hover {
+        transform: scale(0.95);
+        opacity: 0.95;
+        border-color: var(--app-primary);
+      }
+
+      &.active {
+        border-color: var(--app-primary);
+        box-shadow: 0 0 0 3px color-mix(in srgb, var(--app-primary) 20%, transparent);
+      }
+
+      img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+    }
+  }
+}
+
+/* Scrollbar styling for thumbnail strip */
+.thumbnail-strip > div {
+  scroll-behavior: smooth;
+
+  &::-webkit-scrollbar {
+    height: 4px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: var(--app-bg-muted-2);
+    border-radius: 2px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: var(--app-text-muted);
+    border-radius: 2px;
+
+    &:hover {
+      background: var(--app-primary);
+    }
+  }
+}

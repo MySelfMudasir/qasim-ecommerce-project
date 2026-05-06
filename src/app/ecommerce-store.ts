@@ -66,6 +66,13 @@ export const EcommerceStore = signalStore(
         price: 149.99,
         imageUrl:
           'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&w=400&q=80',
+        images: [
+          'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&w=1200&q=85',
+          'https://images.unsplash.com/photo-1510127034890-ba27508e9f1c?auto=format&w=1200&q=85',
+          'https://images.unsplash.com/photo-1452780212940-6f5c0d14d848?auto=format&w=1200&q=85',
+          'https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?auto=format&w=1200&q=85',
+          'https://images.unsplash.com/photo-1484704849700-f032a568e944?auto=format&w=1200&q=85',
+        ],
         rating: 4.6,
         reviewCount: 134,
         inStock: true,
@@ -114,6 +121,13 @@ export const EcommerceStore = signalStore(
         price: 219.0,
         imageUrl:
           'https://images.unsplash.com/photo-1593784991095-a205069470b6?auto=format&w=400&q=80',
+        images: [
+          'https://images.unsplash.com/photo-1593784991095-a205069470b6?auto=format&w=400&q=80',
+          'https://images.unsplash.com/photo-1510127034890-ba27508e9f1c?auto=format&w=1200&q=85',
+          'https://images.unsplash.com/photo-1452780212940-6f5c0d14d848?auto=format&w=1200&q=85',
+          'https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?auto=format&w=1200&q=85',
+          'https://images.unsplash.com/photo-1484704849700-f032a568e944?auto=format&w=1200&q=85',
+        ],
         rating: 4.4,
         reviewCount: 89,
         inStock: true,
@@ -139,6 +153,13 @@ export const EcommerceStore = signalStore(
         price: 79.95,
         imageUrl:
           'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&w=400&q=80',
+        images: [
+          'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&w=400&q=80',
+          'https://images.unsplash.com/photo-1510127034890-ba27508e9f1c?auto=format&w=1200&q=85',
+          'https://images.unsplash.com/photo-1452780212940-6f5c0d14d848?auto=format&w=1200&q=85',
+          'https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?auto=format&w=1200&q=85',
+          'https://images.unsplash.com/photo-1484704849700-f032a568e944?auto=format&w=1200&q=85',
+        ],
         rating: 4.7,
         reviewCount: 432,
         inStock: false,
@@ -165,6 +186,13 @@ export const EcommerceStore = signalStore(
         price: 24.5,
         imageUrl:
           'https://images.unsplash.com/photo-1523205771623-e0faa4d2813d?auto=format&w=400&q=80',
+        images: [
+          'https://images.unsplash.com/photo-1523205771623-e0faa4d2813d?auto=format&w=400&q=80',
+          'https://images.unsplash.com/photo-1510127034890-ba27508e9f1c?auto=format&w=1200&q=85',
+          'https://images.unsplash.com/photo-1452780212940-6f5c0d14d848?auto=format&w=1200&q=85',
+          'https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?auto=format&w=1200&q=85',
+          'https://images.unsplash.com/photo-1484704849700-f032a568e944?auto=format&w=1200&q=85',
+        ],
         rating: 4.8,
         reviewCount: 52,
         inStock: true,
@@ -191,6 +219,13 @@ export const EcommerceStore = signalStore(
         price: 99.99,
         imageUrl:
           'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&w=400&q=80',
+        images: [
+          'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&w=400&q=80',
+          'https://images.unsplash.com/photo-1510127034890-ba27508e9f1c?auto=format&w=1200&q=85',
+          'https://images.unsplash.com/photo-1452780212940-6f5c0d14d848?auto=format&w=1200&q=85',
+          'https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?auto=format&w=1200&q=85',
+          'https://images.unsplash.com/photo-1484704849700-f032a568e944?auto=format&w=1200&q=85',
+        ],
         rating: 4.3,
         reviewCount: 210,
         inStock: true,
@@ -707,7 +742,7 @@ export const EcommerceStore = signalStore(
         }
 
         console.log(checkout);
-        
+
         // DELIVERY
         if (checkout.mode === 'delivery') {
           if (!checkout.shipping) {
@@ -790,7 +825,7 @@ export const EcommerceStore = signalStore(
       },
 
       signIn: ({ email, checkout, dialogId, redirectUrl }: SignInParams) => {
-      // console.log('Signing in with', { email, checkout, dialogId, redirectUrl });  
+        // console.log('Signing in with', { email, checkout, dialogId, redirectUrl });
         const mode: CheckoutModel['mode'] = 'collection';
 
         patchState(store, {

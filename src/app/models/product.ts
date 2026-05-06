@@ -6,6 +6,7 @@ export type ProductModel = {
     description: string;
     price: number;
     imageUrl: string;
+    images?: string[]; // Array of product images for gallery
     rating: number;
     reviewCount: number;
     inStock: boolean;
