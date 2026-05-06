@@ -19,6 +19,9 @@ import { SkeletonCard } from '../../shared/skeleton-card/skeleton-card';
 import { SearchBar } from '../../components/search-bar/search-bar';
 import { ActivatedRoute } from '@angular/router';
 import { link } from 'fs';
+import { PopularProducts } from "../../components/popular-products/popular-products";
+import { TopSellingProducts } from "../../components/top-selling-products/top-selling-products";
+import { A11yModule } from "@angular/cdk/a11y";
 
 @Component({
   selector: 'app-products-grid',
@@ -41,7 +44,10 @@ import { link } from 'fs';
     MenuBar,
     LoadMoreProducts,
     SkeletonCard,
-  ],
+    PopularProducts,
+    TopSellingProducts,
+    A11yModule
+],
   templateUrl: './products-grid.html',
   styleUrl: './products-grid.scss',
 })
@@ -103,7 +109,7 @@ export class ProductsGrid {
   }
 
   carouselConfig: CarouselConfig = {
-    autoPlay: false,
+    autoPlay: true,
     interval: 3000,
     animation: 'slide',
     showIndicators: true,

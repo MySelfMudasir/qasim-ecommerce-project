@@ -1,57 +1,29 @@
-<div 
-  class="lightbox-container"
-  tabindex="0"
-  (keydown)="onKeyDown($event)"
->
+<div class="lightbox-container" tabindex="0" (keydown)="onKeyDown($event)">
   <!-- Main Image Display -->
   <div class="main-display">
     <div class="image-wrapper" [class.zoomed]="isZoomed()">
-      <img 
-        [src]="currentImage()"
-        [alt]="productName() + ' - Image ' + (currentIndex() + 1)"
-        class="lightbox-image"
-        loading="lazy"
-      />
+      <img [src]="currentImage()" [alt]="productName() + ' - Image ' + (currentIndex() + 1)" class="lightbox-image"
+        loading="lazy" />
     </div>
 
     <!-- Navigation Buttons -->
-    <button
-      type="button"
-      class="nav-button prev-button"
-      (click)="previousImage()"
-      [disabled]="images().length <= 1"
-      title="Previous image (←)"
-    >
+    <button type="button" class="nav-button prev-button" (click)="previousImage()" [disabled]="images().length <= 1"
+      title="Previous image (←)">
       <mat-icon>chevron_left</mat-icon>
     </button>
 
-    <button
-      type="button"
-      class="nav-button next-button"
-      (click)="nextImage()"
-      [disabled]="images().length <= 1"
-      title="Next image (→)"
-    >
+    <button type="button" class="nav-button next-button" (click)="nextImage()" [disabled]="images().length <= 1"
+      title="Next image (→)">
       <mat-icon>chevron_right</mat-icon>
     </button>
 
     <!-- Close Button -->
-    <button
-      type="button"
-      class="close-button"
-      (click)="close()"
-      title="Close (Esc)"
-    >
+    <button type="button" class="close-button" (click)="close()" title="Close (Esc)">
       <mat-icon>close</mat-icon>
     </button>
 
     <!-- Zoom Button -->
-    <button
-      type="button"
-      class="zoom-button"
-      (click)="toggleZoom()"
-      [title]="isZoomed() ? 'Zoom out' : 'Zoom in'"
-    >
+    <button type="button" class="zoom-button" (click)="toggleZoom()" [title]="isZoomed() ? 'Zoom out' : 'Zoom in'">
       <mat-icon>{{ isZoomed() ? 'zoom_out' : 'zoom_in' }}</mat-icon>
     </button>
 
@@ -64,18 +36,9 @@
   <!-- Thumbnail Strip -->
   <div class="thumbnail-strip" *ngIf="images().length > 1">
     <div class="thumbnails-container">
-      <button
-        *ngFor="let img of images(); let i = index"
-        type="button"
-        (click)="goToImage(i)"
-        [class.active]="currentIndex() === i"
-        class="thumbnail"
-      >
-        <img 
-          [src]="img"
-          [alt]="productName() + ' - Thumbnail ' + (i + 1)"
-          loading="lazy"
-        />
+      <button *ngFor="let img of images(); let i = index" type="button" (click)="goToImage(i)"
+        [class.active]="currentIndex() === i" class="thumbnail">
+        <img [src]="img" [alt]="productName() + ' - Thumbnail ' + (i + 1)" loading="lazy" />
       </button>
     </div>
   </div>

@@ -500,6 +500,35 @@ export const EcommerceStore = signalStore(
         );
       }),
 
+
+      recommendedProducts: computed(() => {
+        const selectedId = selectedProductId();
+        if (!selectedId) {
+          return products().slice(0, 6);
+        }
+        const selected = products().find((p) => p.id === selectedId);
+        if (!selected) {
+          return products().slice(0, 6);
+        }
+        return products()
+          .filter((p) => p.category.toLowerCase() === selected.category.toLowerCase() && p.id !== selected.id)
+          .slice(0, 6);
+      }),
+
+      popularProducts: computed(() => {
+        return products()
+          .slice()
+          .sort((a, b) => b.rating - a.rating)
+          .slice(0, 6);
+      }),
+
+      topSellingProducts: computed(() => {
+        return products()
+          .slice()
+          .sort((a, b) => b.reviewCount - a.reviewCount)
+          .slice(0, 6);
+      }),
+
       wishlistCount: computed(() => {
         return wishlistItems().length;
       }),

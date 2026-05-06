@@ -5,11 +5,8 @@
 
     @if(store.selectedProduct(); as product) {
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8 mb-8 items-start">
-        <app-product-image-gallery 
-            [mainImage]="product.imageUrl"
-            [images]="product.images || [product.imageUrl]"
-            [productName]="product.name"
-        ></app-product-image-gallery>
+        <app-product-image-gallery [mainImage]="product.imageUrl" [images]="product.images || [product.imageUrl]"
+            [productName]="product.name"></app-product-image-gallery>
 
         <div class="min-w-0">
             <app-product-info [product]="product"></app-product-info>
@@ -17,5 +14,35 @@
     </div>
 
     <app-view-reviews [product]="product"></app-view-reviews>
+
+
+    <!-- Recommended Products Section -->
+    @if (store.recommendedProducts().length > 0) {
+    <div class="my-12">
+        <div class="flex items-center gap-3 mb-6">
+            <div class="flex items-center justify-center w-10 h-10 rounded-full"
+                style="background: var(--app-primary); color: white;">
+                <mat-icon class="text-white">recommend</mat-icon>
+            </div>
+            <h2 class="text-2xl md:text-3xl font-bold" style="color: var(--app-text);">
+                Recommended For You
+            </h2>
+            <span class="text-xs rounded-xl px-2 py-1 w-fit border"
+                style="color: var(--app-text-muted); background-color: var(--app-bg); border: 2px solid var(--app-border)">
+                Personalized
+            </span>
+        </div>
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-5 gap-3 md:gap-4">
+            @for (product of store.recommendedProducts().slice(0, 5); track product.id) {
+            <app-recommended-products [product]="product">
+                <app-toggle-wishlist-button class="!absolute top-3 right-3" [product]="product"
+                    [style.view-transition-name]="'wishlist-button-' + product.id">
+                </app-toggle-wishlist-button>
+            </app-recommended-products>
+            }
+        </div>
+    </div>
+    }
+
     }
 </div>

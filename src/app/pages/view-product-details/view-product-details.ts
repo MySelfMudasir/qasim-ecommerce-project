@@ -5,12 +5,14 @@ import { MatIcon } from '@angular/material/icon';
 import { ToggleWishlistButton } from '../../components/toggle-wishlist-button/toggle-wishlist-button';
 import { ProductInfo } from '../product-info/product-info';
 import { ViewReviews } from '../view-reviews/view-reviews';
-import { QuantitySelector } from '../../components/quantity-selector/quantity-selector';
 import { ProductImageGallery } from '../../components/product-image-gallery/product-image-gallery';
+import { RecommendedProducts } from "../../components/recommended-products/recommended-products";
+import { PopularProducts } from "../../components/popular-products/popular-products";
+import { TopSellingProducts } from "../../components/top-selling-products/top-selling-products";
 
 @Component({
   selector: 'app-view-product-details',
-  imports: [BackButton, MatIcon, QuantitySelector, ToggleWishlistButton, ProductInfo, ViewReviews, ProductImageGallery],
+  imports: [BackButton, MatIcon, ToggleWishlistButton, ProductInfo, ViewReviews, ProductImageGallery, RecommendedProducts, PopularProducts, TopSellingProducts],
   templateUrl: './view-product-details.html',
   styleUrl: './view-product-details.scss',
 })

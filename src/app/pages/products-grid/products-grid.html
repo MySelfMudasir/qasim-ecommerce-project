@@ -81,10 +81,72 @@
 </div>
 
 
+
+
 @if(store.filteredProducts().length !== 0) {
-<div class="py-4">
+<div class="mt-10">
   <app-load-more-products></app-load-more-products>
 </div>
 }
+
+
+<hr class="my-12 border-gray-300">
+
+
+    <!-- Popular Products Section -->
+    <div class="my-12">
+        <div class="flex items-center gap-3 mb-6">
+            <div class="flex items-center justify-center w-10 h-10 rounded-full" style="background: var(--app-primary); color: white;">
+                <mat-icon class="text-white">trending_up</mat-icon>
+            </div>
+            <h2 class="text-2xl md:text-3xl font-bold" style="color: var(--app-text);">
+                Popular Products
+            </h2>
+            <span class="text-xs rounded-xl px-2 py-1 w-fit border" 
+                style="color: var(--app-text-muted); background-color: var(--app-bg); border: 2px solid var(--app-border)">
+                Most Rated
+            </span>
+        </div>
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-5 gap-3 md:gap-4">
+            @for (product of store.popularProducts().slice(0, 5); track product.id) {
+            <app-popular-products [product]="product">
+                <app-toggle-wishlist-button class="!absolute top-3 right-3" [product]="product"
+                    [style.view-transition-name]="'wishlist-button-' + product.id">
+                </app-toggle-wishlist-button>
+            </app-popular-products>
+            }
+        </div>
+    </div>
+
+
+    <hr class="my-12 border-gray-300">
+
+    
+    <!-- Top Selling Products Section -->
+    <div class="my-12">
+        <div class="flex items-center gap-3 mb-6">
+            <div class="flex items-center justify-center w-10 h-10 rounded-full" style="background: var(--app-primary); color: white;">
+                <mat-icon class="text-white">local_fire_department</mat-icon>
+            </div>
+            <h2 class="text-2xl md:text-3xl font-bold" style="color: var(--app-text);">
+                Top Selling Products
+            </h2>
+            <span class="text-xs rounded-xl px-2 py-1 w-fit border" 
+                style="color: var(--app-text-muted); background-color: var(--app-bg); border: 2px solid var(--app-border)">
+                Best Sellers
+            </span>
+        </div>
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-5 gap-3 md:gap-4">
+            @for (product of store.topSellingProducts().slice(0, 5); track product.id) {
+            <app-top-selling-products [product]="product">
+                <app-toggle-wishlist-button class="!absolute top-3 right-3" [product]="product"
+                    [style.view-transition-name]="'wishlist-button-' + product.id">
+                </app-toggle-wishlist-button>
+            </app-top-selling-products>
+            }
+        </div>
+    </div>
+
+
 <!-- </mat-sidenav-content>
 </mat-sidenav-container> -->
