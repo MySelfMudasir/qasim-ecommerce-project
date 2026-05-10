@@ -1,30 +1,36 @@
 <ng-template #searchResultsContent>
-  <div class="px-4 py-2 md:py-0 border-b"
+  <div class="py-2 md:py-0 border-b"
     style="background-color: var(--app-bg); border-color: var(--app-border-color, #e0e0e0);">
-    <div class="flex items-center justify-between gap-4">
-      <button mat-icon-button (click)="goBack()" class="shrink-0" title="Go back">
+    <div class="flex items-center ms-2 justify-end min-w-0">
+      <button matIconButton (click)="goBack()" class="shrink-0" title="Go back">
         <mat-icon>arrow_back</mat-icon>
       </button>
 
-      <app-search-bar class="flex-1"></app-search-bar>
+      <app-search-bar class="flex-1 min-w-0"></app-search-bar>
 
-      <button mat-icon-button (click)="toggleSidebar()" class="shrink-0" title="Toggle filters">
-        <mat-icon>tune</mat-icon>
-      </button>
+
     </div>
   </div>
 
   <div class="p-4">
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-      <h1 class="text-sm md:text-2xl font-bold text-wrap" style="color: var(--app-text)">
-        Search results for "{{ searchQuery() }}"
-      </h1>
-      <span class="text-sm md:text-xl text-left md:text-right" style="color: var(--app-text-muted);">
-        {{ store.displayedProducts().length }} of {{ store.filteredProducts().length > 99 ? '99+' : store.filteredProducts().length }} products found
-      </span>
+    <div class="grid grid-cols-6 md:grid-cols-6 gap-4 mb-6 min-w-0">
+      <div class="col-span-5 md:col-span-5">
+        <h1 class="text-sm md:text-2xl font-bold text-wrap" style="color: var(--app-text)">
+          Search results for "{{ searchQuery() }}"
+        </h1>
+        <span class="text-sm md:text-xl text-left md:text-right" style="color: var(--app-text-muted);">
+          {{ store.displayedProducts().length }} of {{ store.filteredProducts().length > 99 ? '99+' :
+          store.filteredProducts().length }} products found
+        </span>
+      </div>
+      <div class="col-span-1 md:col-span-1 flex justify-end items-center gap-2">
+        <button matIconButton (click)="toggleSidebar()" class="shrink-0" title="Toggle filters">
+          <mat-icon style="color: var(--app-filter-button-text)">tune</mat-icon>
+        </button>
+      </div>
     </div>
 
-    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-5 gap-3 md:gap-6">
+    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-5 gap-3 md:gap-6 min-w-0">
       @if (store.skeleton()) {
       @for (item of [1,2,3,4,5,6]; track item) {
       <app-skeleton-card></app-skeleton-card>
@@ -52,10 +58,10 @@
 </ng-template>
 
 <mat-sidenav-container class="w-full search-results-container">
-  <mat-sidenav #sidenav [mode]="sidebarMode()" [opened]="sidebarOpened()"
-    (openedChange)="onSidenavOpenedChange($event)" [autoFocus]="false" class="search-results-sidenav"
-    style="border-color: var(--app-border-color, #e0e0e0);">
-    <app-filter-sidebar class="search-results-filter" [activeFilters]="filters()" (filterChange)="onFilterChange($event)"></app-filter-sidebar>
+  <mat-sidenav #sidenav [mode]="sidebarMode()" [opened]="sidebarOpened()" (openedChange)="onSidenavOpenedChange($event)"
+    [autoFocus]="false" class="search-results-sidenav" style="border-color: var(--app-border-color, #e0e0e0);">
+    <app-filter-sidebar class="search-results-filter" [activeFilters]="filters()"
+      (filterChange)="onFilterChange($event)"></app-filter-sidebar>
   </mat-sidenav>
 
   <mat-sidenav-content>

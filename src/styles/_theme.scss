@@ -4,11 +4,11 @@
   // SHARED TOKENS
   --app-primary: #006043;
   --app-primary-contrast: #ffffff;
-  
+
   // DEFAULT TO LIGHT MODE
   --app-bg: #f5f5f5;
   --app-bg-muted: #f9fafb;
-  --app-bg-muted-2: #E5E7EB;
+  --app-bg-muted-2: #e5e7eb;
   --app-surface: #ffffff;
   --app-text: #1c1b1f;
   --app-search-text: #6b7280;
@@ -24,36 +24,40 @@
   --app-footer-bg-2: #004d3a;
   --app-footer-bg-3: #003d2d;
   --app-footer-text: #e2e2e2;
-  --app-footer-text-muted: #E5E7EB;
-  --app-footer-divider: #E5E7EB;
+  --app-footer-text-muted: #e5e7eb;
+  --app-footer-divider: #e5e7eb;
   --app-footer-card-bg: #004d3a;
-  --app-footer-card-border: #E5E7EB;
-  --app--footer-badge-button-bg: #E5E7EB;
-  --app--footer-badge-button-text: #121212;
+  --app-footer-card-border: #e5e7eb;
+  --app-footer-badge-button-bg: #e5e7eb;
+  --app-footer-badge-button-text: #121212;
+  --app-filter-button-text: #006043;
 
-  @include mat.theme((
-    color: mat.$violet-palette,
-    typography: (
-      plain-family: 'Inter',
-      brand-family: 'Inter'
-    ),
-    density: 0
-  ));
+  @include mat.theme(
+    (
+      color: mat.$violet-palette,
+      typography: (
+        plain-family: 'Inter',
+        brand-family: 'Inter',
+      ),
+      density: 0,
+    )
+  );
 }
-
 
 .light-theme {
   color-scheme: light;
   // Variables are already set in :root, but you can override here if needed
-  
-  @include mat.theme-overrides((
-    primary: var(--app-primary),
-    'on-primary': var(--app-primary-contrast),
-    surface: var(--app-surface),
-    'on-surface': var(--app-text),
-    background: var(--app-bg),
-    outline: var(--app-border)
-  ));
+
+  @include mat.theme-overrides(
+    (
+      primary: var(--app-primary),
+      'on-primary': var(--app-primary-contrast),
+      surface: var(--app-surface),
+      'on-surface': var(--app-text),
+      background: var(--app-bg),
+      outline: var(--app-border),
+    )
+  );
 }
 
 .dark-theme {
@@ -78,26 +82,27 @@
   --app-footer-bg-2: #004d3a;
   --app-footer-bg-3: #003d2d;
   --app-footer-text: #e2e2e2;
-  --app-footer-text-muted: #E5E7EB;
+  --app-footer-text-muted: #e5e7eb;
   --app-footer-divider: #374151;
   --app-footer-card-bg: #004d3a;
-  --app-footer-card-border: #E5E7EB;
-  --app--footer-badge-button-bg: #E5E7EB;
-  --app--footer-badge-button-text: #121212;
+  --app-footer-card-border: #e5e7eb;
+  --app-footer-badge-button-bg: #e5e7eb;
+  --app-footer-badge-button-text: #121212;
+  --app-filter-button-text: #34d399;
 
-
-
-  @include mat.theme-overrides((
-    primary: #33ab84, // Slightly lighter primary for dark mode accessibility
-    'on-primary': #ffffff,
-    surface: var(--app-surface),
-    'on-surface': var(--app-text),
-    background: var(--app-bg),
-    'on-background': var(--app-text),
-    outline: var(--app-border)
-  ));
+  @include mat.theme-overrides(
+    (
+      primary: #33ab84,
+      // Slightly lighter primary for dark mode accessibility
+      'on-primary': #ffffff,
+      surface: var(--app-surface),
+      'on-surface': var(--app-text),
+      background: var(--app-bg),
+      'on-background': var(--app-text),
+      outline: var(--app-border),
+    )
+  );
 }
-
 
 /* Fix Menu Panel for Dark Mode */
 .dark-theme .mat-mdc-menu-panel {
