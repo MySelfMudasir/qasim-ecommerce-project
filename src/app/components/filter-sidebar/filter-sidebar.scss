@@ -1,0 +1,90 @@
+:host {
+  display: block;
+  background-color: var(--app-bg);
+  width: 100%;
+}
+
+// Remove Material expansion panel default styles
+mat-expansion-panel {
+  border: none !important;
+  box-shadow: none !important;
+  background-color: transparent !important;
+
+  &::before {
+    display: none !important;
+  }
+
+  .mat-expansion-panel-header {
+    background-color: transparent !important;
+    height: auto !important;
+    padding: 12px 0 !important;
+    border-bottom: 1px solid var(--app-border-color, #e0e0e0) !important;
+  }
+}
+
+// Custom filter styling
+.filter-button {
+  width: 100%;
+  padding: 12px 0;
+  text-align: left;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  
+  &:hover {
+    opacity: 0.8;
+  }
+}
+
+.filter-options {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  
+  label {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    
+    input[type="checkbox"],
+    input[type="radio"] {
+      cursor: pointer;
+      width: 16px;
+      height: 16px;
+      flex-shrink: 0;
+      accent-color: var(--app-primary);
+    }
+    
+    &:hover {
+      opacity: 0.8;
+    }
+  }
+}
+
+// Mobile responsive adjustments
+@media (max-width: 640px) {
+  :host {
+    width: 100%;
+  }
+  
+  .filter-options {
+    gap: 10px;
+    
+    label {
+      font-size: 0.85rem;
+    }
+  }
+}
+
+
+label {
+  user-select: none;
+}
+
+

@@ -12,6 +12,11 @@ export const routes: Routes = [
         redirectTo: 'products/all',
       },
       {
+        path: 'search',
+        loadComponent: () =>
+          import('./pages/search-results/search-results').then(m => m.SearchResults),
+      },
+      {
         path: 'products/:selectedCategory',
         loadComponent: () =>
           import('./pages/products-grid/products-grid').then(m => m.ProductsGrid),

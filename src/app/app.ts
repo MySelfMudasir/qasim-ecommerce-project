@@ -11,10 +11,12 @@ import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { log } from 'node:console';
 import { MyService } from './services/my-service';
 import { Footer } from "./layout/footer/footer";
+import { MenuBar } from "./components/menu-bar/menu-bar";
+import { SkeletonComponent } from "boneyard-js/angular";
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, Header, ViewPanel, CommonModule, PreLoader, Footer],
+  imports: [RouterOutlet, Header, ViewPanel, CommonModule, PreLoader, Footer, MenuBar, SkeletonComponent],
   templateUrl: './app.html',
   styleUrl: './app.scss',
 })

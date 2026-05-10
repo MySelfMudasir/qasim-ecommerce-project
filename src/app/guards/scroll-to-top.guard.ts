@@ -1,12 +1,14 @@
-import { Injectable, inject } from '@angular/core';
+import { Injectable, inject, PLATFORM_ID } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
+import { isPlatformBrowser } from '@angular/common';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ScrollToTopGuard {
   private router = inject(Router);
+  private platformId = inject(PLATFORM_ID);
 
   constructor() {
     this.initializeScrollToTop();
@@ -16,12 +18,15 @@ export class ScrollToTopGuard {
     this.router.events
       .pipe(filter((event) => event instanceof NavigationEnd))
       .subscribe(() => {
-        // Perform scroll immediately and at multiple intervals
-        this.performScroll();
-        setTimeout(() => this.performScroll(), 0);
-        setTimeout(() => this.performScroll(), 100);
-        setTimeout(() => this.performScroll(), 300);
-        setTimeout(() => this.performScroll(), 500);
+        // Only perform scroll on browser platform
+        if (isPlatformBrowser(this.platformId)) {
+          // Perform scroll immediately and at multiple intervals
+          this.performScroll();
+          setTimeout(() => this.performScroll(), 0);
+          setTimeout(() => this.performScroll(), 100);
+          setTimeout(() => this.performScroll(), 300);
+          setTimeout(() => this.performScroll(), 500);
+        }
       });
   }
 

@@ -12,4 +12,7 @@ export type ProductModel = {
     inStock: boolean;
     category: string;
     reviews: UserReviewModel[];
+    brand?: string | null;
+    storageType?: string | null;
+    size?: string | null;
 }

@@ -2,7 +2,7 @@
   <!-- Main Image Display -->
   <div class="main-display">
     <div class="image-wrapper" [class.zoomed]="isZoomed()">
-      <img [src]="currentImage()" [alt]="productName() + ' - Image ' + (currentIndex() + 1)" class="lightbox-image"
+      <img [src]="currentImage()" [alt]="productName() + ' - Image ' + (currentIndex() + 1)" onerror="this.onerror=null; this.src='./assets/images/image-404.jpg'" class="lightbox-image"
         loading="lazy" />
     </div>
 
@@ -38,7 +38,7 @@
     <div class="thumbnails-container">
       <button *ngFor="let img of images(); let i = index" type="button" (click)="goToImage(i)"
         [class.active]="currentIndex() === i" class="thumbnail">
-        <img [src]="img" [alt]="productName() + ' - Thumbnail ' + (i + 1)" loading="lazy" />
+        <img [src]="img" [alt]="productName() + ' - Thumbnail ' + (i + 1)" onerror="this.onerror=null; this.src='./assets/images/image-404.jpg'" loading="lazy" />
       </button>
     </div>
   </div>

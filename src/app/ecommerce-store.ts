@@ -20,9 +20,10 @@ import { withStorageSync } from '@angular-architects/ngrx-toolkit';
 import { AddReviewParams, UserReviewModel } from './models/user-review';
 import { SearchLoadingService } from './services/search-loading';
 import { SeoManager } from './services/seo-manager';
-import { Checkout } from './pages/checkout/checkout';
 import { CheckoutModel } from './models/checkout';
 import { formatDate } from '@angular/common';
+import { PRODUCTS } from './data/products.data';
+import { CATEGORIES } from './data/categories.data';
 
 export type EcommerceState = {
   products: ProductModel[];
@@ -37,8 +38,20 @@ export type EcommerceState = {
   skeleton: boolean;
   preLoader: boolean;
   searchLoading: boolean;
+  isLoadingMore: boolean;
   searchedProduct: string;
   checkout: CheckoutModel;
+  // Filter state
+  selectedBrands: string[];
+  selectedCategories: string[];
+  priceRange: [number, number];
+  selectedStorageTypes: string[];
+  selectedSizes: string[];
+  selectedFeatures: string[];
+  selectedSort: string;
+  showOutOfStock: boolean;
+  itemsPerPage: number;
+  displayedItemCount: number;
 };
 
 const LOGOUT_STATE: Partial<EcommerceState> = {
@@ -57,397 +70,9 @@ export const EcommerceStore = signalStore(
     providedIn: 'root',
   },
   withState({
-    products: [
-      {
-        id: '1',
-        name: 'Vintage Camera',
-        description:
-          'Capture your moments with a touch of retro style. High-quality manual lens and durable body.',
-        price: 149.99,
-        imageUrl:
-          'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&w=400&q=80',
-        images: [
-          'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&w=1200&q=85',
-          'https://images.unsplash.com/photo-1510127034890-ba27508e9f1c?auto=format&w=1200&q=85',
-          'https://images.unsplash.com/photo-1452780212940-6f5c0d14d848?auto=format&w=1200&q=85',
-          'https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?auto=format&w=1200&q=85',
-          'https://images.unsplash.com/photo-1484704849700-f032a568e944?auto=format&w=1200&q=85',
-        ],
-        rating: 4.6,
-        reviewCount: 134,
-        inStock: true,
-        category: 'FLOUR BATTER & BREADING',
-        reviews: [
-          {
-            id: 'r1',
-            productId: '1',
-            userId: 'u1',
-            userName: 'Anonymous',
-            userImageUrl: 'https://randomuser.me/api/portraits/men/0.jpg',
-            rating: 5,
-            title: 'Great Camera!',
-            comment: 'I love the vintage look...',
-            reviewDate: new Date('2023-08-02'),
-          },
-          {
-            id: 'r2',
-            productId: '1',
-            userId: 'u2',
-            userName: 'Anonymous',
-            userImageUrl: 'https://randomuser.me/api/portraits/men/1.jpg',
-            rating: 5,
-            title: 'Great Camera!',
-            comment: 'I love the vintage look...',
-            reviewDate: new Date('2023-08-12'),
-          },
-          {
-            id: 'r3',
-            productId: '1',
-            userId: 'u3',
-            userName: 'Anonymous',
-            userImageUrl: 'https://randomuser.me/api/portraits/men/2.jpg',
-            rating: 5,
-            title: 'Great Camera!',
-            comment: 'I love the vintage look...',
-            reviewDate: new Date('2023-08-15'),
-          },
-        ],
-      },
-      {
-        id: '2',
-        name: 'Ergonomic Office Chair',
-        description:
-          'Supportive and stylish chair for long working hours. Adjustable height and lumbar support.',
-        price: 219.0,
-        imageUrl:
-          'https://images.unsplash.com/photo-1593784991095-a205069470b6?auto=format&w=400&q=80',
-        images: [
-          'https://images.unsplash.com/photo-1593784991095-a205069470b6?auto=format&w=400&q=80',
-          'https://images.unsplash.com/photo-1510127034890-ba27508e9f1c?auto=format&w=1200&q=85',
-          'https://images.unsplash.com/photo-1452780212940-6f5c0d14d848?auto=format&w=1200&q=85',
-          'https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?auto=format&w=1200&q=85',
-          'https://images.unsplash.com/photo-1484704849700-f032a568e944?auto=format&w=1200&q=85',
-        ],
-        rating: 4.4,
-        reviewCount: 89,
-        inStock: true,
-        category: 'FLOUR BATTER & BREADING',
-        reviews: [
-          {
-            id: 'r1',
-            productId: '1',
-            userId: 'u1',
-            userName: 'Anonymous',
-            userImageUrl: 'https://randomuser.me/api/portraits/men/1.jpg',
-            rating: 5,
-            title: 'Great Camera!',
-            comment: 'I love the vintage look...',
-            reviewDate: new Date('2023-08-15'),
-          },
-        ],
-      },
-      {
-        id: '3',
-        name: 'Bluetooth Headphones',
-        description: 'Wireless headphones with noise-cancellation and crystal-clear sound quality.',
-        price: 79.95,
-        imageUrl:
-          'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&w=400&q=80',
-        images: [
-          'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&w=400&q=80',
-          'https://images.unsplash.com/photo-1510127034890-ba27508e9f1c?auto=format&w=1200&q=85',
-          'https://images.unsplash.com/photo-1452780212940-6f5c0d14d848?auto=format&w=1200&q=85',
-          'https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?auto=format&w=1200&q=85',
-          'https://images.unsplash.com/photo-1484704849700-f032a568e944?auto=format&w=1200&q=85',
-        ],
-        rating: 4.7,
-        reviewCount: 432,
-        inStock: false,
-        category: 'FLOUR BATTER & BREADING',
-        reviews: [
-          {
-            id: 'r1',
-            productId: '1',
-            userId: 'u1',
-            userName: 'Anonymous',
-            userImageUrl: 'https://randomuser.me/api/portraits/men/2.jpg',
-            rating: 5,
-            title: 'Great Camera!',
-            comment: 'I love the vintage look...',
-            reviewDate: new Date('2023-08-15'),
-          },
-        ],
-      },
-      {
-        id: '4',
-        name: 'Leather Journal',
-        description:
-          'Handcrafted journal with premium leather cover and thick paper for writing or sketching.',
-        price: 24.5,
-        imageUrl:
-          'https://images.unsplash.com/photo-1523205771623-e0faa4d2813d?auto=format&w=400&q=80',
-        images: [
-          'https://images.unsplash.com/photo-1523205771623-e0faa4d2813d?auto=format&w=400&q=80',
-          'https://images.unsplash.com/photo-1510127034890-ba27508e9f1c?auto=format&w=1200&q=85',
-          'https://images.unsplash.com/photo-1452780212940-6f5c0d14d848?auto=format&w=1200&q=85',
-          'https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?auto=format&w=1200&q=85',
-          'https://images.unsplash.com/photo-1484704849700-f032a568e944?auto=format&w=1200&q=85',
-        ],
-        rating: 4.8,
-        reviewCount: 52,
-        inStock: true,
-        category: 'CHEESE',
-        reviews: [
-          {
-            id: 'r1',
-            productId: '1',
-            userId: 'u1',
-            userName: 'Anonymous',
-            userImageUrl: 'https://randomuser.me/api/portraits/men/3.jpg',
-            rating: 5,
-            title: 'Great Camera!',
-            comment: 'I love the vintage look...',
-            reviewDate: new Date('2023-08-15'),
-          },
-        ],
-      },
-      {
-        id: '5',
-        name: 'Running Shoes',
-        description:
-          'Comfortable and breathable shoes designed for runners. Lightweight with excellent grip.',
-        price: 99.99,
-        imageUrl:
-          'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&w=400&q=80',
-        images: [
-          'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&w=400&q=80',
-          'https://images.unsplash.com/photo-1510127034890-ba27508e9f1c?auto=format&w=1200&q=85',
-          'https://images.unsplash.com/photo-1452780212940-6f5c0d14d848?auto=format&w=1200&q=85',
-          'https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?auto=format&w=1200&q=85',
-          'https://images.unsplash.com/photo-1484704849700-f032a568e944?auto=format&w=1200&q=85',
-        ],
-        rating: 4.3,
-        reviewCount: 210,
-        inStock: true,
-        category: 'PIZZA TOPPING',
-        reviews: [
-          {
-            id: 'r1',
-            productId: '1',
-            userId: 'u1',
-            userName: 'Anonymous',
-            userImageUrl: 'https://randomuser.me/api/portraits/men/4.jpg',
-            rating: 5,
-            title: 'Great Camera!',
-            comment: 'I love the vintage look...',
-            reviewDate: new Date('2023-08-15'),
-          },
-        ],
-      },
-      {
-        id: '6',
-        name: 'Ceramic Mug Set',
-        description:
-          'Set of 4 hand-glazed ceramic mugs perfect for hot beverages and cozy mornings.',
-        price: 34.99,
-        imageUrl:
-          'https://images.unsplash.com/photo-1539533113208-f6df8cc8b543?auto=format&w=400&q=80',
-        rating: 4.5,
-        reviewCount: 78,
-        inStock: false,
-        category: 'VEGETABLES Oil & FAT',
-        reviews: [
-          {
-            id: 'r1',
-            productId: '1',
-            userId: 'u1',
-            userName: 'Anonymous',
-            userImageUrl: 'https://randomuser.me/api/portraits/men/5.jpg',
-            rating: 5,
-            title: 'Great Camera!',
-            comment: 'I love the vintage look...',
-            reviewDate: new Date('2023-08-15'),
-          },
-        ],
-      },
-      {
-        id: '7',
-        name: 'Mountain Backpack',
-        description:
-          'Rugged and waterproof backpack suitable for hiking, camping, and outdoor adventures.',
-        price: 129.0,
-        imageUrl:
-          'https://images.unsplash.com/photo-1524592094714-0f0654e20314?auto=format&w=400&q=80',
-        rating: 4.9,
-        reviewCount: 305,
-        inStock: true,
-        category: 'DONNER KEBAB',
-        reviews: [
-          {
-            id: 'r1',
-            productId: '1',
-            userId: 'u1',
-            userName: 'Anonymous',
-            userImageUrl: 'https://randomuser.me/api/portraits/men/8.jpg',
-            rating: 5,
-            title: 'Great Camera!',
-            comment: 'I love the vintage look...',
-            reviewDate: new Date('2023-08-15'),
-          },
-        ],
-      },
-      {
-        id: '8',
-        name: 'Smart LED Lamp',
-        description:
-          'Minimalist desk lamp with adjustable brightness and app-controlled color settings.',
-        price: 59.49,
-        imageUrl:
-          'https://images.unsplash.com/photo-1511499767150-a48a237f0083?auto=format&w=400&q=80',
-        rating: 4.2,
-        reviewCount: 120,
-        inStock: true,
-        category: 'CHICKEN DONNER',
-        reviews: [
-          {
-            id: 'r1',
-            productId: '1',
-            userId: 'u1',
-            userName: 'Anonymous',
-            userImageUrl: 'https://randomuser.me/api/portraits/men/6.jpg',
-            rating: 5,
-            title: 'Great Camera!',
-            comment: 'I love the vintage look...',
-            reviewDate: new Date('2023-08-15'),
-          },
-        ],
-      },
-      {
-        id: '9',
-        name: 'Acoustic Guitar',
-        description:
-          'Classic 6-string acoustic guitar with rich tone and smooth finish. Great for beginners and pros.',
-        price: 199.99,
-        imageUrl:
-          'https://images.unsplash.com/photo-1627123424574-724758594e93?auto=format&w=400&q=80',
-        rating: 4.6,
-        reviewCount: 157,
-        inStock: true,
-        category: 'CHICKEN PRODUCTS',
-        reviews: [
-          {
-            id: 'r1',
-            productId: '1',
-            userId: 'u1',
-            userName: 'Anonymous',
-            userImageUrl: 'https://randomuser.me/api/portraits/men/7.jpg',
-            rating: 5,
-            title: 'Great Camera!',
-            comment: 'I love the vintage look...',
-            reviewDate: new Date('2023-08-15'),
-          },
-        ],
-      },
-      {
-        id: '10',
-        name: 'Succulent Plant Set',
-        description:
-          'Aesthetic mini succulents in ceramic pots to brighten up your living or workspace.',
-        price: 28.0,
-        imageUrl:
-          'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&w=400&q=80',
-        rating: 4.7,
-        reviewCount: 64,
-        inStock: false,
-        category: 'FISH PRODUCTS',
-        reviews: [
-          {
-            id: 'r1',
-            productId: '1',
-            userId: 'u1',
-            userName: 'Anonymous',
-            userImageUrl: 'https://randomuser.me/api/portraits/men/9.jpg',
-            rating: 5,
-            title: 'Great Camera!',
-            comment: 'I love the vintage look...',
-            reviewDate: new Date('2023-08-15'),
-          },
-        ],
-      },
-      {
-        id: '11',
-        name: 'Succulent Plant Set',
-        description:
-          'Aesthetic mini succulents in ceramic pots to brighten up your living or workspace.',
-        price: 28.0,
-        imageUrl:
-          'https://images.unsplash.com/photo-1585771724684-38269d6639fd?auto=format&w=400&q=80',
-        rating: 4.7,
-        reviewCount: 64,
-        inStock: false,
-        category: 'SAUCES & MAYONNAISE',
-        reviews: [
-          {
-            id: 'r1',
-            productId: '1',
-            userId: 'u1',
-            userName: 'Anonymous',
-            userImageUrl: 'https://randomuser.me/api/portraits/men/10.jpg',
-            rating: 5,
-            title: 'Great Camera!',
-            comment: 'I love the vintage look...',
-            reviewDate: new Date('2023-08-15'),
-          },
-        ],
-      },
-      {
-        id: '12',
-        name: 'Succulent Plant Set',
-        description:
-          'Aesthetic mini succulents in ceramic pots to brighten up your living or workspace.',
-        price: 28.0,
-        imageUrl:
-          'https://images.unsplash.com/photo-1600857544200-b2f666a9a2ec?auto=format&w=400&q=80',
-        rating: 4.7,
-        reviewCount: 64,
-        inStock: false,
-        category: 'PACKAGING',
-        reviews: [
-          {
-            id: 'r1',
-            productId: '1',
-            userId: 'u1',
-            userName: 'Anonymous',
-            userImageUrl: 'https://randomuser.me/api/portraits/men/11.jpg',
-            rating: 5,
-            title: 'Great Camera!',
-            comment: 'I love the vintage look...',
-            reviewDate: new Date('2023-08-15'),
-          },
-        ],
-      },
-    ],
-    categoriesList: [
-      'all',
-      'FLOUR BATTER & BREADING',
-      'CHEESE',
-      'PIZZA TOPPING',
-      'VEGETABLES Oil & FAT',
-      'DONNER KEBAB',
-      'CHICKEN DONNER',
-      'CHICKEN PRODUCTS',
-      'FISH PRODUCTS',
-      'SAUCES & MAYONNAISE',
-      'PACKAGING',
-      'SAUSAGES & SAVELOYS',
-      'BUNS & PITTA BREAD',
-      'HMC PRODUCTS',
-      'CHIPS, FRIES AND POTATO PRODUCTS',
-      'CLEANING MATERIALS',
-      'CANS FOOD',
-      'SPICES',
-      'SOFT DRINKS',
-    ],
+    // products: [],
+    products: PRODUCTS,
+    categoriesList: CATEGORIES,
     selectedCategory: 'all',
     wishlistItems: [],
     cartItems: [],
@@ -458,6 +83,7 @@ export const EcommerceStore = signalStore(
     skeleton: true,
     preLoader: false,
     searchLoading: false,
+    isLoadingMore: false,
     searchedProduct: '',
     checkout: {
       mode: 'collection', // default
@@ -466,6 +92,17 @@ export const EcommerceStore = signalStore(
       collectionTime: null,
       shipping: null,
     } as CheckoutModel,
+    // Filter state
+    selectedBrands: [],
+    selectedCategories: [],
+    priceRange: [0, 500],
+    selectedStorageTypes: [],
+    selectedSizes: [],
+    selectedFeatures: [],
+    selectedSort: 'relevance',
+    showOutOfStock: true,
+    itemsPerPage: 10,
+    displayedItemCount: 10,
   } as EcommerceState),
 
   // withStorageSync({
@@ -481,66 +118,150 @@ export const EcommerceStore = signalStore(
       cartItems,
       selectedProductId,
       searchedProduct,
-    }) => ({
-      filteredProducts: computed(() => {
-        // 1. If searching → ignore category
+      selectedBrands,
+      selectedCategories,
+      priceRange,
+      selectedStorageTypes,
+      selectedSizes,
+      selectedFeatures,
+      selectedSort,
+      showOutOfStock,
+      displayedItemCount,
+    }) => {
+      const getFilteredProducts = () => {
+        let filtered = [...products()];
+
         if (searchedProduct()) {
-          return products().filter((p) =>
-            p.name.toLowerCase().includes(searchedProduct().toLowerCase()),
+          const searchTerm = searchedProduct().toLowerCase();
+          filtered = filtered.filter((p) => {
+            const searchableText = [
+              p.name,
+              p.description,
+              p.category,
+              (p as any).brand,
+              (p as any).storageType,
+              (p as any).size,
+            ]
+              .filter(Boolean)
+              .join(' ')
+              .toLowerCase();
+
+            return searchableText.includes(searchTerm);
+          });
+        } else if (selectedCategory().toLowerCase() !== 'all') {
+          filtered = filtered.filter(
+            (p) => p.category.toLowerCase() === selectedCategory().toLowerCase(),
           );
         }
 
-        // 2. If NOT searching → use category
-        if (selectedCategory().toLowerCase() === 'all') {
-          return products();
+        if (selectedCategories().length > 0) {
+          filtered = filtered.filter((p) =>
+            selectedCategories().some((cat) => p.category.toLowerCase() === cat.toLowerCase()),
+          );
         }
 
-        return products().filter(
-          (p) => p.category.toLowerCase() === selectedCategory().toLowerCase(),
-        );
-      }),
+        const [minPrice, maxPrice] = priceRange();
+        filtered = filtered.filter((p) => p.price >= minPrice && p.price <= maxPrice);
 
-
-      recommendedProducts: computed(() => {
-        const selectedId = selectedProductId();
-        if (!selectedId) {
-          return products().slice(0, 6);
+        if (selectedBrands().length > 0) {
+          filtered = filtered.filter((p) =>
+            selectedBrands().some(
+              (brand) => brand.toLowerCase() === String((p as any).brand || '').toLowerCase(),
+            ),
+          );
         }
-        const selected = products().find((p) => p.id === selectedId);
-        if (!selected) {
-          return products().slice(0, 6);
+
+        if (selectedStorageTypes().length > 0) {
+          filtered = filtered.filter((p) =>
+            selectedStorageTypes().some(
+              (type) => type.toLowerCase() === String((p as any).storageType || '').toLowerCase(),
+            ),
+          );
         }
-        return products()
-          .filter((p) => p.category.toLowerCase() === selected.category.toLowerCase() && p.id !== selected.id)
-          .slice(0, 6);
-      }),
 
-      popularProducts: computed(() => {
-        return products()
-          .slice()
-          .sort((a, b) => b.rating - a.rating)
-          .slice(0, 6);
-      }),
+        if (selectedSizes().length > 0) {
+          filtered = filtered.filter((p) =>
+            selectedSizes().some(
+              (size) => size.toLowerCase() === String((p as any).size || '').toLowerCase(),
+            ),
+          );
+        }
 
-      topSellingProducts: computed(() => {
-        return products()
-          .slice()
-          .sort((a, b) => b.reviewCount - a.reviewCount)
-          .slice(0, 6);
-      }),
+        if (selectedFeatures().length > 0) {
+          filtered = filtered.filter((p) =>
+            selectedFeatures().some((feature) => {
+              switch (feature) {
+                case 'new-arrivals':
+                  return Boolean((p as any).isNew);
+                case 'monthly-promos':
+                  return Boolean((p as any).onPromotion);
+                case 'reduced':
+                  return Boolean((p as any).reducedToClear);
+                default:
+                  return true;
+              }
+            }),
+          );
+        }
 
-      wishlistCount: computed(() => {
-        return wishlistItems().length;
-      }),
+        if (!showOutOfStock()) {
+          filtered = filtered.filter((p) => p.inStock);
+        }
 
-      cartCount: computed(() => {
-        return cartItems().length;
-      }),
+        switch (selectedSort()) {
+          case 'price-asc':
+            filtered.sort((a, b) => a.price - b.price);
+            break;
+          case 'price-desc':
+            filtered.sort((a, b) => b.price - a.price);
+            break;
+          case 'rating':
+            filtered.sort((a, b) => b.rating - a.rating);
+            break;
+          case 'newest':
+            filtered.sort((a, b) => Number(b.id) - Number(a.id));
+            break;
+          default:
+            break;
+        }
 
-      selectedProduct: computed(() => {
-        return products().find((p) => p.id === selectedProductId()) ?? undefined;
-      }),
-    }),
+        return filtered;
+      };
+
+      return {
+        filteredProducts: computed(() => getFilteredProducts()),
+        displayedProducts: computed(() => getFilteredProducts().slice(0, displayedItemCount())),
+        hasMoreItems: computed(() => getFilteredProducts().length > displayedItemCount()),
+        recommendedProducts: computed(() => {
+          const selectedId = selectedProductId();
+          if (!selectedId) {
+            return products().slice(0, 6);
+          }
+          const selected = products().find((p) => p.id === selectedId);
+          if (!selected) {
+            return products().slice(0, 6);
+          }
+          return products()
+            .filter((p) => p.category.toLowerCase() === selected.category.toLowerCase() && p.id !== selected.id)
+            .slice(0, 6);
+        }),
+        popularProducts: computed(() => {
+          return products()
+            .slice()
+            .sort((a, b) => b.rating - a.rating)
+            .slice(0, 6);
+        }),
+        topSellingProducts: computed(() => {
+          return products()
+            .slice()
+            .sort((a, b) => b.reviewCount - a.reviewCount)
+            .slice(0, 6);
+        }),
+        wishlistCount: computed(() => wishlistItems().length),
+        cartCount: computed(() => cartItems().length),
+        selectedProduct: computed(() => products().find((p) => p.id === selectedProductId()) ?? undefined),
+      };
+    },
   ),
 
   withMethods(
@@ -553,6 +274,7 @@ export const EcommerceStore = signalStore(
       searchLoadingService = inject(SearchLoadingService),
     ) => ({
       setCategory: signalMethod<string>((selectedCategory: string) => {
+        searchLoadingService.open();
         // // 1. show skeleton
         patchState(store, {
           selectedCategory,
@@ -563,6 +285,7 @@ export const EcommerceStore = signalStore(
 
         // // 2. simulate API delay (or real API later)
         setTimeout(() => {
+          searchLoadingService.close();
           patchState(store, { skeleton: false });
         }, 500);
       }),
@@ -618,7 +341,8 @@ export const EcommerceStore = signalStore(
           patchState(store, { skeleton: false });
         }, 500);
       },
-
+      
+      // Skeleton methods
       setSkeleton: signalMethod<boolean>((value: boolean) => {
         patchState(store, { skeleton: value });
       }),
@@ -649,30 +373,50 @@ export const EcommerceStore = signalStore(
       },
 
       loadMoreProducts: () => {
-        const activeSearchTerm = store.searchedProduct().trim();
-        const loadedProductName = activeSearchTerm
-          ? `${activeSearchTerm} product ${store.products().length + 1}`
-          : 'New Product';
+        patchState(store, { isLoadingMore: true });
 
-        const moreProducts = [
-          {
+        const batchSize = store.itemsPerPage();
+        const baseIndex = store.products().length + 1;
+        const searchTerm = store.searchedProduct().trim();
+        const selectedCategory = store.selectedCategory().toLowerCase();
+        const category = selectedCategory !== 'all'
+          ? selectedCategory
+          : store.selectedCategories()[0]?.toLowerCase() ?? 'all';
+        const priceRange = store.priceRange();
+        const brand = store.selectedBrands()[0] ?? 'Demo Brand';
+        const storageType = store.selectedStorageTypes()[0] ?? 'Standard';
+        const size = store.selectedSizes()[0] ?? 'M';
+
+        const moreProducts = Array.from({ length: batchSize }, (_, index) => {
+          const productNumber = baseIndex + index;
+          const nameSeed = searchTerm || category || 'product';
+          return {
             id: crypto.randomUUID(),
-            name: loadedProductName,
-            price: 50,
-            category: store.selectedCategory(),
+            name: `${nameSeed} ${productNumber}`,
+            price: priceRange[0] + (productNumber % Math.max(1, priceRange[1] - priceRange[0] + 1)),
+            category: category === 'all' ? 'all' : category,
             imageUrl: 'https://placehold.co/600x400',
             rating: 4,
             reviewCount: 5,
             inStock: true,
-            description:
-              'Newly loaded product MILK Solids, Corn Starch, Garlic Powder, Dextrose, Sage, Pepper Extracts (Black & White Pepper), EGG Powder.',
+            description: `Demo product ${productNumber} for ${nameSeed}`,
             reviews: [],
-          },
-        ];
-
-        patchState(store, {
-          products: [...store.products(), ...moreProducts],
+            brand,
+            storageType,
+            size,
+            isNew: store.selectedFeatures().includes('new-arrivals'),
+            onPromotion: store.selectedFeatures().includes('monthly-promos'),
+            reducedToClear: store.selectedFeatures().includes('reduced'),
+          } as ProductModel;
         });
+
+        setTimeout(() => {
+          patchState(store, {
+            products: [...store.products(), ...moreProducts],
+            displayedItemCount: store.displayedItemCount() + batchSize,
+            isLoadingMore: false,
+          });
+        }, 500);
       },
 
       addToCart: (product: ProductModel, quantity = 1) => {
@@ -957,6 +701,53 @@ export const EcommerceStore = signalStore(
           patchState(store, { skeleton: false, searchLoading: false });
         }, 500);
       }),
+
+      // Filter methods
+      setSelectedBrands: signalMethod<string[]>((brands: string[]) => {
+        patchState(store, { selectedBrands: brands });
+      }),
+      
+
+      setSelectedCategories: signalMethod<string[]>((categories: string[]) => {
+        patchState(store, { selectedCategories: categories });
+      }),
+
+      setPriceRange: signalMethod<[number, number]>((range: [number, number]) => {
+        patchState(store, { priceRange: range });
+      }),
+
+      setSelectedStorageTypes: signalMethod<string[]>((types: string[]) => {
+        patchState(store, { selectedStorageTypes: types });
+      }),
+
+      setSelectedSizes: signalMethod<string[]>((sizes: string[]) => {
+        patchState(store, { selectedSizes: sizes });
+      }),
+
+      setSelectedFeatures: signalMethod<string[]>((features: string[]) => {
+        patchState(store, { selectedFeatures: features });
+      }),
+
+      setSelectedSort: signalMethod<string>((sortBy: string) => {
+        patchState(store, { selectedSort: sortBy });
+      }),
+
+      setShowOutOfStock: signalMethod<boolean>((show: boolean) => {
+        patchState(store, { showOutOfStock: show });
+      }),
+
+      clearFilters: () => {
+        patchState(store, {
+          selectedBrands: [],
+          selectedCategories: [],
+          priceRange: [0, 500],
+          selectedStorageTypes: [],
+          selectedSizes: [],
+          selectedFeatures: [],
+          selectedSort: 'relevance',
+          showOutOfStock: false,
+        });
+      },
     }),
   ),
 );

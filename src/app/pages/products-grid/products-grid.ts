@@ -1,64 +1,51 @@
-import { Component, computed, effect, inject, input, signal, ViewChild } from '@angular/core';
-import { ProductModel } from '../../models/product';
-import { ProductCard } from '../../components/product-card/product-card';
-import { MatSidenav, MatSidenavContainer, MatSidenavModule } from '@angular/material/sidenav';
-import { MatListModule } from '@angular/material/list';
-import { RouterLink } from '@angular/router';
+import { Component, inject, input } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ActivatedRoute } from '@angular/router';
 import { EcommerceStore } from '../../ecommerce-store';
-import { MatIcon } from '@angular/material/icon';
+import { ProductCard } from '../../components/product-card/product-card';
 import { ToggleWishlistButton } from '../../components/toggle-wishlist-button/toggle-wishlist-button';
-import { MatButton } from '@angular/material/button';
-import { SidenavService } from '../../services/sidenav';
-import { ViewPanel } from '../../directives/view-panel';
+import { MatIcon } from '@angular/material/icon';
 import { Carousel, CarouselConfig } from '../../components/carousel/carousel';
-import { Carousel2 } from '../../components/carousel2/carousel2';
 import { MenuBar } from '../../components/menu-bar/menu-bar';
+import { SearchBar } from '../../components/search-bar/search-bar';
 import { LoadMoreProducts } from '../../components/load-more-products/load-more-products';
 import { SkeletonCard } from '../../shared/skeleton-card/skeleton-card';
-import { SearchBar } from '../../components/search-bar/search-bar';
-import { ActivatedRoute } from '@angular/router';
-import { link } from 'fs';
-import { PopularProducts } from "../../components/popular-products/popular-products";
-import { TopSellingProducts } from "../../components/top-selling-products/top-selling-products";
-import { A11yModule } from "@angular/cdk/a11y";
+import { PopularProducts } from '../../components/popular-products/popular-products';
+import { TopSellingProducts } from '../../components/top-selling-products/top-selling-products';
+import { SkeletonComponent } from 'boneyard-js/angular'
+import { configureBoneyard } from 'boneyard-js/angular'
 
 @Component({
   selector: 'app-products-grid',
   imports: [
     ProductCard,
     ToggleWishlistButton,
-    MatSidenavModule,
-    MatSidenav,
-    MatSidenavContainer,
-    MatListModule,
-    RouterLink,
     CommonModule,
-    Carousel2,
     MatIcon,
-    MatButton,
     MenuBar,
-    ViewPanel,
     Carousel,
     SearchBar,
-    MenuBar,
     LoadMoreProducts,
     SkeletonCard,
+    SkeletonComponent,
     PopularProducts,
     TopSellingProducts,
-    A11yModule
 ],
   templateUrl: './products-grid.html',
   styleUrl: './products-grid.scss',
 })
 export class ProductsGrid {
+  isLoading = true;
   selectedCategory = input<string>('all');
   store = inject(EcommerceStore);
-  sidenavService = inject(SidenavService);
   mySlides: any[];
   route = inject(ActivatedRoute);
-
   constructor() {
+    configureBoneyard({
+      color: '#e5e5e5',
+      darkColor: 'rgba(255,255,255,0.08)',
+      animate: 'shimmer',
+    })
     this.route.paramMap.subscribe((params) => {
       const category = params.get('selectedCategory') ?? 'all';
       this.store.setCategory(category);
@@ -103,6 +90,7 @@ export class ProductsGrid {
       },
     ];
   }
+
 
   onCategoryChange(category: string) {
     this.store.setCategory(category); // updates store immediately

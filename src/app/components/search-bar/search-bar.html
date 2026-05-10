@@ -1,21 +1,28 @@
-    <div class="flex items-center w-full border rounded-xl my-4" style="background-color: var(--app-surface); border-color: var(--app-border);">
+    <div class="flex items-center w-full border rounded-lg sm:rounded-xl my-1 sm:my-2 md:my-4" style="background-color: var(--app-surface); border-color: var(--app-border);">
 
         <!-- Search icon -->
-        <button matIconButton class="ml-2">
-            <mat-icon class="" style="color: var(--app-icon-color);">search</mat-icon>
+        <button matIconButton class="ml-1 sm:ml-2 flex-shrink-0">
+            <mat-icon class="text-xs sm:text-sm md:text-base" style="color: var(--app-icon-color);">search</mat-icon>
         </button>
 
 
         <!-- Input -->
-        <input matInput autofocus type="text" placeholder="Search products..."
-            class="flex-1 outline-none text-sm placeholder-gray-400" style="color: var(--app-search-text);"
-            (keyup)="applyFilter($event)"/>
+        <input 
+          matInput 
+          autofocus 
+          type="text" 
+          placeholder="Search products..."
+          [value]="searchValue()"
+          class="flex-1 outline-none text-xs sm:text-sm md:text-base placeholder-gray-400 px-1 sm:px-2" 
+          style="color: var(--app-search-text); background: transparent;"
+          (keyup)="applyFilter($event)"
+        />
 
 
 
         <!-- Clear button (optional like in image) -->
-        <button matIconButton type="button" class="mr-2" (click)="clearSearch()">
-        <mat-icon style="color: var(--app-icon-color);">close</mat-icon>
+        <button matIconButton type="button" class="mr-1 sm:mr-2 flex-shrink-0" (click)="clearSearch()">
+        <mat-icon class="text-xs sm:text-sm md:text-base" style="color: var(--app-icon-color);">close</mat-icon>
         </button>
 
     </div>

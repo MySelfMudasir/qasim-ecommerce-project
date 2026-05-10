@@ -1,5 +1,19 @@
-<div class="flex items-center justify-center">
-    <button matButton="filled" (click)="store.loadMoreProducts()">
-        Load More Products
-    </button>
+<div class="flex items-center justify-center py-8">
+  <button
+    mat-raised-button
+    type="button"
+    (click)="onLoadMore()"
+    [disabled]="store.isLoadingMore()"
+    class="px-8 py-3 rounded-lg font-semibold"
+    style="background-color: var(--app-primary); color: white;"
+  >
+    @if (store.isLoadingMore()) {
+      <span class="inline-flex items-center gap-2">
+        <mat-spinner diameter="18"></mat-spinner>
+        Loading...
+      </span>
+    } @else {
+      Load More Products
+    }
+  </button>
 </div>

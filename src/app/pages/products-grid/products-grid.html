@@ -20,10 +20,23 @@
 
 
 <!-- Center: search (hidden on mobile, shown on md+) -->
-<div class="px-4">
-  <app-search-bar class="w-full max-w-[600px]"></app-search-bar>
+<div class="px-4 py-2 md:py-0" style="background-color: var(--app-bg);">
+  <app-search-bar class="w-full max-w-150"></app-search-bar>
 </div>
 
+
+
+<!-- <div class="">
+  <boneyard-skeleton name="menu-bar" [animate]="'shimmer'" [loading]="isLoading">
+  <app-menu-bar class=""></app-menu-bar>
+  </boneyard-skeleton>
+</div>
+
+<div class="mb-4 p-2">
+  <boneyard-skeleton name="carousel" [animate]="'shimmer'" [loading]="isLoading">
+  <app-carousel [slides]="mySlides" [config]="carouselConfig"></app-carousel>
+  </boneyard-skeleton>
+</div> -->
 
 
 <div class="hidden md:flex py-2">
@@ -46,7 +59,7 @@
     <h1 class="text-sm md:text-2xl font-bold text-wrap" style="color: var(--app-text)">{{ selectedCategory() | titlecase
       }}</h1>
     <span class="text-sm md:text-xl text-left md:text-right" style="color: var(--app-text-muted);">
-      {{ store.filteredProducts().length > 99 ? '99+' : store.filteredProducts().length }} products found
+      {{ store.displayedProducts().length }} of {{ store.filteredProducts().length > 99 ? '99+' : store.filteredProducts().length }} products found
     </span>
   </div>
 
@@ -62,16 +75,16 @@
     <app-skeleton-card></app-skeleton-card>
     }
     }
-    @else if (store.filteredProducts().length === 0) {
+    @else if (store.displayedProducts().length === 0) {
     <div class="col-span-full flex flex-col items-center justify-center py-16" style="background-color: var(--app-bg)">
       <h2 class="text-xl font-semibold mb-2" style="color: var(--app-text)">No products found</h2>
       <p class="text-sm" style="color: var(--app-text-muted)">Try selecting a different category.</p>
     </div>
     }
     @else {
-    @for (product of store.filteredProducts(); track product.id) {
+    @for (product of store.displayedProducts(); track product.id) {
     <app-product-card [product]="product">
-      <app-toggle-wishlist-button class="!absolute top-3 right-3" [product]="product"
+      <app-toggle-wishlist-button class="absolute! top-3 right-3" [product]="product"
         [style.view-transition-name]="'wishlist-button-' + product.id">
       </app-toggle-wishlist-button>
     </app-product-card>
@@ -83,11 +96,9 @@
 
 
 
-@if(store.filteredProducts().length !== 0) {
 <div class="mt-10">
   <app-load-more-products></app-load-more-products>
 </div>
-}
 
 
 <hr class="my-12 border-gray-300">
@@ -110,7 +121,7 @@
         <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-5 gap-3 md:gap-4">
             @for (product of store.popularProducts().slice(0, 5); track product.id) {
             <app-popular-products [product]="product">
-                <app-toggle-wishlist-button class="!absolute top-3 right-3" [product]="product"
+                <app-toggle-wishlist-button class="absolute! top-3 right-3" [product]="product"
                     [style.view-transition-name]="'wishlist-button-' + product.id">
                 </app-toggle-wishlist-button>
             </app-popular-products>
@@ -139,7 +150,7 @@
         <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-5 gap-3 md:gap-4">
             @for (product of store.topSellingProducts().slice(0, 5); track product.id) {
             <app-top-selling-products [product]="product">
-                <app-toggle-wishlist-button class="!absolute top-3 right-3" [product]="product"
+                <app-toggle-wishlist-button class="absolute! top-3 right-3" [product]="product"
                     [style.view-transition-name]="'wishlist-button-' + product.id">
                 </app-toggle-wishlist-button>
             </app-top-selling-products>

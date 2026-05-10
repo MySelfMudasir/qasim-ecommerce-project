@@ -1,7 +1,7 @@
 <div class="product-gallery">
     <!-- Main Image Display -->
     <div class="main-image-container relative rounded-lg overflow-hidden">
-        <img [src]="currentImage()" [alt]="productName()" loading="lazy"
+        <img [src]="currentImage()" [alt]="productName()" loading="lazy" onerror="this.onerror=null; this.src='./assets/images/image-404.jpg'"
             class="w-full h-80 sm:h-105 lg:h-137.5 object-cover cursor-pointer transition-opacity hover:opacity-90"
             (click)="openLightbox(selectedImageIndex())" />
 
@@ -39,7 +39,7 @@
                 [class.active]="selectedImageIndex() === i"
                 class="thumbnail-button shrink-0 w-16 h-16 sm:w-20 sm:h-20 rounded-lg overflow-hidden border-2 transition-all"
                 [class.active]="selectedImageIndex() === i">
-                <img [src]="img" [alt]="productName() + ' - Image ' + (i + 1)"
+                <img [src]="img" [alt]="productName() + ' - Image ' + (i + 1)" onerror="this.onerror=null; this.src='./assets/images/image-404.jpg'"
                     class="w-full h-full object-cover hover:opacity-80 transition-opacity" loading="lazy" />
             </button>
         </div>

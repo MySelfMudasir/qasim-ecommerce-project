@@ -1,11 +1,25 @@
-<div class="text-xs rounded-xl px-2 py-1 w-fit mb-2 border" style="background-color: var(--app-bg); border: 2px solid var(--app-border)">
-    {{ product().category | titlecase}}
+<div class="mb-4">
+    <div class="inline-block text-xs rounded-xl px-3 py-1 border"
+        style="background-color: var(--app-bg); border: 2px solid var(--app-border)">
+        {{ product().category | titlecase}}
+    </div>
 </div>
 
-<h1 class="text-2xl font-extrabold mb-3">
+<h1 class="text-2xl font-extrabold mb-2">
     {{ product().name }}
 </h1>
 
+<div class="flex flex-wrap gap-3 mb-4 text-xs">
+    <span class="inline-block px-2 py-1 rounded" *ngIf="product().brand" style=" border: 1px solid var(--app-border-2); color: var(--app-text);">
+        <strong>Brand:</strong> {{ product().brand | titlecase }}
+    </span>
+    <span class="inline-block px-2 py-1 rounded" *ngIf="product().size" style=" border: 1px solid var(--app-border-2); color: var(--app-text);">
+        <strong>Size:</strong> {{ product().size | titlecase }}
+    </span>
+    <span class="inline-block px-2 py-1 rounded" *ngIf="product().storageType" style=" border: 1px solid var(--app-border-2); color: var(--app-text);">
+        <strong>Storage:</strong> {{ product().storageType | titlecase }}
+    </span>
+</div>
 
 <app-star-rating class="mb-3 block" [rating]="product().rating">
     {{ product().rating }} ({{ product().reviewCount }} reviews)
@@ -16,7 +30,8 @@
 <app-stock-status class="mb-4" [inStock]="product().inStock"></app-stock-status>
 
 <p class="font-semibold mb-2">Description</p>
-<p class="pb-4" style="background-color: var(--app-bg); color: var(--app-text-muted); border-bottom: 2px solid var(--app-border)">
+<p class="pb-4"
+    style="background-color: var(--app-bg); color: var(--app-text-muted); border-bottom: 2px solid var(--app-border)">
     {{ product().description }}
 </p>
 
@@ -40,7 +55,7 @@
 </div>
 
 
-<div class="pt-6 flex flex-col gap-2 text-xs"  style="color: var(--app-text-muted-2);">
+<div class="pt-6 flex flex-col gap-2 text-xs" style="color: var(--app-text-muted-2);">
     <div class="flex items-center gap-3">
         <mat-icon class="small">local_shipping</mat-icon>
         <span>Free shipping on orders over $S0</span>

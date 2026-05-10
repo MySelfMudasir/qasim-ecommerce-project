@@ -1,0 +1,169 @@
+<div class="flex flex-col gap-4 p-4" style="background-color: var(--app-bg);">
+  <div class="flex justify-between items-center mb-2">
+    <h2 class="text-lg font-bold" style="color: var(--app-text)">Filters</h2>
+    <button matButton="outlined" class="text-sm" (click)="clearFilters()" style="color: var(--app-text);">
+      Reset
+    </button>
+  </div>
+
+  <!-- Featured Section -->
+  <div class="border-b pb-4" style="border-color: var(--app-border-color, #e0e0e0);">
+    <button (click)="togglePanel('featured')" class="w-full flex justify-between items-center py-2 text-left">
+      <span style="color: var(--app-text); font-weight: 500;">Featured</span>
+      <mat-icon *ngIf="!expandedPanels()['featured']">chevron_right</mat-icon>
+      <mat-icon *ngIf="expandedPanels()['featured']">expand_more</mat-icon>
+    </button>
+    @if (expandedPanels()['featured']) {
+    <div class="flex flex-col gap-2 mt-3">
+      @for (option of featuredOptions; track option.value) {
+      <label class="flex items-center gap-3 cursor-pointer">
+        <input type="checkbox" [checked]="isFeaturedChecked(option.value)"
+          (change)="onFeaturedChange(option.value, $any($event).target.checked)" class="w-4 h-4 cursor-pointer"
+          style="accent-color: var(--app-primary);" />
+        <span style="color: var(--app-text);">{{ option.label }}</span>
+        @if (option.count) {
+        <span style="color: var(--app-text-muted); font-size: 0.85rem;">({{ option.count }})</span>
+        }
+      </label>
+      }
+    </div>
+    }
+  </div>
+
+  <!-- Sort By Section -->
+  <div class="border-b pb-4" style="border-color: var(--app-border-color, #e0e0e0);">
+    <button (click)="togglePanel('sortBy')" class="w-full flex justify-between items-center py-2 text-left">
+      <span style="color: var(--app-text); font-weight: 500;">Sort By</span>
+      <mat-icon *ngIf="!expandedPanels()['sortBy']">chevron_right</mat-icon>
+      <mat-icon *ngIf="expandedPanels()['sortBy']">expand_more</mat-icon>
+    </button>
+    @if (expandedPanels()['sortBy']) {
+    <div class="flex flex-col gap-2 mt-3">
+      @for (option of sortOptions; track option.value) {
+      <label class="flex items-center gap-3 cursor-pointer">
+        <input type="radio" name="sort" [value]="option.value" [checked]="filters.sortBy === option.value"
+          (change)="onSortChange(option.value)" class="w-4 h-4 cursor-pointer"
+          style="accent-color: var(--app-primary);" />
+        <span style="color: var(--app-text);">{{ option.label }}</span>
+      </label>
+      }
+    </div>
+    }
+  </div>
+
+  <!-- Categories Section -->
+  <div class="border-b pb-4" style="border-color: var(--app-border-color, #e0e0e0);">
+    <button (click)="togglePanel('categories')" class="w-full flex justify-between items-center py-2 text-left">
+      <span style="color: var(--app-text); font-weight: 500;">Categories</span>
+      <mat-icon *ngIf="!expandedPanels()['categories']">chevron_right</mat-icon>
+      <mat-icon *ngIf="expandedPanels()['categories']">expand_more</mat-icon>
+    </button>
+    @if (expandedPanels()['categories']) {
+    <div class="flex flex-col gap-2 mt-3">
+      @for (category of store.categoriesList(); track category) {
+      <label class="flex items-center gap-3 cursor-pointer">
+        <input type="checkbox" [checked]="isCategoryChecked(category)"
+          (change)="onCategoryChange(category, $any($event).target.checked)" class="w-4 h-4 cursor-pointer"
+          style="accent-color: var(--app-primary);" />
+        <span style="color: var(--app-text); font-size: 0.9rem;">{{ category | titlecase }}</span>
+      </label>
+      }
+    </div>
+    }
+  </div>
+
+  <!-- Brand Section -->
+  <div class="border-b pb-4" style="border-color: var(--app-border-color, #e0e0e0);">
+    <button (click)="togglePanel('brand')" class="w-full flex justify-between items-center py-2 text-left">
+      <span style="color: var(--app-text); font-weight: 500;">Brand</span>
+      <mat-icon *ngIf="!expandedPanels()['brand']">chevron_right</mat-icon>
+      <mat-icon *ngIf="expandedPanels()['brand']">expand_more</mat-icon>
+    </button>
+    @if (expandedPanels()['brand']) {
+    <div class="flex flex-col gap-2 mt-3">
+      @for (option of brandOptions; track option.value) {
+      <label class="flex items-center gap-3 cursor-pointer">
+        <input type="checkbox" [checked]="isBrandChecked(option.value)"
+          (change)="onBrandChange(option.value, $any($event).target.checked)" class="w-4 h-4 cursor-pointer"
+          style="accent-color: var(--app-primary);" />
+        <span style="color: var(--app-text);">{{ option.label }}</span>
+      </label>
+      }
+    </div>
+    }
+  </div>
+
+  <!-- Price Range Section -->
+  <div class="border-b pb-4" style="border-color: var(--app-border-color, #e0e0e0);">
+    <button (click)="togglePanel('priceRange')" class="w-full flex justify-between items-center py-2 text-left">
+      <span style="color: var(--app-text); font-weight: 500;">Price Range</span>
+      <mat-icon *ngIf="!expandedPanels()['priceRange']">chevron_right</mat-icon>
+      <mat-icon *ngIf="expandedPanels()['priceRange']">expand_more</mat-icon>
+    </button>
+    @if (expandedPanels()['priceRange']) {
+    <div class="flex flex-col gap-4 mt-3">
+      <div class="flex justify-between text-sm" style="color: var(--app-text-muted);">
+        <span>${{ filters.priceRange?.[0] ?? 0 }}</span>
+        <span>${{ filters.priceRange?.[1] ?? 500 }}</span>
+      </div>
+      <mat-slider class="w-full" min="0" max="500" step="1" discrete [displayWith]="formatPrice">
+        <input matSliderStartThumb [value]="filters.priceRange?.[0] ?? 0" (valueChange)="onPriceMinChange($event)" />
+
+        <input matSliderEndThumb [value]="filters.priceRange?.[1] ?? 500" (valueChange)="onPriceMaxChange($event)" />
+      </mat-slider>
+    </div>
+    }
+  </div>
+
+  <!-- Storage Type Section -->
+  <div class="border-b pb-4" style="border-color: var(--app-border-color, #e0e0e0);">
+    <button (click)="togglePanel('storageType')" class="w-full flex justify-between items-center py-2 text-left">
+      <span style="color: var(--app-text); font-weight: 500;">Storage Type</span>
+      <mat-icon *ngIf="!expandedPanels()['storageType']">chevron_right</mat-icon>
+      <mat-icon *ngIf="expandedPanels()['storageType']">expand_more</mat-icon>
+    </button>
+    @if (expandedPanels()['storageType']) {
+    <div class="flex flex-col gap-2 mt-3">
+      @for (option of storageTypeOptions; track option.value) {
+      <label class="flex items-center gap-3 cursor-pointer">
+        <input type="checkbox" [checked]="isStorageTypeChecked(option.value)"
+          (change)="onStorageTypeChange(option.value, $any($event).target.checked)" class="w-4 h-4 cursor-pointer"
+          style="accent-color: var(--app-primary);" />
+        <span style="color: var(--app-text);">{{ option.label }}</span>
+      </label>
+      }
+    </div>
+    }
+  </div>
+
+  <!-- Size Section -->
+  <div class="border-b pb-4" style="border-color: var(--app-border-color, #e0e0e0);">
+    <button (click)="togglePanel('size')" class="w-full flex justify-between items-center py-2 text-left">
+      <span style="color: var(--app-text); font-weight: 500;">Size</span>
+      <mat-icon *ngIf="!expandedPanels()['size']">chevron_right</mat-icon>
+      <mat-icon *ngIf="expandedPanels()['size']">expand_more</mat-icon>
+    </button>
+    @if (expandedPanels()['size']) {
+    <div class="flex flex-col gap-2 mt-3">
+      @for (option of sizeOptions; track option.value) {
+      <label class="flex items-center gap-3 cursor-pointer">
+        <input type="checkbox" [checked]="isSizeChecked(option.value)"
+          (change)="onSizeChange(option.value, $any($event).target.checked)" class="w-4 h-4 cursor-pointer"
+          style="accent-color: var(--app-primary);" />
+        <span style="color: var(--app-text);">{{ option.label }}</span>
+      </label>
+      }
+    </div>
+    }
+  </div>
+
+  <!-- Show Out of Stock -->
+  <div class="pt-2">
+    <label class="flex items-center gap-3 cursor-pointer">
+      <input type="checkbox" [checked]="filters.showOutOfStock"
+        (change)="onShowOutOfStockChange($any($event).target.checked)" class="w-4 h-4 cursor-pointer"
+        style="accent-color: var(--app-primary);" />
+      <span style="color: var(--app-text);">Show Out of Stock Products</span>
+    </label>
+  </div>
+</div>

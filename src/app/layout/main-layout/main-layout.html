@@ -1,5 +1,6 @@
 <mat-sidenav-container class="h-full">
-    <!-- Sidebar -->
+    <!-- Sidebar - Hidden on search route -->
+    @if (showSidebar()) {
     <mat-sidenav [mode]="sidenavService.mode()" [opened]="sidenavService.opened()" class="h-full">
         <div class="p-6">
             <h2 class="text-lg">Categories</h2>
@@ -16,6 +17,7 @@
             </mat-nav-list>
         </div>
     </mat-sidenav>
+    }
 
     <!-- Main Content -->
     <mat-sidenav-content class="p-2 pb-0 md:p-6 md:pb-0 h-full" style="background-color: var(--app-bg)">

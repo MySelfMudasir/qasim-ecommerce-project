@@ -9,10 +9,11 @@ import { ProductImageGallery } from '../../components/product-image-gallery/prod
 import { RecommendedProducts } from "../../components/recommended-products/recommended-products";
 import { PopularProducts } from "../../components/popular-products/popular-products";
 import { TopSellingProducts } from "../../components/top-selling-products/top-selling-products";
+import { SearchBar } from '../../components/search-bar/search-bar';
 
 @Component({
   selector: 'app-view-product-details',
-  imports: [BackButton, MatIcon, ToggleWishlistButton, ProductInfo, ViewReviews, ProductImageGallery, RecommendedProducts, PopularProducts, TopSellingProducts],
+  imports: [BackButton, MatIcon, ToggleWishlistButton, ProductInfo, ViewReviews, ProductImageGallery, RecommendedProducts, PopularProducts, TopSellingProducts, SearchBar],
   templateUrl: './view-product-details.html',
   styleUrl: './view-product-details.scss',
 })

@@ -1,19 +1,19 @@
-import { Component, inject, input } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { EcommerceStore } from '../../ecommerce-store';
-import { MatButton } from '@angular/material/button';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatButtonModule } from '@angular/material/button';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-load-more-products',
-  imports: [MatButton],
+  imports: [MatProgressSpinnerModule, MatButtonModule, CommonModule],
   templateUrl: './load-more-products.html',
   styleUrl: './load-more-products.scss',
 })
 export class LoadMoreProducts {
   store = inject(EcommerceStore);
 
-  constructor() {
-    // console.log(this.store.selectedCategory()); // ✅ works now
+  onLoadMore() {
+    this.store.loadMoreProducts();
   }
-    
-
 }

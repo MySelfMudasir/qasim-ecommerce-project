@@ -9,7 +9,7 @@ export class SidenavService {
   private _opened = signal(true);
 
   isMobile = this._isMobile.asReadonly();
-  opened = this._opened.asReadonly(); // ✅ allow manual control
+  opened = this._opened.asReadonly(); // allow manual control
 
 
   mode = computed(() => {
@@ -24,7 +24,7 @@ export class SidenavService {
       if (result.matches) {
         this._opened.set(false); // mobile default closed
       } else {
-        this._opened.set(true); // desktop default open
+        this._opened.set(false); // desktop default open
       }
     });
   }
