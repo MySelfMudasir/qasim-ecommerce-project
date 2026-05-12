@@ -1,4 +1,4 @@
-import { Component, inject, input } from '@angular/core';
+import { Component, inject, input, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { EcommerceStore } from '../../ecommerce-store';
@@ -12,8 +12,7 @@ import { LoadMoreProducts } from '../../components/load-more-products/load-more-
 import { SkeletonCard } from '../../shared/skeleton-card/skeleton-card';
 import { PopularProducts } from '../../components/popular-products/popular-products';
 import { TopSellingProducts } from '../../components/top-selling-products/top-selling-products';
-import { SkeletonComponent } from 'boneyard-js/angular'
-import { configureBoneyard } from 'boneyard-js/angular'
+import { SkeletonComponent } from 'boneyard-js/angular';
 
 @Component({
   selector: 'app-products-grid',
@@ -30,22 +29,17 @@ import { configureBoneyard } from 'boneyard-js/angular'
     SkeletonComponent,
     PopularProducts,
     TopSellingProducts,
-],
+  ],
   templateUrl: './products-grid.html',
   styleUrl: './products-grid.scss',
 })
 export class ProductsGrid {
-  isLoading = true;
   selectedCategory = input<string>('all');
   store = inject(EcommerceStore);
   mySlides: any[];
   route = inject(ActivatedRoute);
+
   constructor() {
-    configureBoneyard({
-      color: '#e5e5e5',
-      darkColor: 'rgba(255,255,255,0.08)',
-      animate: 'shimmer',
-    })
     this.route.paramMap.subscribe((params) => {
       const category = params.get('selectedCategory') ?? 'all';
       this.store.setCategory(category);
@@ -90,7 +84,7 @@ export class ProductsGrid {
       },
     ];
   }
-
+  
 
   onCategoryChange(category: string) {
     this.store.setCategory(category); // updates store immediately

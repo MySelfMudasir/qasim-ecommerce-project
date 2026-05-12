@@ -32,11 +32,11 @@ export type EcommerceState = {
   wishlistItems: ProductModel[];
   cartItems: cartModel[];
   user: UserModel | undefined;
-  loading: boolean;
   selectedProductId: string | undefined;
   writeReview: boolean;
-  skeleton: boolean;
   preLoader: boolean;
+  loading: boolean;
+  isSkeletonLoading: boolean;
   searchLoading: boolean;
   isLoadingMore: boolean;
   searchedProduct: string;
@@ -60,7 +60,7 @@ const LOGOUT_STATE: Partial<EcommerceState> = {
   // cartItems: [],
   // wishlistItems: [],
   // selectedProductId: undefined,
-  // skeleton: false,
+  // isSkeletonLoading: false,
   // preLoader: false,
   // searchLoading: false,
 };
@@ -77,11 +77,11 @@ export const EcommerceStore = signalStore(
     wishlistItems: [],
     cartItems: [],
     user: undefined,
-    loading: false,
     selectedProductId: undefined,
     writeReview: false,
-    skeleton: true,
     preLoader: false,
+    loading: false,
+    isSkeletonLoading: true,
     searchLoading: false,
     isLoadingMore: false,
     searchedProduct: '',
@@ -242,7 +242,11 @@ export const EcommerceStore = signalStore(
             return products().slice(0, 6);
           }
           return products()
-            .filter((p) => p.category.toLowerCase() === selected.category.toLowerCase() && p.id !== selected.id)
+            .filter(
+              (p) =>
+                p.category.toLowerCase() === selected.category.toLowerCase() &&
+                p.id !== selected.id,
+            )
             .slice(0, 6);
         }),
         popularProducts: computed(() => {
@@ -259,7 +263,9 @@ export const EcommerceStore = signalStore(
         }),
         wishlistCount: computed(() => wishlistItems().length),
         cartCount: computed(() => cartItems().length),
-        selectedProduct: computed(() => products().find((p) => p.id === selectedProductId()) ?? undefined),
+        selectedProduct: computed(
+          () => products().find((p) => p.id === selectedProductId()) ?? undefined,
+        ),
       };
     },
   ),
@@ -279,15 +285,15 @@ export const EcommerceStore = signalStore(
         patchState(store, {
           selectedCategory,
           searchedProduct: '',
-          skeleton: true,
+          isSkeletonLoading: true,
           preLoader: false,
         });
 
         // // 2. simulate API delay (or real API later)
         setTimeout(() => {
           searchLoadingService.close();
-          patchState(store, { skeleton: false });
-        }, 500);
+          patchState(store, { isSkeletonLoading: false });
+        }, 1500);
       }),
 
       setProductsListSeoTags: signalMethod<string | undefined>((category) => {
@@ -327,24 +333,24 @@ export const EcommerceStore = signalStore(
       }),
 
       openWishlist: () => {
-        patchState(store, { skeleton: true });
+        patchState(store, { isSkeletonLoading: true });
 
         setTimeout(() => {
-          patchState(store, { skeleton: false });
+          patchState(store, { isSkeletonLoading: false });
         }, 500);
       },
 
       openCart: () => {
-        patchState(store, { skeleton: true });
+        patchState(store, { isSkeletonLoading: true });
 
         setTimeout(() => {
-          patchState(store, { skeleton: false });
+          patchState(store, { isSkeletonLoading: false });
         }, 500);
       },
-      
+
       // Skeleton methods
-      setSkeleton: signalMethod<boolean>((value: boolean) => {
-        patchState(store, { skeleton: value });
+      setIsSkeletonLoading: signalMethod<boolean>((value: boolean) => {
+        patchState(store, { isSkeletonLoading: value });
       }),
 
       setPreLoader: signalMethod<boolean>((value: boolean) => {
@@ -379,9 +385,10 @@ export const EcommerceStore = signalStore(
         const baseIndex = store.products().length + 1;
         const searchTerm = store.searchedProduct().trim();
         const selectedCategory = store.selectedCategory().toLowerCase();
-        const category = selectedCategory !== 'all'
-          ? selectedCategory
-          : store.selectedCategories()[0]?.toLowerCase() ?? 'all';
+        const category =
+          selectedCategory !== 'all'
+            ? selectedCategory
+            : (store.selectedCategories()[0]?.toLowerCase() ?? 'all');
         const priceRange = store.priceRange();
         const brand = store.selectedBrands()[0] ?? 'Demo Brand';
         const storageType = store.selectedStorageTypes()[0] ?? 'Standard';
@@ -690,7 +697,7 @@ export const EcommerceStore = signalStore(
         patchState(store, {
           searchedProduct: term,
           selectedCategory: 'all',
-          skeleton: true,
+          isSkeletonLoading: true,
           preLoader: false,
           searchLoading: true,
         });
@@ -698,7 +705,7 @@ export const EcommerceStore = signalStore(
         // 2. simulate delay
         setTimeout(() => {
           searchLoadingService.close();
-          patchState(store, { skeleton: false, searchLoading: false });
+          patchState(store, { isSkeletonLoading: false, searchLoading: false });
         }, 500);
       }),
 
@@ -706,7 +713,6 @@ export const EcommerceStore = signalStore(
       setSelectedBrands: signalMethod<string[]>((brands: string[]) => {
         patchState(store, { selectedBrands: brands });
       }),
-      
 
       setSelectedCategories: signalMethod<string[]>((categories: string[]) => {
         patchState(store, { selectedCategories: categories });

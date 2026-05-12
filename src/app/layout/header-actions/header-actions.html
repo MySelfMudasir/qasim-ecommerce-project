@@ -16,7 +16,8 @@
 
     @if(store.user(); as user) {
     <button matIconButton [matMenuTriggerFor]="userMenu">
-      <img [src]="user.imageUrl" loading="lazy" [alt]="user.name" onerror="this.onerror=null; this.src='./assets/images/image-404.jpg'" class="w-8 h-8 rounded-full" />
+      <img [src]="user.imageUrl" loading="lazy" [alt]="user.name"
+        onerror="this.onerror=null; this.src='./assets/images/image-404.jpg'" class="w-8 h-8 rounded-full" />
     </button>
     <mat-menu #userMenu="matMenu" xPosition="before">
       <div class="flex flex-col px-3 min-w-[200px]">
@@ -46,16 +47,14 @@
         Sign Up
       </button>
     </div>
-  }
-  
+    }
+
 
   </div>
 
   <div class="hidden md:flex md:flex-1 md:justify-center md:px-4">
     <app-theme-button></app-theme-button>
   </div>
-
-
 
 
 </div>

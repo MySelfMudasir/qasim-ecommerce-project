@@ -4,11 +4,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { Router, RouterLink } from '@angular/router';
 import { EcommerceStore } from '../../ecommerce-store';
 import { MatBadgeModule } from '@angular/material/badge';
-import {
-  MatMenuItem,
-  MatMenuModule,
-  MatMenuTrigger,
-} from '@angular/material/menu';
+import { MatMenuItem, MatMenuModule, MatMenuTrigger } from '@angular/material/menu';
 import { MatDivider } from '@angular/material/divider';
 import { MatDialog } from '@angular/material/dialog';
 import { SignInDialog } from '../../components/sign-in-dialog/sign-in-dialog';
@@ -27,18 +23,18 @@ import { ThemeButton } from '../../components/theme-button/theme-button';
     MatMenuItem,
     MatMenuTrigger,
     MatDivider,
-    ThemeButton
+    ThemeButton,
   ],
   templateUrl: './header-actions.html',
   styleUrl: './header-actions.scss',
 })
 export class HeaderActions {
   store = inject(EcommerceStore);
-  router = inject(Router)
+  router = inject(Router);
   themeService = inject(ThemeService);
   matDialog = inject(MatDialog);
 
-  
+
   openSignInDialog() {
     this.matDialog.open(SignInDialog, {
       disableClose: true,
@@ -46,14 +42,10 @@ export class HeaderActions {
     });
   }
 
-
   openSignUpDialog() {
     this.matDialog.open(SignUpDialog, {
       disableClose: true,
       data: { redirectUrl: this.router.url },
     });
   }
-
-
-
 }

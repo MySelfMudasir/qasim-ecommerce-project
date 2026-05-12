@@ -2,19 +2,16 @@
   "routes": [
     "/products/all"
   ],
-  
-  "breakpoints": [375, 768, 1280],
+  "breakpoints": [
+    375,
+    768,
+    1280
+  ],
   "out": "./src/bones",
   "wait": 8000,
-
-  "color": "#e5e5e5",
+  "color": "#D4D4D4",
   "darkColor": "#2a2a2a",
   "animate": "shimmer",
-  "transition": true,
-  "stagger": true
-
-
-
-  
-
+  "stagger": true,
+  "transition": true
 }

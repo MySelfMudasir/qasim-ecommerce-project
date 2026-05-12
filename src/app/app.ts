@@ -13,6 +13,7 @@ import { MyService } from './services/my-service';
 import { Footer } from "./layout/footer/footer";
 import { MenuBar } from "./components/menu-bar/menu-bar";
 import { SkeletonComponent } from "boneyard-js/angular";
+import { PushNotificationService } from './services/push-notification.service';
 
 @Component({
   selector: 'app-root',
@@ -36,6 +37,7 @@ export class App {
   // myService = inject(MyService);
   store = inject(EcommerceStore);
   themeService = inject(ThemeService);
+  private push = inject(PushNotificationService);
 
   
   
@@ -99,6 +101,9 @@ export class App {
     if (!isPlatformBrowser(this.platformId)) {
       return;
     }
+
+    this.push.requestPermission();
+    this.push.listen();
 
     const loader = document.getElementById('global-loader');
     if (loader) {

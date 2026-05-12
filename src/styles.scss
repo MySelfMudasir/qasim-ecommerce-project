@@ -2,6 +2,9 @@
 @use 'tailwindcss';
 
 
+// skeletons and placeholders
+@use './styles/skeleton';
+
 // Core system
 @use './styles/theme';
 

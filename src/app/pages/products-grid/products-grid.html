@@ -26,26 +26,24 @@
 
 
 
-<!-- <div class="">
-  <boneyard-skeleton name="menu-bar" [animate]="'shimmer'" [loading]="isLoading">
-  <app-menu-bar class=""></app-menu-bar>
-  </boneyard-skeleton>
-</div>
-
-<div class="mb-4 p-2">
-  <boneyard-skeleton name="carousel" [animate]="'shimmer'" [loading]="isLoading">
-  <app-carousel [slides]="mySlides" [config]="carouselConfig"></app-carousel>
-  </boneyard-skeleton>
-</div> -->
 
 
-<div class="hidden md:flex py-2">
-  <app-menu-bar class=""></app-menu-bar>
-</div>
 
-<div class="mb-4 p-2">
-  <app-carousel [slides]="mySlides" [config]="carouselConfig"></app-carousel>
-</div>
+
+<boneyard-skeleton name="menu-bar" [loading]="store.isSkeletonLoading()">
+  <div class="hidden md:flex py-2">
+    <app-menu-bar class=""></app-menu-bar>
+  </div>
+</boneyard-skeleton>
+
+
+<boneyard-skeleton name="carousel" [loading]="store.isSkeletonLoading()">
+  <div class="mb-4 p-2">
+    <app-carousel [slides]="mySlides" [config]="carouselConfig"></app-carousel>
+  </div>
+</boneyard-skeleton>
+
+
 
 <!-- <div appViewPanel class="mb-4">
   <app-carousel2></app-carousel2>
@@ -59,7 +57,8 @@
     <h1 class="text-sm md:text-2xl font-bold text-wrap" style="color: var(--app-text)">{{ selectedCategory() | titlecase
       }}</h1>
     <span class="text-sm md:text-xl text-left md:text-right" style="color: var(--app-text-muted);">
-      {{ store.displayedProducts().length }} of {{ store.filteredProducts().length > 99 ? '99+' : store.filteredProducts().length }} products found
+      {{ store.displayedProducts().length }} of {{ store.filteredProducts().length > 99 ? '99+' :
+      store.filteredProducts().length }} products found
     </span>
   </div>
 
@@ -70,12 +69,7 @@
       </p> -->
 
   <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-5 gap-3 md:gap-6">
-    @if (store.skeleton()) {
-    @for (item of [1,2,3,4,5,6]; track item) {
-    <app-skeleton-card></app-skeleton-card>
-    }
-    }
-    @else if (store.displayedProducts().length === 0) {
+ @if (store.displayedProducts().length === 0) {
     <div class="col-span-full flex flex-col items-center justify-center py-16" style="background-color: var(--app-bg)">
       <h2 class="text-xl font-semibold mb-2" style="color: var(--app-text)">No products found</h2>
       <p class="text-sm" style="color: var(--app-text-muted)">Try selecting a different category.</p>
@@ -83,11 +77,13 @@
     }
     @else {
     @for (product of store.displayedProducts(); track product.id) {
-    <app-product-card [product]="product">
-      <app-toggle-wishlist-button class="absolute! top-3 right-3" [product]="product"
-        [style.view-transition-name]="'wishlist-button-' + product.id">
-      </app-toggle-wishlist-button>
-    </app-product-card>
+      <boneyard-skeleton name="product-card" [loading]="store.isSkeletonLoading()">
+        <app-product-card [product]="product">
+          <app-toggle-wishlist-button class="absolute! top-3 right-3" [product]="product"
+          [style.view-transition-name]="'wishlist-button-' + product.id">
+        </app-toggle-wishlist-button>
+      </app-product-card>
+    </boneyard-skeleton>
     }
     }
   </div>
@@ -104,59 +100,61 @@
 <hr class="my-12 border-gray-300">
 
 
-    <!-- Popular Products Section -->
-    <div class="my-12">
-        <div class="flex items-center gap-3 mb-6">
-            <div class="flex items-center justify-center w-10 h-10 rounded-full" style="background: var(--app-primary); color: white;">
-                <mat-icon class="text-white">trending_up</mat-icon>
-            </div>
-            <h2 class="text-lg md:text-3xl font-bold" style="color: var(--app-text);">
-                Popular Products
-            </h2>
-            <span class="text-xs rounded-xl px-2 py-1 w-fit border" 
-                style="color: var(--app-text-muted); background-color: var(--app-bg); border: 2px solid var(--app-border)">
-                Most Rated
-            </span>
-        </div>
-        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-5 gap-3 md:gap-4">
-            @for (product of store.popularProducts().slice(0, 5); track product.id) {
-            <app-popular-products [product]="product">
-                <app-toggle-wishlist-button class="absolute! top-3 right-3" [product]="product"
-                    [style.view-transition-name]="'wishlist-button-' + product.id">
-                </app-toggle-wishlist-button>
-            </app-popular-products>
-            }
-        </div>
+<!-- Popular Products Section -->
+<div class="my-12">
+  <div class="flex items-center gap-3 mb-6">
+    <div class="flex items-center justify-center w-10 h-10 rounded-full"
+      style="background: var(--app-primary); color: white;">
+      <mat-icon class="text-white">trending_up</mat-icon>
     </div>
+    <h2 class="text-lg md:text-3xl font-bold" style="color: var(--app-text);">
+      Popular Products
+    </h2>
+    <span class="text-xs rounded-xl px-2 py-1 w-fit border"
+      style="color: var(--app-text-muted); background-color: var(--app-bg); border: 2px solid var(--app-border)">
+      Most Rated
+    </span>
+  </div>
+  <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-5 gap-3 md:gap-4">
+    @for (product of store.popularProducts().slice(0, 5); track product.id) {
+    <app-popular-products [product]="product">
+      <app-toggle-wishlist-button class="absolute! top-3 right-3" [product]="product"
+        [style.view-transition-name]="'wishlist-button-' + product.id">
+      </app-toggle-wishlist-button>
+    </app-popular-products>
+    }
+  </div>
+</div>
 
 
-    <hr class="my-12 border-gray-300">
+<hr class="my-12 border-gray-300">
 
-    
-    <!-- Top Selling Products Section -->
-    <div class="my-12">
-        <div class="flex items-center gap-3 mb-6">
-            <div class="flex items-center justify-center w-10 h-10 rounded-full" style="background: var(--app-primary); color: white;">
-                <mat-icon class="text-white">local_fire_department</mat-icon>
-            </div>
-            <h2 class="text-lg md:text-3xl font-bold" style="color: var(--app-text);">
-                Top Selling Products
-            </h2>
-            <span class="text-xs rounded-xl px-2 py-1 w-fit border" 
-                style="color: var(--app-text-muted); background-color: var(--app-bg); border: 2px solid var(--app-border)">
-                Best Sellers
-            </span>
-        </div>
-        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-5 gap-3 md:gap-4">
-            @for (product of store.topSellingProducts().slice(0, 5); track product.id) {
-            <app-top-selling-products [product]="product">
-                <app-toggle-wishlist-button class="absolute! top-3 right-3" [product]="product"
-                    [style.view-transition-name]="'wishlist-button-' + product.id">
-                </app-toggle-wishlist-button>
-            </app-top-selling-products>
-            }
-        </div>
+
+<!-- Top Selling Products Section -->
+<div class="my-12">
+  <div class="flex items-center gap-3 mb-6">
+    <div class="flex items-center justify-center w-10 h-10 rounded-full"
+      style="background: var(--app-primary); color: white;">
+      <mat-icon class="text-white">local_fire_department</mat-icon>
     </div>
+    <h2 class="text-lg md:text-3xl font-bold" style="color: var(--app-text);">
+      Top Selling Products
+    </h2>
+    <span class="text-xs rounded-xl px-2 py-1 w-fit border"
+      style="color: var(--app-text-muted); background-color: var(--app-bg); border: 2px solid var(--app-border)">
+      Best Sellers
+    </span>
+  </div>
+  <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-5 gap-3 md:gap-4">
+    @for (product of store.topSellingProducts().slice(0, 5); track product.id) {
+    <app-top-selling-products [product]="product">
+      <app-toggle-wishlist-button class="absolute! top-3 right-3" [product]="product"
+        [style.view-transition-name]="'wishlist-button-' + product.id">
+      </app-toggle-wishlist-button>
+    </app-top-selling-products>
+    }
+  </div>
+</div>
 
 
 <!-- </mat-sidenav-content>

@@ -1,18 +1,21 @@
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatIconModule } from '@angular/material/icon';
 import { RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { PwaInstallService } from '../../services/pwa-install.service';
+import { MatButton, MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-footer',
-  imports: [MatExpansionModule, MatIconModule, RouterLink, CommonModule],
+  imports: [MatExpansionModule, MatIconModule, MatButtonModule, MatIconModule, RouterLink, CommonModule],
   templateUrl: './footer.html',
   styleUrl: './footer.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Footer {
   readonly currentYear = new Date().getFullYear();
+  pwaInstall = inject(PwaInstallService);
 
   readonly categories = [
     'FLOUR BATTER & BREADING',

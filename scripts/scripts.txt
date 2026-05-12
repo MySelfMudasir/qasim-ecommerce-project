@@ -9,8 +9,10 @@ npm uninstall firebase @angular/fire
 ng update @angular/core@20 @angular/cli@20
 npm install firebase @angular/fire
 
+npx boneyard-js build http://localhost:4200
 
-
+ng add @angular/pwa@latest
+npm install @angular/service-worker@21.2.8 --save --legacy-peer-deps
 
 rd /s /q node_modules
 del package-lock.json

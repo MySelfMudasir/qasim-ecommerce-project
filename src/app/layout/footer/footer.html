@@ -8,7 +8,8 @@
         <h3 class="text-base sm:text-lg font-bold mb-4 sm:mb-6 text-white">Categories</h3>
         <ul class="space-y-2 sm:space-y-3">
           @for (item of categories; track item) {
-            <li class="text-emerald-100 text-sm hover:text-white transition-colors cursor-pointer" [routerLink]="['/products', item]">{{ item.toLowerCase() | titlecase }}</li>
+          <li class="text-emerald-100 text-sm hover:text-white transition-colors cursor-pointer"
+            [routerLink]="['/products', item]">{{ item.toLowerCase() | titlecase }}</li>
           }
         </ul>
       </div>
@@ -18,7 +19,8 @@
         <h3 class="text-base sm:text-lg font-bold mb-4 sm:mb-6 text-white">Chips & Potatoes</h3>
         <ul class="space-y-2 sm:space-y-3">
           @for (item of chipsAndPotatoes; track item) {
-            <li class="text-emerald-100 text-sm hover:text-white transition-colors cursor-pointer" [routerLink]="['/products', item]">{{ item.toLowerCase() | titlecase }}</li>
+          <li class="text-emerald-100 text-sm hover:text-white transition-colors cursor-pointer"
+            [routerLink]="['/products', item]">{{ item.toLowerCase() | titlecase }}</li>
           }
         </ul>
       </div>
@@ -28,7 +30,8 @@
         <h3 class="text-base sm:text-lg font-bold mb-4 sm:mb-6 text-white">Drinks</h3>
         <ul class="space-y-2 sm:space-y-3">
           @for (item of drinks; track item) {
-            <li class="text-emerald-100 text-sm hover:text-white transition-colors cursor-pointer" [routerLink]="['/products', item]">{{ item.toLowerCase() | titlecase }}</li>
+          <li class="text-emerald-100 text-sm hover:text-white transition-colors cursor-pointer"
+            [routerLink]="['/products', item]">{{ item.toLowerCase() | titlecase }}</li>
           }
         </ul>
       </div>
@@ -38,7 +41,8 @@
         <h3 class="text-base sm:text-lg font-bold mb-4 sm:mb-6 text-white">Company Information</h3>
         <ul class="space-y-2 sm:space-y-3">
           @for (item of companyInfo; track item) {
-            <li class="text-emerald-100 text-sm hover:text-white transition-colors cursor-pointer" [routerLink]="['/products', item]">{{ item.toLowerCase() | titlecase }}</li>
+          <li class="text-emerald-100 text-sm hover:text-white transition-colors cursor-pointer"
+            [routerLink]="['/products', item]">{{ item.toLowerCase() | titlecase }}</li>
           }
         </ul>
       </div>
@@ -48,7 +52,8 @@
         <h3 class="text-base sm:text-lg font-bold mb-4 sm:mb-6 text-white">Purchasing</h3>
         <ul class="space-y-2 sm:space-y-3">
           @for (item of purchasing; track item) {
-            <li class="text-emerald-100 text-sm hover:text-white transition-colors cursor-pointer" [routerLink]="['/products', item]">{{ item.toLowerCase() | titlecase }}</li>
+          <li class="text-emerald-100 text-sm hover:text-white transition-colors cursor-pointer"
+            [routerLink]="['/products', item]">{{ item.toLowerCase() | titlecase }}</li>
           }
         </ul>
       </div>
@@ -57,6 +62,12 @@
     <!-- Divider -->
     <div class="border-t border-white my-8"></div>
 
+    @if (pwaInstall.canInstall()) {
+    <button matButton="outlined" class="" style="color: var(--app-bg);" (click)="pwaInstall.installPwa()">
+      <mat-icon>install_mobile</mat-icon>
+      Install Khyber Foods App
+    </button>
+    }
 
     <!-- Copyright -->
     <p class="text-emerald-100 text-xs text-center">© {{ currentYear }} Khyber Foods. All rights reserved.</p>

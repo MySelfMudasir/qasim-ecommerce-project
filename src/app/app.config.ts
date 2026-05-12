@@ -14,9 +14,11 @@ import { provideHotToastConfig } from '@ngxpert/hot-toast';
 import { environment } from '../environments/environment.development';
 import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
 import { ThemeService } from './services/theme';
-import { APP_INITIALIZER } from '@angular/core';
+import { APP_INITIALIZER, isDevMode } from '@angular/core';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { ScrollToTopGuard } from './guards/scroll-to-top.guard';
+import { provideServiceWorker } from '@angular/service-worker';
+import { NotificationClickService } from './services/notification-click.service';
 // import { cacheInterceptor } from './interceptors/cache.interceptor';
 
 export const appConfig: ApplicationConfig = {
@@ -60,10 +62,15 @@ export const appConfig: ApplicationConfig = {
       provide: APP_INITIALIZER,
       useFactory: () => {
         inject(ScrollToTopGuard);
+        inject(NotificationClickService);
         return () => undefined;
       },
       multi: true,
     },
     provideClientHydration(withEventReplay()),
+    provideServiceWorker('ngsw-worker.js', {
+      enabled: !isDevMode(),
+      registrationStrategy: 'registerWhenStable:30000',
+    }),
   ],
 };

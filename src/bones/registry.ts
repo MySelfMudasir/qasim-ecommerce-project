@@ -4,16 +4,12 @@ import { configureBoneyard } from 'boneyard-js/angular'
 
 import _menu_bar from './menu-bar.bones.json'
 import _carousel from './carousel.bones.json'
-import _app_carousel from './app-carousel.bones.json'
-import _app_menu_bar from './app-menu-bar.bones.json'
-import _blog_card from './blog-card.bones.json'
+import _product_card from './product-card.bones.json'
 
-configureBoneyard({"color":"#e5e5e5","darkColor":"#2a2a2a","animate":"shimmer","stagger":true,"transition":true})
+configureBoneyard({"color":"#D4D4D4","darkColor":"#2a2a2a","animate":"shimmer","stagger":true,"transition":true})
 
 registerBones({
   "menu-bar": _menu_bar,
   "carousel": _carousel,
-  "app-carousel": _app_carousel,
-  "app-menu-bar": _app_menu_bar,
-  "blog-card": _blog_card,
+  "product-card": _product_card,
 })
