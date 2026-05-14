@@ -9,7 +9,7 @@ import { Carousel, CarouselConfig } from '../../components/carousel/carousel';
 import { MenuBar } from '../../components/menu-bar/menu-bar';
 import { SearchBar } from '../../components/search-bar/search-bar';
 import { LoadMoreProducts } from '../../components/load-more-products/load-more-products';
-import { SkeletonCard } from '../../shared/skeleton-card/skeleton-card';
+import { SkeletonProductCard } from '../../shared/skeletons/skeleton-product-card';
 import { PopularProducts } from '../../components/popular-products/popular-products';
 import { TopSellingProducts } from '../../components/top-selling-products/top-selling-products';
 import { SkeletonComponent } from 'boneyard-js/angular';
@@ -25,11 +25,11 @@ import { SkeletonComponent } from 'boneyard-js/angular';
     Carousel,
     SearchBar,
     LoadMoreProducts,
-    SkeletonCard,
+    SkeletonProductCard,
     SkeletonComponent,
     PopularProducts,
     TopSellingProducts,
-  ],
+],
   templateUrl: './products-grid.html',
   styleUrl: './products-grid.scss',
 })
@@ -38,6 +38,7 @@ export class ProductsGrid {
   store = inject(EcommerceStore);
   mySlides: any[];
   route = inject(ActivatedRoute);
+  timer: any = true;
 
   constructor() {
     this.route.paramMap.subscribe((params) => {

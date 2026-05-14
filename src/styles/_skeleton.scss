@@ -1,5 +1,6 @@
 [data-boneyard-bone] > div {
-  animation: shimmer 2s linear infinite !important;
+  // animation: shimmer 2s linear infinite !important;
+  animation: shimmer 1.5s linear infinite !important;
 }
 
 @keyframes shimmer {

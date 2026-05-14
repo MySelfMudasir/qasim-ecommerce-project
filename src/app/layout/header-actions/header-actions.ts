@@ -34,6 +34,9 @@ export class HeaderActions {
   themeService = inject(ThemeService);
   matDialog = inject(MatDialog);
 
+  toggle() {
+    this.store.setIsSkeletonLoading(!this.store.isSkeletonLoading());
+  }
 
   openSignInDialog() {
     this.matDialog.open(SignInDialog, {

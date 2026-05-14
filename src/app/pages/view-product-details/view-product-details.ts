@@ -10,10 +10,14 @@ import { RecommendedProducts } from "../../components/recommended-products/recom
 import { PopularProducts } from "../../components/popular-products/popular-products";
 import { TopSellingProducts } from "../../components/top-selling-products/top-selling-products";
 import { SearchBar } from '../../components/search-bar/search-bar';
+import { SkeletonComponent } from "boneyard-js/angular";
+import { SkeletonProductImageGallery } from "../../shared/skeletons/skeleton-product-image-gallery";
+import { SkeletonProductInfo } from "../../shared/skeletons/skeleton-product-info";
+import { SkeletonProductCard } from "../../shared/skeletons/skeleton-product-card";
 
 @Component({
   selector: 'app-view-product-details',
-  imports: [BackButton, MatIcon, ToggleWishlistButton, ProductInfo, ViewReviews, ProductImageGallery, RecommendedProducts, PopularProducts, TopSellingProducts, SearchBar],
+  imports: [BackButton, MatIcon, ToggleWishlistButton, ProductInfo, ViewReviews, ProductImageGallery, RecommendedProducts, PopularProducts, TopSellingProducts, SearchBar, SkeletonComponent, SkeletonProductImageGallery, SkeletonProductInfo, SkeletonProductCard],
   templateUrl: './view-product-details.html',
   styleUrl: './view-product-details.scss',
 })

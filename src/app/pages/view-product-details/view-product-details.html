@@ -9,11 +9,24 @@
 
     @if(store.selectedProduct(); as product) {
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8 mb-8 items-start">
+        @if(store.isSkeletonLoading()) {
+        @for (item of [1]; track item) {
+        <app-skeleton-product-image-gallery></app-skeleton-product-image-gallery>
+        }
+        }
+        @else{
         <app-product-image-gallery [mainImage]="product.imageUrl" [images]="product.images || [product.imageUrl]"
             [productName]="product.name"></app-product-image-gallery>
-
+        }
         <div class="min-w-0">
+            @if(store.isSkeletonLoading()) {
+            @for (item of [1]; track item) {
+            <app-skeleton-product-info></app-skeleton-product-info>
+            }
+            }
+            @else{
             <app-product-info [product]="product"></app-product-info>
+            }
         </div>
     </div>
 
@@ -37,12 +50,19 @@
             </span>
         </div>
         <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-5 gap-3 md:gap-4">
+            @if(store.isSkeletonLoading()) {
+            @for (item of [].constructor(store.recommendedProducts().slice(0, 5) || 0);track $index){
+            <app-skeleton-product-card></app-skeleton-product-card>
+            }
+            }
+            @else {
             @for (product of store.recommendedProducts().slice(0, 5); track product.id) {
             <app-recommended-products [product]="product">
                 <app-toggle-wishlist-button class="!absolute top-3 right-3" [product]="product"
                     [style.view-transition-name]="'wishlist-button-' + product.id">
                 </app-toggle-wishlist-button>
             </app-recommended-products>
+            }
             }
         </div>
     </div>

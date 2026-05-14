@@ -8,7 +8,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { SearchBar } from '../../components/search-bar/search-bar';
 import { ProductCard } from '../../components/product-card/product-card';
-import { SkeletonCard } from '../../shared/skeleton-card/skeleton-card';
+import { SkeletonProductCard } from '../../shared/skeletons/skeleton-product-card';
 import { EcommerceStore } from '../../ecommerce-store';
 import { SearchLoadingService } from '../../services/search-loading';
 import { ToggleWishlistButton } from '../../components/toggle-wishlist-button/toggle-wishlist-button';
@@ -26,7 +26,7 @@ import { A11yModule } from '@angular/cdk/a11y';
     MatProgressSpinnerModule,
     SearchBar,
     ProductCard,
-    SkeletonCard,
+    SkeletonProductCard,
     ToggleWishlistButton,
     FilterSidebar,
     LoadMoreProducts,

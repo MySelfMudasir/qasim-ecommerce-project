@@ -68,8 +68,14 @@
         {{ store.filteredProducts().length }} products found
       </p> -->
 
+
   <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-5 gap-3 md:gap-6">
- @if (store.displayedProducts().length === 0) {
+    @if(store.isSkeletonLoading()) {
+    @for (item of [].constructor(store.displayedItemCount() || 0);track $index){
+    <app-skeleton-product-card></app-skeleton-product-card>
+    }
+    }
+    @else if (store.displayedProducts().length === 0) {
     <div class="col-span-full flex flex-col items-center justify-center py-16" style="background-color: var(--app-bg)">
       <h2 class="text-xl font-semibold mb-2" style="color: var(--app-text)">No products found</h2>
       <p class="text-sm" style="color: var(--app-text-muted)">Try selecting a different category.</p>
@@ -77,16 +83,36 @@
     }
     @else {
     @for (product of store.displayedProducts(); track product.id) {
-      <boneyard-skeleton name="product-card" [loading]="store.isSkeletonLoading()">
-        <app-product-card [product]="product">
-          <app-toggle-wishlist-button class="absolute! top-3 right-3" [product]="product"
+    <app-product-card [product]="product">
+      <app-toggle-wishlist-button class="absolute! top-3 right-3" [product]="product"
+        [style.view-transition-name]="'wishlist-button-' + product.id">
+      </app-toggle-wishlist-button>
+    </app-product-card>
+    }
+    }
+
+  </div>
+
+
+  <!-- <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-5 gap-3 md:gap-6">
+    @if (store.displayedProducts().length === 0) {
+    <div class="col-span-full flex flex-col items-center justify-center py-16" style="background-color: var(--app-bg)">
+      <h2 class="text-xl font-semibold mb-2" style="color: var(--app-text)">No products found</h2>
+      <p class="text-sm" style="color: var(--app-text-muted)">Try selecting a different category.</p>
+    </div>
+    }
+    @else {
+    @for (product of store.displayedProducts(); track product.id) {
+    <boneyard-skeleton name="product-card" [loading]="store.isSkeletonLoading()">
+      <app-product-card [product]="product">
+        <app-toggle-wishlist-button class="absolute! top-3 right-3" [product]="product"
           [style.view-transition-name]="'wishlist-button-' + product.id">
         </app-toggle-wishlist-button>
       </app-product-card>
     </boneyard-skeleton>
     }
     }
-  </div>
+  </div> -->
 </div>
 
 
@@ -116,12 +142,19 @@
     </span>
   </div>
   <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-5 gap-3 md:gap-4">
+    @if(store.isSkeletonLoading()) {
+    @for (item of [].constructor(store.displayedItemCount() || 0);track $index){
+    <app-skeleton-product-card></app-skeleton-product-card>
+    }
+    }
+    @else {
     @for (product of store.popularProducts().slice(0, 5); track product.id) {
     <app-popular-products [product]="product">
       <app-toggle-wishlist-button class="absolute! top-3 right-3" [product]="product"
         [style.view-transition-name]="'wishlist-button-' + product.id">
       </app-toggle-wishlist-button>
     </app-popular-products>
+    }
     }
   </div>
 </div>
@@ -146,12 +179,19 @@
     </span>
   </div>
   <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-5 gap-3 md:gap-4">
+    @if(store.isSkeletonLoading()) {
+    @for (item of [].constructor(store.displayedItemCount() || 0);track $index){
+    <app-skeleton-product-card></app-skeleton-product-card>
+    }
+    }
+    @else {
     @for (product of store.topSellingProducts().slice(0, 5); track product.id) {
-    <app-top-selling-products [product]="product">
-      <app-toggle-wishlist-button class="absolute! top-3 right-3" [product]="product"
-        [style.view-transition-name]="'wishlist-button-' + product.id">
-      </app-toggle-wishlist-button>
-    </app-top-selling-products>
+      <app-top-selling-products [product]="product">
+        <app-toggle-wishlist-button class="absolute! top-3 right-3" [product]="product"
+          [style.view-transition-name]="'wishlist-button-' + product.id">
+        </app-toggle-wishlist-button>
+      </app-top-selling-products>
+    }
     }
   </div>
 </div>

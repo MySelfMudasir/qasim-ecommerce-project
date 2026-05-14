@@ -1,9 +1,15 @@
-
 <div appViewPanel>
     <h2 class="text-2xl font-bold mb-4">Cart Items ({{ store.cartCount() }})</h2>
     <div class="flex flex-col gap-6">
+        @if(store.isSkeletonLoading()) {
+        @for (item of [].constructor(store.cartCount() || 0);track $index){
+        <app-skeleton-show-cart-item></app-skeleton-show-cart-item>
+        }
+        }
+        @else {
         @for (item of store.cartItems(); track item.product.id) {
-          <app-show-cart-item [item]="item"></app-show-cart-item>
+        <app-show-cart-item [item]="item"></app-show-cart-item>
+        }
         }
     </div>
 </div>

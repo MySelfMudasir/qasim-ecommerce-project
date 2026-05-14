@@ -1,6 +1,9 @@
 {
   "routes": [
-    "/products/all"
+    "/products/all",
+    "/product/",
+    "/wishlist",
+    "/cart"
   ],
   "breakpoints": [
     375,
@@ -9,7 +12,7 @@
   ],
   "out": "./src/bones",
   "wait": 8000,
-  "color": "#D4D4D4",
+  "color": "#e5e7eb",
   "darkColor": "#2a2a2a",
   "animate": "shimmer",
   "stagger": true,

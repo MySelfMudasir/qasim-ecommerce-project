@@ -33,7 +33,7 @@
     <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-5 gap-3 md:gap-6 min-w-0">
       @if (store.isSkeletonLoading()) {
       @for (item of [1,2,3,4,5,6]; track item) {
-      <app-skeleton-card></app-skeleton-card>
+      <app-skeleton-product-card></app-skeleton-product-card>
       }
       } @else if (store.displayedProducts().length === 0) {
       <div class="col-span-full flex flex-col items-center justify-center py-16"

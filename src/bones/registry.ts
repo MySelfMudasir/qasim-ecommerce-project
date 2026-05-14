@@ -5,11 +5,15 @@ import { configureBoneyard } from 'boneyard-js/angular'
 import _menu_bar from './menu-bar.bones.json'
 import _carousel from './carousel.bones.json'
 import _product_card from './product-card.bones.json'
+import _popular_products from './popular-products.bones.json'
+import _top_selling_products from './top-selling-products.bones.json'
 
-configureBoneyard({"color":"#D4D4D4","darkColor":"#2a2a2a","animate":"shimmer","stagger":true,"transition":true})
+configureBoneyard({"color":"#e5e7eb","darkColor":"#2a2a2a","animate":"shimmer","stagger":true,"transition":true})
 
 registerBones({
   "menu-bar": _menu_bar,
   "carousel": _carousel,
   "product-card": _product_card,
+  "popular-products": _popular_products,
+  "top-selling-products": _top_selling_products,
 })

@@ -37,6 +37,7 @@ export type EcommerceState = {
   preLoader: boolean;
   loading: boolean;
   isSkeletonLoading: boolean;
+  skeletonLoadingTime: string | null;
   searchLoading: boolean;
   isLoadingMore: boolean;
   searchedProduct: string;
@@ -82,6 +83,7 @@ export const EcommerceStore = signalStore(
     preLoader: false,
     loading: false,
     isSkeletonLoading: true,
+    skeletonLoadingTime: '3s',
     searchLoading: false,
     isLoadingMore: false,
     searchedProduct: '',
@@ -293,7 +295,7 @@ export const EcommerceStore = signalStore(
         setTimeout(() => {
           searchLoadingService.close();
           patchState(store, { isSkeletonLoading: false });
-        }, 1500);
+        }, 2000);
       }),
 
       setProductsListSeoTags: signalMethod<string | undefined>((category) => {
@@ -320,6 +322,12 @@ export const EcommerceStore = signalStore(
             type: 'product',
           });
         }
+
+         // // 2. simulate API delay (or real API later)
+        setTimeout(() => {
+          searchLoadingService.close();
+          patchState(store, { isSkeletonLoading: false });
+        }, 2000);
       }),
 
       setProductSeoTags: signalMethod<ProductModel | undefined>((product) => {
@@ -335,17 +343,19 @@ export const EcommerceStore = signalStore(
       openWishlist: () => {
         patchState(store, { isSkeletonLoading: true });
 
+        // // 2. simulate API delay (or real API later)
         setTimeout(() => {
           patchState(store, { isSkeletonLoading: false });
-        }, 500);
+        }, 2000);
       },
 
       openCart: () => {
         patchState(store, { isSkeletonLoading: true });
 
+        // // 2. simulate API delay (or real API later)
         setTimeout(() => {
           patchState(store, { isSkeletonLoading: false });
-        }, 500);
+        }, 2000);
       },
 
       // Skeleton methods
