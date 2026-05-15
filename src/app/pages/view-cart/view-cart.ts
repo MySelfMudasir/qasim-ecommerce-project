@@ -15,4 +15,7 @@ import { MatButton } from '@angular/material/button';
 export class ViewCart {
   store = inject(EcommerceStore);
 
+  ngOnInit() {
+    this.store.openWishlist(); // THIS IS THE KEY
+  }
 }

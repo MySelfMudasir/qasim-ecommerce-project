@@ -13,6 +13,7 @@ import { SkeletonProductCard } from '../../shared/skeletons/skeleton-product-car
 import { PopularProducts } from '../../components/popular-products/popular-products';
 import { TopSellingProducts } from '../../components/top-selling-products/top-selling-products';
 import { SkeletonComponent } from 'boneyard-js/angular';
+import { AdvertisementBanner } from "../../components/advertisement-banner/advertisement-banner";
 
 @Component({
   selector: 'app-products-grid',
@@ -29,6 +30,7 @@ import { SkeletonComponent } from 'boneyard-js/angular';
     SkeletonComponent,
     PopularProducts,
     TopSellingProducts,
+    AdvertisementBanner
 ],
   templateUrl: './products-grid.html',
   styleUrl: './products-grid.scss',

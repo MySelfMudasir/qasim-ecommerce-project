@@ -10,7 +10,6 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { AsyncPipe } from '@angular/common';
 import { BackButton } from '../../components/back-button/back-button';
 import { ViewPanel } from '../../directives/view-panel';
-import { MatSelectModule } from '@angular/material/select';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { STEPPER_GLOBAL_OPTIONS } from '@angular/cdk/stepper';
 import { MatIconModule } from '@angular/material/icon';
@@ -29,7 +28,6 @@ import { SignInDialog } from '../../components/sign-in-dialog/sign-in-dialog';
     BackButton,
     MatInputModule,
     MatButtonModule,
-    MatSelectModule,
     MatCheckboxModule,
     MatIconModule,
     AsyncPipe,

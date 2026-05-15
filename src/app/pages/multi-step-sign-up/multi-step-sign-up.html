@@ -1,4 +1,4 @@
-<div class="mx-auto max-w-[1200px]">
+<div class="mx-auto max-w-300">
     <app-back-button class="mb-6" navigateTo="/products/all"> Continue Shopping </app-back-button>
 
     <div appViewPanel class="signup-shell">
@@ -188,11 +188,11 @@
 
                         <mat-form-field appearance="outline">
                             <mat-label>Business type</mat-label>
-                            <mat-select formControlName="businessType" required>
+                            <select matNativeControl formControlName="businessType" required>
                                 @for (type of businessTypes; track type) {
-                                <mat-option [value]="type">{{ type }}</mat-option>
+                                <option [value]="type">{{ type }}</option>
                                 }
-                            </mat-select>
+                            </select>
                             @if (businessFormGroup.get('businessType')?.hasError('required')) {
                             <mat-error>Business type is required</mat-error>
                             }
@@ -200,11 +200,11 @@
 
                         <mat-form-field appearance="outline">
                             <mat-label>Primary category</mat-label>
-                            <mat-select formControlName="primaryCategory" required>
+                            <select matNativeControl formControlName="primaryCategory" required>
                                 @for (category of productCategories; track category) {
-                                <mat-option [value]="category">{{ category }}</mat-option>
+                                <option [value]="category">{{ category }}</option>
                                 }
-                            </mat-select>
+                            </select>
                             @if (businessFormGroup.get('primaryCategory')?.hasError('required')) {
                             <mat-error>Primary category is required</mat-error>
                             }

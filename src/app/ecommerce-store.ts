@@ -295,7 +295,7 @@ export const EcommerceStore = signalStore(
         setTimeout(() => {
           searchLoadingService.close();
           patchState(store, { isSkeletonLoading: false });
-        }, 2000);
+        }, 1500);
       }),
 
       setProductsListSeoTags: signalMethod<string | undefined>((category) => {
@@ -327,7 +327,7 @@ export const EcommerceStore = signalStore(
         setTimeout(() => {
           searchLoadingService.close();
           patchState(store, { isSkeletonLoading: false });
-        }, 2000);
+        }, 1500);
       }),
 
       setProductSeoTags: signalMethod<ProductModel | undefined>((product) => {
@@ -346,7 +346,7 @@ export const EcommerceStore = signalStore(
         // // 2. simulate API delay (or real API later)
         setTimeout(() => {
           patchState(store, { isSkeletonLoading: false });
-        }, 2000);
+        }, 1500);
       },
 
       openCart: () => {
@@ -355,7 +355,7 @@ export const EcommerceStore = signalStore(
         // // 2. simulate API delay (or real API later)
         setTimeout(() => {
           patchState(store, { isSkeletonLoading: false });
-        }, 2000);
+        }, 1500);
       },
 
       // Skeleton methods
