@@ -2,32 +2,18 @@ import { Component, inject, signal } from '@angular/core';
 import { ViewPanel } from '../../directives/view-panel';
 import {
   FormBuilder,
-  FormGroup,
-  FormGroupName,
-  ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { MatFormField, MatLabel } from '@angular/material/form-field';
-import { MatSelectModule } from '@angular/material/select';
-import { MatInputModule } from '@angular/material/input';
-import { MatFormFieldModule } from '@angular/material/form-field';
 import { EcommerceStore } from '../../ecommerce-store';
 import { OptionItemModel } from '../../models/option-item';
-import { MatButton } from '@angular/material/button';
 import { AddReviewParams } from '../../models/user-review';
+import { SharedModule } from '../../modules/shared';
 
 @Component({
   selector: 'app-write-review',
   imports: [
     ViewPanel,
-    ReactiveFormsModule,
-    MatLabel,
-    MatInputModule,
-    MatButton,
-    MatFormFieldModule,
-    MatInputModule,
-    MatSelectModule,
-    MatFormField,
+    SharedModule
   ],
   templateUrl: './write-review.html',
   styleUrl: './write-review.scss',

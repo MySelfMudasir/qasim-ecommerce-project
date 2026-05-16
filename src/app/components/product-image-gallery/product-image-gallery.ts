@@ -1,14 +1,11 @@
 import { Component, input, signal, computed, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { MatIconModule } from '@angular/material/icon';
-import { MatButtonModule } from '@angular/material/button';
-import { MatDialogModule, MatDialog } from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { ProductImageLightboxComponent } from './product-image-lightbox/product-image-lightbox';
+import { SharedModule } from '../../modules/shared';
 
 @Component({
   selector: 'app-product-image-gallery',
-  standalone: true,
-  imports: [CommonModule, MatIconModule, MatButtonModule, MatDialogModule],
+  imports: [SharedModule],
   templateUrl: './product-image-gallery.html',
   styleUrl: './product-image-gallery.scss',
 })

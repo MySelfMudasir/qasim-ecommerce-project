@@ -2,12 +2,11 @@ import { Component, computed, inject, input } from '@angular/core';
 import { cartModel } from '../../models/cart';
 import { QuantitySelector } from '../../components/quantity-selector/quantity-selector';
 import { EcommerceStore } from '../../ecommerce-store';
-import { MatIcon } from '@angular/material/icon';
-import { MatButton, MatIconButton } from '@angular/material/button';
+import { SharedModule } from '../../modules/shared';
 
 @Component({
   selector: 'app-show-cart-item',
-  imports: [QuantitySelector, MatIcon, MatIconButton],
+  imports: [QuantitySelector, SharedModule],
   templateUrl: './show-cart-item.html',
   styleUrl: './show-cart-item.scss',
 })

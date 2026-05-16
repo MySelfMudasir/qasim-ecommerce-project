@@ -63,7 +63,7 @@
     <div class="border-t border-white my-8"></div>
 
     @if (pwaInstall.canInstall()) {
-    <button matButton="outlined" class="" style="color: var(--app-bg);" (click)="pwaInstall.installPwa()">
+    <button matButton="outlined" matTooltip="Install App" class="" style="color: var(--app-bg);" (click)="pwaInstall.installPwa()">
       <mat-icon>install_mobile</mat-icon>
       Install Khyber Foods App
     </button>

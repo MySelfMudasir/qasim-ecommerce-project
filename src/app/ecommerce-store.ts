@@ -16,7 +16,7 @@ import { SignInDialog } from './components/sign-in-dialog/sign-in-dialog';
 import { MatDialog } from '@angular/material/dialog';
 import { Router, RouterLink } from '@angular/router';
 import { orderModel } from './models/order';
-import { withStorageSync } from '@angular-architects/ngrx-toolkit';
+import { withStorageSync, withLocalStorage } from '@angular-architects/ngrx-toolkit';
 import { AddReviewParams, UserReviewModel } from './models/user-review';
 import { SearchLoadingService } from './services/search-loading';
 import { SeoManager } from './services/seo-manager';
@@ -24,6 +24,7 @@ import { CheckoutModel } from './models/checkout';
 import { formatDate } from '@angular/common';
 import { PRODUCTS } from './data/products.data';
 import { CATEGORIES } from './data/categories.data';
+import { AuthService } from './services/auth-service';
 
 export type EcommerceState = {
   products: ProductModel[];
@@ -107,10 +108,13 @@ export const EcommerceStore = signalStore(
     displayedItemCount: 10,
   } as EcommerceState),
 
-  // withStorageSync({
-  //   key: 'E-Commerce Store',
-  //   select: ({ user, wishlistItems, cartItems }) => ({ user, wishlistItems, cartItems }),
-  // }),
+  withStorageSync(
+    {
+      key: 'E-Commerce Store',
+      select: ({ user, wishlistItems, cartItems }) => ({ user, wishlistItems, cartItems }),
+    },
+    withLocalStorage(),
+  ),
 
   withComputed(
     ({
@@ -280,6 +284,7 @@ export const EcommerceStore = signalStore(
       router = inject(Router),
       seoManager = inject(SeoManager),
       searchLoadingService = inject(SearchLoadingService),
+      authService = inject(AuthService),
     ) => ({
       setCategory: signalMethod<string>((selectedCategory: string) => {
         searchLoadingService.open();
@@ -378,8 +383,9 @@ export const EcommerceStore = signalStore(
       },
 
       removeFromWishlist: (product: ProductModel) => {
+        const updatedWishlistItems = store.wishlistItems().filter((p) => p.id !== product.id);
         patchState(store, {
-          wishlistItems: store.wishlistItems().filter((p) => p.id !== product.id),
+          wishlistItems: updatedWishlistItems,
         });
         toaster.success(`Product remove from wishlist`);
       },
@@ -485,8 +491,9 @@ export const EcommerceStore = signalStore(
 
       //remove from cart
       removeFromCart: (product: ProductModel) => {
+        const updatedCartItems = store.cartItems().filter((c) => c.product.id !== product.id);
         patchState(store, {
-          cartItems: store.cartItems().filter((c) => c.product.id !== product.id),
+          cartItems: updatedCartItems,
         });
       },
 
@@ -594,15 +601,17 @@ export const EcommerceStore = signalStore(
 
       signUp: ({ email, checkout, dialogId, redirectUrl }: SignInParams) => {
         // console.log('Signing up with', { email, checkout, dialogId, redirectUrl });
-        patchState(store, {
-          user: {
-            id: crypto.randomUUID(),
-            name: email.split('@')[0],
-            email,
-            imageUrl: 'https://randomuser.me/api/portraits/men/1.jpg',
-            checkoutMode: { mode: 'delivery' },
-          },
-        });
+        const user: UserModel = {
+          id: crypto.randomUUID(),
+          name: email.split('@')[0],
+          email,
+          imageUrl: 'https://randomuser.me/api/portraits/men/1.jpg',
+          checkoutMode: { mode: 'delivery' },
+        };
+
+        authService.setSession(crypto.randomUUID());
+
+        patchState(store, { user });
 
         toaster.success(`Account created for ${email}`);
         matDialog.getDialogById(dialogId)?.close();
@@ -617,15 +626,18 @@ export const EcommerceStore = signalStore(
       signIn: ({ email, checkout, dialogId, redirectUrl }: SignInParams) => {
         // console.log('Signing in with', { email, checkout, dialogId, redirectUrl });
         const mode: CheckoutModel['mode'] = 'collection';
+        const user: UserModel = {
+          id: '1',
+          name: 'John Doe',
+          email: email,
+          imageUrl: 'https://randomuser.me/api/portraits/men/1.jpg',
+          checkoutMode: { mode: 'collection' },
+        };
+
+        authService.setSession(crypto.randomUUID());
 
         patchState(store, {
-          user: {
-            id: '1',
-            name: 'John Doe',
-            email: email,
-            imageUrl: 'https://randomuser.me/api/portraits/men/1.jpg',
-            checkoutMode: { mode: 'collection' },
-          },
+          user,
           checkout: {
             ...store.checkout(),
             mode,
@@ -643,6 +655,7 @@ export const EcommerceStore = signalStore(
       },
 
       signOut: () => {
+        authService.logout();
         patchState(store, LOGOUT_STATE);
         // router.navigate(['/']);
       },

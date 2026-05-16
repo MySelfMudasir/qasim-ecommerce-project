@@ -1,17 +1,14 @@
 import { Component, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
-import { MatIconButton } from '@angular/material/button';
-import { MatIcon } from '@angular/material/icon';
-import { MatInputModule } from '@angular/material/input';
-import { MatRippleModule } from '@angular/material/core';
 import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
 import { SearchLoadingService } from '../../services/search-loading';
 import { EcommerceStore } from '../../ecommerce-store';
 import { ActivatedRoute } from '@angular/router';
+import { SharedModule } from '../../modules/shared';
 
 @Component({
   selector: 'app-search-bar',
-  imports: [MatIconButton, MatIcon, MatInputModule, MatRippleModule],
+  imports: [SharedModule],
   templateUrl: './search-bar.html',
   styleUrl: './search-bar.scss',
 })

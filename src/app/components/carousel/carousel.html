@@ -1,14 +1,20 @@
-<div class="relative w-full h-[260px] md:h-[400px] overflow-hidden rounded-lg">
+<div class="relative w-full h-[380px] md:h-[500px] overflow-hidden rounded-lg">
 
 
     <!-- SLIDE MODE -->
     <div *ngIf="finalConfig().animation === 'slide'" class="flex transition-transform duration-700 ease-in-out h-full"
         [style.transform]="'translateX(-' + currentIndex() * 100 + '%)'">
         <div *ngFor="let s of slides()" class="w-full flex-shrink-0 relative h-full">
-            <img [src]="s.image" loading="lazy" alt="image not found" onerror="this.onerror=null; this.src='./assets/images/image-404.jpg'" class="w-full h-full object-cover" />
-            <!-- overlay -->
-            <!-- <div class="absolute inset-0 bg-black/8 z-10"></div> -->
-            <a [href]="s.link" target="_blank" rel="noopener noreferrer">
+            <a [href]="s.url" target="_blank" rel="noopener noreferrer">
+                <img [src]="s.mobileImage" loading="lazy" alt="image not found"
+                    onerror="this.onerror=null; this.src='./assets/images/image-404.jpg'"
+                    class="w-full h-full object-cover sm:hidden" />
+                <img [src]="s.desktopImage" loading="lazy" alt="image not found"
+                    onerror="this.onerror=null; this.src='./assets/images/image-404.jpg'"
+                    class="w-full h-full object-cover hidden sm:block" />
+                <!-- overlay -->
+                <!-- <div class="absolute inset-0 bg-black/8 z-10"></div> -->
+                <!-- <a [href]="s.url" target="_blank" rel="noopener noreferrer"> -->
                 <!-- text -->
                 <!-- <div class="absolute inset-0 flex flex-col items-center justify-center px-6 md:px-16 bg-black/20 z-10">
                     <h1 class="text-white text-4xl md:text-6xl font-bold">
@@ -23,13 +29,18 @@
     </div>
 
     <!-- FADE MODE -->
-    <div *ngIf="finalConfig().animation === 'fade'" class="relative w-full h-[260px] md:h-[500px]">
+    <div *ngIf="finalConfig().animation === 'fade'" class="relative w-full h-[380] md:h-[500px]">
         <div *ngFor="let s of slides(); let i = index" class="absolute inset-0 transition-opacity duration-700"
             [class.opacity-100]="i === currentIndex()" [class.opacity-0]="i !== currentIndex()"
             [class.z-10]="i === currentIndex()" [class.z-0]="i !== currentIndex()">
 
-            <a [href]="s.link" target="_blank" rel="noopener noreferrer">
-                <img [src]="s.image" loading="lazy" alt="image not found" onerror="this.onerror=null; this.src='./assets/images/image-404.jpg'" class="w-full h-full object-cover" />
+            <a [href]="s.url" target="_blank" rel="noopener noreferrer">
+                <img [src]="s.mobileImage" loading="lazy" alt="image not found"
+                    onerror="this.onerror=null; this.src='./assets/images/image-404.jpg'"
+                    class="w-full h-full object-cover sm:hidden" />
+                <img [src]="s.desktopImage" loading="lazy" alt="image not found"
+                    onerror="this.onerror=null; this.src='./assets/images/image-404.jpg'"
+                    class="w-full h-full object-cover hidden sm:block" />
                 <!-- overlay -->
                 <!-- <div class="absolute inset-0 bg-black/5 z-10"></div> -->
                 <!-- text -->
@@ -46,13 +57,18 @@
     </div>
 
     <!-- ZOOM MODE -->
-    <div *ngIf="finalConfig().animation === 'zoom'" class="relative w-full h-[260px] md:h-[500px]">
+    <div *ngIf="finalConfig().animation === 'zoom'" class="relative w-full h-[380px] md:h-[500px]">
         <div *ngFor="let s of slides(); let i = index" class="absolute inset-0 transition-all duration-700"
             [class.scale-100]="i === currentIndex()" [class.scale-110]="i !== currentIndex()"
             [class.opacity-100]="i === currentIndex()" [class.opacity-0]="i !== currentIndex()">
 
-            <a [href]="s.link" target="_blank" rel="noopener noreferrer">
-                <img [src]="s.image" loading="lazy" alt="image not found" onerror="this.onerror=null; this.src='./assets/images/image-404.jpg'" class="w-full h-full object-cover" />
+            <a [href]="s.url" target="_blank" rel="noopener noreferrer">
+                <img [src]="s.mobileImage" loading="lazy" alt="image not found"
+                    onerror="this.onerror=null; this.src='./assets/images/image-404.jpg'"
+                    class="w-full h-full object-cover sm:hidden" />
+                <img [src]="s.desktopImage" loading="lazy" alt="image not found"
+                    onerror="this.onerror=null; this.src='./assets/images/image-404.jpg'"
+                    class="w-full h-full object-cover hidden sm:block" />
                 <!-- overlay -->
                 <!-- <div class="absolute inset-0 bg-black/8 z-10"></div> -->
                 <!-- text -->

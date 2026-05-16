@@ -1,0 +1,37 @@
+<!-- ad-dialog.component.html -->
+
+<div class="dialog-wrapper">
+
+    <a [href]="advertisementUrl" target="_blank" rel="noopener noreferrer">
+        <div class="offer-card">
+
+        <div class="hot-badge">
+            <mat-icon>local_fire_department</mat-icon>
+            TRENDING
+        </div>
+
+        <div class="icon-wrap">
+            <mat-icon class="promo-icon">
+                storefront
+            </mat-icon>
+        </div>
+
+        <div class="sale">
+            60%
+        </div>
+
+        <h3>Special Mega Sale</h3>
+
+        <p>
+            Save up to 60% on selected categories this week only.
+        </p>
+
+    </div>
+    </a>
+
+    <!-- CLOSE BUTTON -->
+    <button matIconButton class="close-btn" (click)="closeDialog()">
+        <mat-icon>close</mat-icon>
+    </button>
+
+</div>

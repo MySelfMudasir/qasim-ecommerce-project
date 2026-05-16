@@ -1,14 +1,7 @@
 import { Component, inject, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { NonNullableFormBuilder, ReactiveFormsModule, Validators, FormControl } from '@angular/forms';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { merge } from 'rxjs';
-
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatSelectModule } from '@angular/material/select';
 
 import { EcommerceStore } from '../../ecommerce-store';
 import { BackButton } from '../../components/back-button/back-button';
@@ -17,19 +10,13 @@ import { CollectionDate } from '../../components/collection-date/collection-date
 import { CollectionTime } from '../../components/collection-time/collection-time';
 import { ShippingForm } from '../shipping-form/shipping-form';
 import { ShippingModel } from '../../models/checkout';
+import { SharedModule } from '../../modules/shared';
 
 @Component({
   selector: 'app-checkout',
-  standalone: true,
   imports: [
-    CommonModule,
-    ReactiveFormsModule,
+    SharedModule,
     BackButton,
-    MatButtonModule,
-    MatIconModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatSelectModule,
     SummarizeOrder,
     CollectionDate,
     CollectionTime,

@@ -1,11 +1,8 @@
 import { Component, inject, signal, computed, HostListener, PLATFORM_ID, OnInit, ViewChild } from '@angular/core';
-import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { isPlatformBrowser } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
-import { MatSidenavModule, MatSidenav } from '@angular/material/sidenav';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSidenav } from '@angular/material/sidenav';
 import { SearchBar } from '../../components/search-bar/search-bar';
 import { ProductCard } from '../../components/product-card/product-card';
 import { SkeletonProductCard } from '../../shared/skeletons/skeleton-product-card';
@@ -15,15 +12,12 @@ import { ToggleWishlistButton } from '../../components/toggle-wishlist-button/to
 import { FilterSidebar, FilterOptions } from '../../components/filter-sidebar/filter-sidebar';
 import { LoadMoreProducts } from '../../components/load-more-products/load-more-products';
 import { A11yModule } from '@angular/cdk/a11y';
+import { SharedModule } from '../../modules/shared';
 
 @Component({
   selector: 'app-search-results',
   imports: [
-    CommonModule,
-    MatSidenavModule,
-    MatButtonModule,
-    MatIconModule,
-    MatProgressSpinnerModule,
+    SharedModule,
     SearchBar,
     ProductCard,
     SkeletonProductCard,

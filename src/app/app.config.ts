@@ -1,4 +1,4 @@
-import { ApplicationConfig, inject, provideBrowserGlobalErrorListeners } from '@angular/core';
+import { ApplicationConfig, provideBrowserGlobalErrorListeners } from '@angular/core';
 import {
   PreloadAllModules,
   provideRouter,
@@ -14,7 +14,7 @@ import { provideHotToastConfig } from '@ngxpert/hot-toast';
 import { environment } from '../environments/environment.development';
 import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
 import { ThemeService } from './services/theme';
-import { APP_INITIALIZER, isDevMode } from '@angular/core';
+import { APP_INITIALIZER, inject, isDevMode } from '@angular/core';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { ScrollToTopGuard } from './guards/scroll-to-top.guard';
 import { provideServiceWorker } from '@angular/service-worker';
@@ -42,7 +42,7 @@ export const appConfig: ApplicationConfig = {
         marginTop: '70px',
       },
       stacking: 'depth',
-      duration: 500,
+      duration: 700,
     }),
 
     // provideFirebaseApp(() => initializeApp(environment.firebase)),

@@ -1,13 +1,11 @@
 import { Component, inject } from '@angular/core';
 import { ViewPanel } from '../../directives/view-panel';
-import { MatIcon } from '@angular/material/icon';
 import { EcommerceStore } from '../../ecommerce-store';
-import { MatButton } from '@angular/material/button';
-import { RouterLink } from '@angular/router';
+import { SharedModule } from '../../modules/shared';
 
 @Component({
   selector: 'app-tease-wishlist',
-  imports: [ViewPanel, MatButton, MatIcon, RouterLink],
+  imports: [ViewPanel, SharedModule],
   templateUrl: './tease-wishlist.html',
   styleUrl: './tease-wishlist.scss',
 })

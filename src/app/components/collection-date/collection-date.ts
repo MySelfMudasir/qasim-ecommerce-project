@@ -4,10 +4,11 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { ReactiveFormsModule, FormControl } from '@angular/forms';
+import { SharedModule } from '../../modules/shared';
 
 @Component({
   selector: 'app-collection-date',
-  imports: [MatFormFieldModule, MatInputModule, MatDatepickerModule, ReactiveFormsModule],
+  imports: [SharedModule],
   templateUrl: './collection-date.html',
   styleUrl: './collection-date.scss',
   providers: [provideNativeDateAdapter()],

@@ -1,12 +1,10 @@
 import { Component, inject } from '@angular/core';
 import { EcommerceStore } from '../../ecommerce-store';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatButtonModule } from '@angular/material/button';
-import { CommonModule } from '@angular/common';
+import { SharedModule } from '../../modules/shared';
 
 @Component({
   selector: 'app-load-more-products',
-  imports: [MatProgressSpinnerModule, MatButtonModule, CommonModule],
+  imports: [SharedModule],
   templateUrl: './load-more-products.html',
   styleUrl: './load-more-products.scss',
 })

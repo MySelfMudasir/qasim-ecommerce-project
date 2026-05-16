@@ -4,18 +4,18 @@
   <div class="flex items-center gap-2 md:gap-4">
 
     <!-- Wishlist -->
-    <button matIconButton routerLink="/wishlist" [matBadge]="store.wishlistCount()"
-      [matBadgeHidden]="store.wishlistCount() === 0">
+    <button matIconButton  routerLink="/wishlist" [matBadge]="store.wishlistCount()"
+      [matBadgeHidden]="store.wishlistCount() === 0" matTooltip="Wishlist">
       <mat-icon>favorite</mat-icon>
     </button>
 
     <!-- Cart -->
-    <button matIconButton routerLink="/cart" [matBadge]="store.cartCount()" [matBadgeHidden]="store.cartCount() === 0">
+    <button matIconButton routerLink="/cart" [matBadge]="store.cartCount()" [matBadgeHidden]="store.cartCount() === 0" matTooltip="Cart">
       <mat-icon>shopping_cart</mat-icon>
     </button>
 
     @if(store.user(); as user) {
-    <button matIconButton [matMenuTriggerFor]="userMenu">
+    <button matIconButton [matMenuTriggerFor]="userMenu" matTooltip="Account">
       <img [src]="user.imageUrl" loading="lazy" [alt]="user.name"
         onerror="this.onerror=null; this.src='./assets/images/image-404.jpg'" class="w-8 h-8 rounded-full" />
     </button>
@@ -25,7 +25,7 @@
         <span class="text-xs">{{ user.email }}</span>
       </div>
       <mat-divider></mat-divider>
-      <button class="!min-h-[32px]" mat-menu-item (click)="store.signOut()">
+      <button class="!min-h-[32px]" mat-menu-item (click)="store.signOut()" matTooltip="Sign Out">
         <mat-icon>logout</mat-icon>
         <span>Sign Out</span>
       </button>
@@ -35,7 +35,7 @@
 
     <!-- Hidden on mobile -->
     <div class="hidden md:inline">
-      <button matButton class="" (click)="openSignInDialog()">
+      <button matButton matTooltip="Sign In" class="" (click)="openSignInDialog()">
         Sign In
       </button>
 
@@ -43,7 +43,7 @@
         Sign Up
       </button> -->
 
-      <button matButton="filled" class="hidden md:inline" routerLink="/multi-step-sign-up">
+      <button matButton="filled" matTooltip="Sign Up" class="hidden md:inline" routerLink="/multi-step-sign-up">
         Sign Up
       </button>
     </div>

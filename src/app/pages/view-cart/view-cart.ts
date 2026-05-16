@@ -4,11 +4,11 @@ import { BackButton } from "../../components/back-button/back-button";
 import { ListCartItems } from "../list-cart-items/list-cart-items";
 import { TeaseWishlist } from '../tease-wishlist/tease-wishlist';
 import { SummarizeOrder } from '../../components/summarize-order/summarize-order';
-import { MatButton } from '@angular/material/button';
+import { SharedModule } from '../../modules/shared';
 
 @Component({
   selector: 'app-view-cart',
-  imports: [BackButton, MatButton, ListCartItems, TeaseWishlist, SummarizeOrder],
+  imports: [BackButton, ListCartItems, TeaseWishlist, SummarizeOrder, SharedModule],
   templateUrl: './view-cart.html',
   styleUrl: './view-cart.scss',
 })

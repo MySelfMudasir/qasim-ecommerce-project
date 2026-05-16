@@ -1,13 +1,12 @@
 import { Component, inject } from '@angular/core';
-import { MatButton } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
-import { MatIcon } from '@angular/material/icon';
 import { Router } from '@angular/router';
 import { SignInDialog } from '../../components/sign-in-dialog/sign-in-dialog';
+import { SharedModule } from '../../modules/shared';
 
 @Component({
   selector: 'app-signup-success',
-  imports: [MatIcon, MatButton],
+  imports: [SharedModule],
   templateUrl: './signup-success.html',
   styleUrl: './signup-success.scss',
 })

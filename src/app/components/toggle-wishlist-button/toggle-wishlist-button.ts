@@ -1,12 +1,11 @@
 import { Component, inject, input, computed } from '@angular/core';
-import { MatIcon } from '@angular/material/icon';
 import { EcommerceStore } from '../../ecommerce-store';
 import { ProductModel } from '../../models/product';
-import { MatButton, MatIconButton } from '@angular/material/button';
+import { SharedModule } from '../../modules/shared';
 
 @Component({
   selector: 'app-toggle-wishlist-button',
-  imports: [MatIcon, MatIconButton],
+  imports: [SharedModule],
   templateUrl: './toggle-wishlist-button.html',
   styleUrl: './toggle-wishlist-button.scss',
 })

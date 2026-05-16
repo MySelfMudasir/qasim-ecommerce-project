@@ -5,11 +5,11 @@ import { RatingSummary } from '../rating-summary/rating-summary';
 import { ViewReviewItem } from '../view-review-item/view-review-item';
 import { EcommerceStore } from '../../ecommerce-store';
 import { WriteReview } from '../write-review/write-review';
-import { MatButton } from '@angular/material/button';
+import { SharedModule } from '../../modules/shared';
 
 @Component({
   selector: 'app-view-reviews',
-  imports: [MatButton, ViewPanel, RatingSummary, ViewReviewItem, WriteReview],
+  imports: [ViewPanel, RatingSummary, ViewReviewItem, WriteReview, SharedModule],
   templateUrl: './view-reviews.html',
   styleUrl: './view-reviews.scss',
 })

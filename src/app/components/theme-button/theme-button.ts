@@ -1,11 +1,10 @@
 import { Component, inject } from '@angular/core';
-import { MatIcon } from '@angular/material/icon';
 import { ThemeService } from '../../services/theme';
-import { MatButtonModule } from '@angular/material/button';
+import { SharedModule } from '../../modules/shared';
 
 @Component({
   selector: 'app-theme-button',
-  imports: [MatButtonModule, MatIcon],
+  imports: [SharedModule],
   templateUrl: './theme-button.html',
   styleUrl: './theme-button.scss',
 })

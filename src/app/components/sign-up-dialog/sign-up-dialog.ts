@@ -1,26 +1,14 @@
 import { Component, inject, signal, Signal } from '@angular/core';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIcon } from '@angular/material/icon';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogClose, MatDialogRef } from '@angular/material/dialog';
 import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { MatFormFieldModule, MatPrefix, MatSuffix } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
 import { EcommerceStore } from '../../ecommerce-store';
 import { SignInDialog } from '../sign-in-dialog/sign-in-dialog';
 import { SignInParams } from '../../models/user';
 import { Router } from '@angular/router';
+import { SharedModule } from '../../modules/shared';
 @Component({
   selector: 'app-sign-up-dialog',
-  imports: [
-    MatButtonModule,
-    MatIcon,
-    MatDialogClose,
-    ReactiveFormsModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatPrefix,
-    MatSuffix,
-  ],
+  imports: [SharedModule],
   templateUrl: './sign-up-dialog.html',
   styleUrl: './sign-up-dialog.scss',
 })
@@ -61,7 +49,10 @@ export class SignUpDialog {
     this.dialogRef.close();
     this.matDialog.open(SignInDialog, {
       disableClose: true,
-      data: { checkout: this.router.url === '/cart' ? true : false, redirectUrl: this.data.redirectUrl },
+      data: {
+        checkout: this.router.url === '/cart' ? true : false,
+        redirectUrl: this.data.redirectUrl,
+      },
     });
   }
 }

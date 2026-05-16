@@ -3,13 +3,14 @@ import { ViewPanel } from '../../directives/view-panel';
 import { CollectionDate } from "../collection-date/collection-date";
 import { CollectionTime } from "../collection-time/collection-time";
 import { EcommerceStore } from '../../ecommerce-store';
-import { NonNullableFormBuilder, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
+import { NonNullableFormBuilder, FormControl, Validators } from '@angular/forms';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { merge } from 'rxjs';
+import { SharedModule } from '../../modules/shared';
 
 @Component({
   selector: 'app-collection-details',
-  imports: [ViewPanel, CollectionDate, CollectionTime, ReactiveFormsModule],
+  imports: [ViewPanel, SharedModule, CollectionDate, CollectionTime],
   templateUrl: './collection-details.html',
   styleUrl: './collection-details.scss',
 })

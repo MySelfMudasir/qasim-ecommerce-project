@@ -5,10 +5,12 @@ import { RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { PwaInstallService } from '../../services/pwa-install.service';
 import { MatButton, MatButtonModule } from '@angular/material/button';
+import {MatTooltipModule} from '@angular/material/tooltip';
+import { SharedModule } from '../../modules/shared';
 
 @Component({
   selector: 'app-footer',
-  imports: [MatExpansionModule, MatIconModule, MatButtonModule, MatIconModule, RouterLink, CommonModule],
+  imports: [SharedModule],
   templateUrl: './footer.html',
   styleUrl: './footer.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

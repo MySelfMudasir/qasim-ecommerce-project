@@ -42,14 +42,14 @@
 </div>
 
 <div class="flex gap-4 mb-4 pb-4" style="background-color: var(--app-bg); border-bottom: 2px solid var(--app-border)">
-    <button matButton="filled" class="w-2/3 flex items-center gap-2" (click)="store.addToCart(product())"
+    <button matButton="filled" matTooltip="Add to Cart" class="w-2/3 flex items-center gap-2" (click)="store.addToCart(product())"
         [disabled]="!product().inStock">
         <mat-icon>shopping_cart</mat-icon>
         {{ product().inStock ? 'Add to Cart' : 'Out of Stock' }}
     </button>
 
     <app-toggle-wishlist-button [product]="product()"></app-toggle-wishlist-button>
-    <button matIconButton>
+    <button matIconButton matTooltip="Share">
         <mat-icon>share</mat-icon>
     </button>
 </div>

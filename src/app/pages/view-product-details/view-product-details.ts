@@ -1,7 +1,6 @@
 import { Component, computed, effect, inject, input } from '@angular/core';
 import { EcommerceStore } from '../../ecommerce-store';
 import { BackButton } from '../../components/back-button/back-button';
-import { MatIcon } from '@angular/material/icon';
 import { ToggleWishlistButton } from '../../components/toggle-wishlist-button/toggle-wishlist-button';
 import { ProductInfo } from '../product-info/product-info';
 import { ViewReviews } from '../view-reviews/view-reviews';
@@ -10,14 +9,14 @@ import { RecommendedProducts } from "../../components/recommended-products/recom
 import { PopularProducts } from "../../components/popular-products/popular-products";
 import { TopSellingProducts } from "../../components/top-selling-products/top-selling-products";
 import { SearchBar } from '../../components/search-bar/search-bar';
-import { SkeletonComponent } from "boneyard-js/angular";
 import { SkeletonProductImageGallery } from "../../shared/skeletons/skeleton-product-image-gallery";
 import { SkeletonProductInfo } from "../../shared/skeletons/skeleton-product-info";
 import { SkeletonProductCard } from "../../shared/skeletons/skeleton-product-card";
+import { SharedModule } from '../../modules/shared';
 
 @Component({
   selector: 'app-view-product-details',
-  imports: [BackButton, MatIcon, ToggleWishlistButton, ProductInfo, ViewReviews, ProductImageGallery, RecommendedProducts, PopularProducts, TopSellingProducts, SearchBar, SkeletonComponent, SkeletonProductImageGallery, SkeletonProductInfo, SkeletonProductCard],
+  imports: [BackButton, SharedModule, ToggleWishlistButton, ProductInfo, ViewReviews, ProductImageGallery, RecommendedProducts, PopularProducts, TopSellingProducts, SearchBar, SkeletonProductImageGallery, SkeletonProductInfo, SkeletonProductCard],
   templateUrl: './view-product-details.html',
   styleUrl: './view-product-details.scss',
 })
@@ -34,6 +33,10 @@ export class ViewProductDetails {
         this.store.setProductSeoTags(product);
       }
     });
+  }
+
+  ngOnInit() {
+    this.store.openWishlist(); // THIS IS THE KEY
   }
 
   backRoute = computed(() => {

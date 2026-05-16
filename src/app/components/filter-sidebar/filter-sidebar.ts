@@ -1,11 +1,6 @@
 import { Component, effect, inject, input, output, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { MatExpansionModule } from '@angular/material/expansion';
-import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MatSliderModule } from '@angular/material/slider';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
 import { EcommerceStore } from '../../ecommerce-store';
+import { SharedModule } from '../../modules/shared';
 
 export interface FilterOptions {
   featured?: string[];
@@ -21,12 +16,7 @@ export interface FilterOptions {
 @Component({
   selector: 'app-filter-sidebar',
   imports: [
-    CommonModule,
-    MatExpansionModule,
-    MatCheckboxModule,
-    MatSliderModule,
-    MatButtonModule,
-    MatIconModule,
+    SharedModule
   ],
   templateUrl: './filter-sidebar.html',
   styleUrl: './filter-sidebar.scss',

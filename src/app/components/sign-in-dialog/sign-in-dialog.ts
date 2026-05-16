@@ -1,41 +1,14 @@
 import { Component, inject, signal, Signal } from '@angular/core';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIcon } from '@angular/material/icon';
-import {
-  MAT_DIALOG_DATA,
-  MatDialog,
-  MatDialogClose,
-  MatDialogRef,
-} from '@angular/material/dialog';
-import {
-  NonNullableFormBuilder,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
-import {
-  MatFormFieldModule,
-  MatPrefix,
-  MatSuffix,
-} from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogClose, MatDialogRef } from '@angular/material/dialog';
+import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { EcommerceStore } from '../../ecommerce-store';
-import { SignUpDialog } from '../sign-up-dialog/sign-up-dialog';
 import { SignInParams } from '../../models/user';
 import { Router, RouterLink } from '@angular/router';
+import { SharedModule } from '../../modules/shared';
 
 @Component({
   selector: 'app-sign-in-dialog',
-  imports: [
-    MatButtonModule,
-    MatIcon,
-    MatDialogClose,
-    ReactiveFormsModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatPrefix,
-    MatSuffix,
-    RouterLink
-],
+  imports: [SharedModule],
   templateUrl: './sign-in-dialog.html',
   styleUrl: './sign-in-dialog.scss',
 })

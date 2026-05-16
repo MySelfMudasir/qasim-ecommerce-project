@@ -33,7 +33,7 @@
         <div class="mt-auto flex flex-col gap-3">
             <span class="text-lg md:text-xl font-bold leading-none">${{ product().price.toFixed(2) }}</span>
 
-            <button matButton="filled" class="w-full" (click)="store.addToCart(product())"
+            <button matButton="filled" matTooltip="Add to Cart" class="w-full" (click)="store.addToCart(product())"
                 [disabled]="!product().inStock">
                 <div class="flex items-center justify-center gap-2">
                     <div class="hidden md:flex">

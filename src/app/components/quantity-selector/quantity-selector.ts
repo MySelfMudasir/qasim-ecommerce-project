@@ -1,10 +1,9 @@
 import { Component, input, output } from '@angular/core';
-import { MatButton, MatIconButton } from '@angular/material/button';
-import { MatIcon } from '@angular/material/icon';
+import { SharedModule } from '../../modules/shared';
 
 @Component({
   selector: 'app-quantity-selector',
-  imports: [MatIconButton, MatIcon],
+  imports: [SharedModule],
   templateUrl: './quantity-selector.html',
   styleUrl: './quantity-selector.scss',
 })

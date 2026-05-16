@@ -21,10 +21,10 @@
         </div>
 
         <div class="flex gap-4">
-            <button matButton="filled" type="submit" [disabled]="store.loading()">
+            <button matButton="filled" matTooltip="Submit Review" type="submit" [disabled]="store.loading()">
                 {{ store.loading()? 'Submitting...': 'Submit Review' }}
             </button>
-            <button matButton="outlined" type="button" (click)="store.hideWriteReview()">
+            <button matButton="outlined" matTooltip="Cancel" type="button" (click)="store.hideWriteReview()">
                 Cancel
             </button>
         </div>

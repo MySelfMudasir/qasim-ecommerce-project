@@ -1,15 +1,12 @@
-import { Component, computed, inject, input, output } from '@angular/core';
+import { Component, inject, input, output } from '@angular/core';
 import { ProductModel } from '../../models/product';
-import { MatAnchor, MatButton } from "@angular/material/button";
-import { MatIcon } from '@angular/material/icon';
 import { EcommerceStore } from '../../ecommerce-store';
-import { RouterLink } from "@angular/router";
 import { StarRating } from "../star-rating/star-rating";
-import { CommonModule } from '@angular/common';
+import { SharedModule } from '../../modules/shared';
 
 @Component({
   selector: 'app-product-card',
-  imports: [MatIcon, MatButton, RouterLink, StarRating, CommonModule],
+  imports: [StarRating, SharedModule],
   templateUrl: './product-card.html',
   styleUrl: './product-card.scss',
 })

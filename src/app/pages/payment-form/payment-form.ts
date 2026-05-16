@@ -3,13 +3,12 @@ import { BackButton } from '../../components/back-button/back-button';
 import { ShippingForm } from '../shipping-form/shipping-form';
 import { SummarizeOrder } from '../../components/summarize-order/summarize-order';
 import { EcommerceStore } from '../../ecommerce-store';
-import { MatIcon } from '@angular/material/icon';
-import {MatRadioModule} from '@angular/material/radio';
 import { ViewPanel } from '../../directives/view-panel';
+import { SharedModule } from '../../modules/shared';
 
 @Component({
   selector: 'app-payment-form',
-  imports: [BackButton,ViewPanel, MatIcon, ShippingForm, SummarizeOrder, MatRadioModule],
+  imports: [BackButton,ViewPanel, SharedModule, ShippingForm, SummarizeOrder],
   templateUrl: './payment-form.html',
   styleUrl: './payment-form.scss'
 })

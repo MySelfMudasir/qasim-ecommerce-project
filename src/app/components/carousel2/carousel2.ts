@@ -7,7 +7,7 @@ import {
   signal,
   computed,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { SharedModule } from '../../modules/shared';
 
 export interface CarouselSlide {
   id: number;
@@ -33,8 +33,7 @@ export interface SlideImage {
 
 @Component({
   selector: 'app-carousel2',
-  standalone: true,
-  imports: [CommonModule],
+  imports: [SharedModule],
   templateUrl: './carousel2.html',
   styleUrls: ['./carousel2.scss'],
 })

@@ -2,10 +2,12 @@ import { CommonModule } from '@angular/common';
 import { Component, Input, signal, computed, effect, OnDestroy, input } from '@angular/core';
 import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
+import { SharedModule } from '../../modules/shared';
 
 export interface Slide {
-  image: string;
-  link?: string;
+  mobileImage: string;
+  desktopImage: string;
+  url?: string;
   title?: string;
   subtitle?: string;
 }
@@ -20,7 +22,7 @@ export interface CarouselConfig {
 
 @Component({
   selector: 'app-carousel',
-  imports: [CommonModule, MatButton, MatIcon],
+  imports: [SharedModule],
   templateUrl: './carousel.html',
   styleUrl: './carousel.scss',
   host: {

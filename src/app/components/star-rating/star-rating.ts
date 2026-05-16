@@ -1,9 +1,9 @@
 import { Component, computed, input } from '@angular/core';
-import { MatIcon } from '@angular/material/icon';
+import { SharedModule } from '../../modules/shared';
 
 @Component({
   selector: 'app-star-rating',
-  imports: [MatIcon],
+  imports: [SharedModule],
   templateUrl: './star-rating.html',
   styleUrl: './star-rating.scss',
 })

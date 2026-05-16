@@ -8,6 +8,7 @@ import { MatListItem, MatNavList } from '@angular/material/list';
 import { MatRipple } from '@angular/material/core';
 import { RouterLink } from '@angular/router';
 import { EcommerceStore } from '../../ecommerce-store';
+import { SharedModule } from '../../modules/shared';
 
 export interface MenuItem {
   label: string;
@@ -29,14 +30,7 @@ export interface MenuGroup {
 @Component({
   selector: 'app-menu-bar',
   imports: [
-    MatButtonModule,
-    MatMenuModule,
-    MatIcon,
-    A11yModule,
-    CommonModule,
-    MatListItem,
-    MatNavList,
-    RouterLink,
+    SharedModule,
   ],
   templateUrl: './menu-bar.html',
   styleUrl: './menu-bar.scss',

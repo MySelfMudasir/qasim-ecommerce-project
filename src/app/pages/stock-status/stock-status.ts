@@ -1,9 +1,9 @@
 import { Component, input } from '@angular/core';
-import { MatIcon } from "@angular/material/icon";
+import { SharedModule } from '../../modules/shared';
 
 @Component({
   selector: 'app-stock-status',
-  imports: [MatIcon],
+  imports: [SharedModule],
   templateUrl: './stock-status.html',
   styleUrl: './stock-status.scss',
   host: {

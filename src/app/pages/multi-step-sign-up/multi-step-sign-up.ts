@@ -4,32 +4,19 @@ import { BreakpointObserver } from '@angular/cdk/layout';
 import { StepperOrientation, MatStepperModule } from '@angular/material/stepper';
 import { Observable, zip } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { MatButtonModule } from '@angular/material/button';
-import { MatInputModule } from '@angular/material/input';
-import { MatFormFieldModule } from '@angular/material/form-field';
 import { AsyncPipe } from '@angular/common';
 import { BackButton } from '../../components/back-button/back-button';
-import { ViewPanel } from '../../directives/view-panel';
-import { MatCheckboxModule } from '@angular/material/checkbox';
+import { ViewPanel } from '../../directives/view-panel';;
 import { STEPPER_GLOBAL_OPTIONS } from '@angular/cdk/stepper';
-import { MatIconModule } from '@angular/material/icon';
 import { Router } from '@angular/router';
-import { MatDialog } from '@angular/material/dialog';
-import { SignInDialog } from '../../components/sign-in-dialog/sign-in-dialog';
+import { SharedModule } from '../../modules/shared';
 
 @Component({
   selector: 'app-multi-step-sign-up',
   imports: [
-    MatStepperModule,
-    FormsModule,
-    ReactiveFormsModule,
-    MatFormFieldModule,
+    SharedModule,
     ViewPanel,
     BackButton,
-    MatInputModule,
-    MatButtonModule,
-    MatCheckboxModule,
-    MatIconModule,
     AsyncPipe,
   ],
   templateUrl: './multi-step-sign-up.html',

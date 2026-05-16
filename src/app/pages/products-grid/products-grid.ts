@@ -1,10 +1,8 @@
-import { Component, inject, input, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, inject, input } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { EcommerceStore } from '../../ecommerce-store';
 import { ProductCard } from '../../components/product-card/product-card';
 import { ToggleWishlistButton } from '../../components/toggle-wishlist-button/toggle-wishlist-button';
-import { MatIcon } from '@angular/material/icon';
 import { Carousel, CarouselConfig } from '../../components/carousel/carousel';
 import { MenuBar } from '../../components/menu-bar/menu-bar';
 import { SearchBar } from '../../components/search-bar/search-bar';
@@ -13,15 +11,16 @@ import { SkeletonProductCard } from '../../shared/skeletons/skeleton-product-car
 import { PopularProducts } from '../../components/popular-products/popular-products';
 import { TopSellingProducts } from '../../components/top-selling-products/top-selling-products';
 import { SkeletonComponent } from 'boneyard-js/angular';
-import { AdvertisementBanner } from "../../components/advertisement-banner/advertisement-banner";
+import { AdvertisementBanner } from '../../components/advertisement-banner/advertisement-banner';
+import { ViewPanel } from '../../directives/view-panel';
+import { SharedModule } from '../../modules/shared';
 
 @Component({
   selector: 'app-products-grid',
   imports: [
     ProductCard,
     ToggleWishlistButton,
-    CommonModule,
-    MatIcon,
+    SharedModule,
     MenuBar,
     Carousel,
     SearchBar,
@@ -30,8 +29,9 @@ import { AdvertisementBanner } from "../../components/advertisement-banner/adver
     SkeletonComponent,
     PopularProducts,
     TopSellingProducts,
-    AdvertisementBanner
-],
+    AdvertisementBanner,
+    ViewPanel,
+  ],
   templateUrl: './products-grid.html',
   styleUrl: './products-grid.scss',
 })
@@ -51,50 +51,68 @@ export class ProductsGrid {
 
     this.mySlides = [
       {
-        link: 'https://www.google.com/',
-        image:
+        url: 'https://www.google.com/',
+        mobileImage:
+          'https://cdn.sanity.io/images/ge071mlp/production/0b909d9e77b6e038ae54df5b14388d6959b143c8-1201x901.webp',
+        desktopImage:
           'https://cdn.sanity.io/images/ge071mlp/production/026ea48ab32640bbebf949d12532d37d75b37e68-2861x982.webp',
         title: 'Fresh',
         subtitle: 'Up to 50% Off',
       },
       {
-        link: 'https://www.google.com/',
-        image:
-          'https://cdn.sanity.io/images/ge071mlp/production/5bc020192e25207ae66165e4d2501b85b43c5340-2862x982.jpg',
+        url: 'https://www.google.com/',
+        mobileImage:
+          'https://cdn.sanity.io/images/ge071mlp/production/41a8c754062e19a5a5680c5ebc5f0db19475b71d-1200x900.jpg',
+        desktopImage:
+          'https://cdn.sanity.io/images/ge071mlp/production/03eda4127d665536a0ca2536a2f7874d387bc154-3520x1216.jpg',
         title: 'Fresh',
         subtitle: 'Up to 50% Off',
       },
       {
-        link: 'https://www.google.com/',
-        image:
-          'https://cdn.sanity.io/images/ge071mlp/production/a8b4381ad4df433a0ad5006d0dd0bb1136b8a9c2-1280x438.gif',
+        url: 'https://www.google.com/',
+        mobileImage:
+          'https://cdn.sanity.io/images/ge071mlp/production/44232b80e84867d6f18ef40d23a9eb4132972839-1201x901.webp',
+        desktopImage:
+          'https://cdn.sanity.io/images/ge071mlp/production/77e238871783ed0a557d16cfc3fece2468dafba0-2861x982.webp',
         title: 'Cake',
         subtitle: 'Up to 50% Off',
       },
       {
-        link: 'https://www.google.com/',
-        image:
-          'https://cdn.sanity.io/images/ge071mlp/production/aee9ad853be7f090e494dbbc94b83a60bdfbbeab-2862x982.jpg',
+        url: 'https://www.google.com/',
+        mobileImage:
+          'https://cdn.sanity.io/images/ge071mlp/production/99733031fa94a9f307e04e26d6f2d06827b158d2-1201x901.webp',
+        desktopImage:
+          'https://cdn.sanity.io/images/ge071mlp/production/1d00a59961e0525625374a44beb150a71876ee51-2861x950.webp',
         title: 'Pizzas',
         subtitle: 'Up to 50% Off',
       },
       {
-        link: 'https://www.google.com/',
-        image:
-          'https://cdn.sanity.io/images/ge071mlp/production/338b067ba0639904c36c9a2a11b9c006f1b472eb-2862x982.webp',
+        url: 'https://www.google.com/',
+        mobileImage:
+          'https://cdn.sanity.io/images/ge071mlp/production/de19d7fb711e034a361bd9391300b550fe6c95b8-800x597.gif',
+        desktopImage:
+          'https://cdn.sanity.io/images/ge071mlp/production/3e365f4b53b9c49327abc291f03043a6fb05a970-1280x439.gif',
+        title: 'Burgers',
+        subtitle: 'Up to 50% Off',
+      },
+      {
+        url: 'https://www.google.com/',
+        mobileImage:
+          'https://cdn.sanity.io/images/ge071mlp/production/a184564aa64fe1db483c39c3e93cbb6fb368ed2d-1201x901.webp',
+        desktopImage:
+          'https://cdn.sanity.io/images/ge071mlp/production/9b0cf1fe84726923dff7f80e316dff56a716d260-2862x982.webp',
         title: 'Burgers',
         subtitle: 'Up to 50% Off',
       },
     ];
   }
-  
 
   onCategoryChange(category: string) {
     this.store.setCategory(category); // updates store immediately
   }
 
   carouselConfig: CarouselConfig = {
-    autoPlay: true,
+    autoPlay: false,
     interval: 3000,
     animation: 'slide',
     showIndicators: true,

@@ -1,14 +1,11 @@
 import { Component, input, Input } from '@angular/core';
 import { ViewPanel } from '../../directives/view-panel';
-import { MatIcon } from '@angular/material/icon';
-import { MatFormField } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatSelect, MatOption } from "@angular/material/select";
-import { FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
+import { SharedModule } from '../../modules/shared';
 
 @Component({
   selector: 'app-shipping-form',
-  imports: [ViewPanel, MatIcon, MatFormField, MatInputModule, MatSelect, MatOption, ReactiveFormsModule],
+  imports: [ViewPanel, SharedModule],
   templateUrl: './shipping-form.html',
   styleUrl: './shipping-form.scss',
 })

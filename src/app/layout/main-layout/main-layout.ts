@@ -1,22 +1,15 @@
 import { Component, inject } from '@angular/core';
-import { MatSidenavModule } from '@angular/material/sidenav';
-import { MatListModule } from '@angular/material/list';
-import { RouterOutlet, RouterLink, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { EcommerceStore } from '../../ecommerce-store';
 import { SidenavService } from '../../services/sidenav';
-import { CommonModule } from '@angular/common';
 import { Footer } from "../footer/footer";
 import { computed } from '@angular/core';
+import { SharedModule } from '../../modules/shared';
 
 @Component({
   selector: 'app-main-layout',
-  standalone: true,
   imports: [
-    MatSidenavModule,
-    MatListModule,
-    RouterOutlet,
-    CommonModule,
-    RouterLink,
+    SharedModule,
     Footer
 ],
   templateUrl: './main-layout.html',

@@ -1,49 +1,92 @@
+<!-- ecommerce-promo-banner.html -->
 
-<!-- Advertisement Banner Component -->
-<section class="ad-banner" role="region" aria-label="Advertisement Banner">
-	<div class="ad-content">
-		<div class="ad-image" aria-hidden="true"></div>
-		<div class="ad-text">
-			<h2 class="ad-title">Spring Sale — Up to 50% Off</h2>
-			<p class="ad-desc">Refresh your home and wardrobe with our limited-time deals. Free shipping on orders over $50.</p>
-			<div class="ad-actions">
-				<a class="ad-cta" href="/sale" role="button">Shop Now</a>
-				<button class="ad-dismiss" aria-label="Dismiss advertisement" title="Dismiss">✕</button>
+<mat-card class="banner">
+
+	<div class="pattern"></div>
+
+	<div class="content">
+
+		<!-- LEFT -->
+		<div class="left">
+
+			<div class="badge">
+				<mat-icon>shopping_bag</mat-icon>
+				Exclusive Shopping Deals
 			</div>
+
+			<h1>
+				Discover Amazing
+				<span class="highlight">Weekend Offers</span>
+			</h1>
+
+			<p>
+				Explore premium collections with unbeatable discounts,
+				fast delivery, and secure shopping experiences tailored for you.
+			</p>
+
+			<div class="features">
+
+				<div class="feature">
+					<mat-icon>local_shipping</mat-icon>
+					Free Shipping
+				</div>
+
+				<div class="feature">
+					<mat-icon>verified_user</mat-icon>
+					Secure Checkout
+				</div>
+
+				<div class="feature">
+					<mat-icon>bolt</mat-icon>
+					Fast Delivery
+				</div>
+
+			</div>
+
+			<div class="actions">
+
+				<button mat-raised-button class="shop-btn">
+					Shop Now
+				</button>
+
+				<button mat-stroked-button class="outline-btn">
+					View Collection
+				</button>
+
+			</div>
+
 		</div>
+
+		<!-- RIGHT -->
+		<div class="right">
+
+			<div class="offer-card">
+
+				<div class="hot-badge">
+					<mat-icon>local_fire_department</mat-icon>
+					TRENDING
+				</div>
+
+				<div class="icon-wrap">
+					<mat-icon class="promo-icon">
+						storefront
+					</mat-icon>
+				</div>
+
+				<div class="sale">
+					60%
+				</div>
+
+				<h3>Special Mega Sale</h3>
+
+				<p>
+					Save up to 60% on selected categories this week only.
+				</p>
+
+			</div>
+
+		</div>
+
 	</div>
 
-	<style>
-		.ad-banner{--bg:#fff;display:block;border:1px solid #e6e6e6;border-radius:8px;overflow:hidden;box-shadow:0 2px 6px rgba(0,0,0,.06);max-width:1100px;margin:12px auto}
-		.ad-content{display:flex;align-items:center;gap:20px;padding:18px}
-		.ad-image{flex:0 0 220px;height:120px;background-image:url('/assets/images/ad-sample.jpg');background-size:cover;background-position:center;border-radius:6px}
-		.ad-text{flex:1;min-width:0}
-		.ad-title{margin:0 0 6px;font-size:1.25rem;color:#111}
-		.ad-desc{margin:0 0 12px;color:#555}
-		.ad-actions{display:flex;gap:10px;align-items:center}
-		.ad-cta{background:#0078d4;color:#fff;padding:10px 14px;border-radius:6px;text-decoration:none;font-weight:600}
-		.ad-cta:focus{outline:2px solid #005a9e}
-		.ad-dismiss{background:transparent;border:1px solid #ddd;padding:6px 8px;border-radius:6px;cursor:pointer}
-		.ad-dismiss:hover{background:#f5f5f5}
-
-		@media (max-width:600px){
-			.ad-content{flex-direction:column;align-items:stretch}
-			.ad-image{width:100%;height:160px}
-		}
-	</style>
-
-	<script>
-		(function(){
-			const btn = document.currentScript && document.currentScript.parentElement.querySelector('.ad-dismiss');
-			if(!btn) return;
-			btn.addEventListener('click', ()=>{
-				const banner = btn.closest('.ad-banner');
-				if(!banner) return;
-				banner.style.transition = 'opacity .25s ease, max-height .25s ease';
-				banner.style.opacity = '0';
-				banner.style.maxHeight = '0';
-				setTimeout(()=> banner.remove(),300);
-			});
-		})();
-	</script>
-</section>
+</mat-card>

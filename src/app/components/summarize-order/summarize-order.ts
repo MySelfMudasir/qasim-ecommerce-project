@@ -1,12 +1,11 @@
 import { Component, computed, inject } from '@angular/core';
 import { ViewPanel } from '../../directives/view-panel';
 import { EcommerceStore } from '../../ecommerce-store';
-import { CommonModule } from '@angular/common';
-import { MatButton } from '@angular/material/button';
+import { SharedModule } from '../../modules/shared';
 
 @Component({
   selector: 'app-summarize-order',
-  imports: [ViewPanel, MatButton, CommonModule],
+  imports: [ViewPanel, SharedModule],
   templateUrl: './summarize-order.html',
   styleUrl: './summarize-order.scss',
 })

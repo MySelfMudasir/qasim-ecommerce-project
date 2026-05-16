@@ -41,3 +41,34 @@
 }
 
 
+
+
+
+
+/* advertisement dialog styles */
+.ad-dialog-panel {
+  .mat-mdc-dialog-container {
+    padding: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    overflow: visible !important;
+  }
+  .mdc-dialog__surface {
+    background: transparent !important;
+    box-shadow: none !important;
+    overflow: visible !important;
+    border-radius: 0 !important;
+    max-height: unset !important;
+  }
+}
+
+
+/* DARK BLUR BACKDROP */
+.ad-dialog-backdrop {
+  // background: rgba(0, 0, 0, 0.72) !important;
+  // background-color: color-mix(in oklab, #e3e3e3 50%, transparent);
+  // gradient background focus on center
+  background: radial-gradient(circle at center, rgba(0, 0, 0, 0.72) 0%, rgba(0, 0, 0, 0.72) 50%, rgba(0, 0, 0, 0.72) 100%) !important;
+  backdrop-filter: blur(6px);
+}

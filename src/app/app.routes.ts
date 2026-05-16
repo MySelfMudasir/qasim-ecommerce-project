@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { MainLayout } from './layout/main-layout/main-layout';
+import { authGuardGuard } from './guards/auth-guard-guard';
 
 export const routes: Routes = [
   {
@@ -38,16 +39,19 @@ export const routes: Routes = [
       },
       {
         path: 'checkout',
+        canActivate: [authGuardGuard],
         loadComponent: () =>
           import('./pages/checkout/checkout').then(m => m.Checkout),
       },
       {
         path: 'order-success',
+        canActivate: [authGuardGuard],
         loadComponent: () =>
           import('./pages/order-success/order-success').then(m => m.OrderSuccess),
       },
       {
         path: 'signup-success',
+        canActivate: [authGuardGuard],
         loadComponent: () =>
           import('./pages/signup-success/signup-success').then(m => m.SignupSuccess),
       },
@@ -55,6 +59,11 @@ export const routes: Routes = [
         path: 'multi-step-sign-up',
         loadComponent: () =>
           import('./pages/multi-step-sign-up/multi-step-sign-up').then(m => m.MultiStepSignUp),
+      },
+      {
+        path: 'not-found',
+        loadComponent: () =>
+          import('./pages/not-found/not-found').then(m => m.NotFound),
       },
       // invalid route - redirect to products
       {
