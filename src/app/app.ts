@@ -153,6 +153,13 @@ export class App {
   }
 
   advertisementDialog(url: string) {
+    const showAdvertisementCount = parseInt(
+      localStorage.getItem('showAdvertisementCount') || '0',
+      10,
+    );
+    if (showAdvertisementCount >= 2) {
+      return;
+    }
     setTimeout(() => {
       this.dialog.open(AdvertisementDialog, {
         data: {
@@ -166,6 +173,8 @@ export class App {
         width: 'auto',
         height: 'auto',
       });
+
+      localStorage.setItem('showAdvertisementCount', String(showAdvertisementCount + 1));
     }, 800);
   }
 }

@@ -188,11 +188,11 @@
 
                         <mat-form-field appearance="outline">
                             <mat-label>Business type</mat-label>
-                            <select matNativeControl formControlName="businessType" required>
+                            <mat-select formControlName="businessType" required>
                                 @for (type of businessTypes; track type) {
-                                <option [value]="type">{{ type }}</option>
+                                <mat-option [value]="type">{{ type }}</mat-option>
                                 }
-                            </select>
+                            </mat-select>
                             @if (businessFormGroup.get('businessType')?.hasError('required')) {
                             <mat-error>Business type is required</mat-error>
                             }
@@ -200,11 +200,11 @@
 
                         <mat-form-field appearance="outline">
                             <mat-label>Primary category</mat-label>
-                            <select matNativeControl formControlName="primaryCategory" required>
+                            <mat-select formControlName="primaryCategory" required>
                                 @for (category of productCategories; track category) {
-                                <option [value]="category">{{ category }}</option>
+                                <mat-option [value]="category">{{ category }}</mat-option>
                                 }
-                            </select>
+                            </mat-select>
                             @if (businessFormGroup.get('primaryCategory')?.hasError('required')) {
                             <mat-error>Primary category is required</mat-error>
                             }
@@ -297,7 +297,8 @@
 
                     <div class="step-actions">
                         <button mat-stroked-button matStepperPrevious>Back</button>
-                        <button mat-flat-button color="primary" [disabled]="!formGroups.every((group) => group.valid)" (click)="onSubmit()">Submit</button>
+                        <button mat-flat-button color="primary" [disabled]="!formGroups.every((group) => group.valid)"
+                            (click)="onSubmit()">Submit</button>
                     </div>
                 </div>
             </mat-step>

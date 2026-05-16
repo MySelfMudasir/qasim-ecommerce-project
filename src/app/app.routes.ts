@@ -51,7 +51,6 @@ export const routes: Routes = [
       },
       {
         path: 'signup-success',
-        canActivate: [authGuardGuard],
         loadComponent: () =>
           import('./pages/signup-success/signup-success').then(m => m.SignupSuccess),
       },

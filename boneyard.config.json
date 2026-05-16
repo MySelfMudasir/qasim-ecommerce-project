@@ -13,7 +13,7 @@
   "out": "./src/bones",
   "wait": 8000,
   "color": "#e5e7eb",
-  "darkColor": "#2a2a2a",
+  "darkColor": "#f5f5f5",
   "animate": "shimmer",
   "stagger": true,
   "transition": true

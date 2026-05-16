@@ -11,6 +11,13 @@ import { STEPPER_GLOBAL_OPTIONS } from '@angular/cdk/stepper';
 import { Router } from '@angular/router';
 import { SharedModule } from '../../modules/shared';
 
+
+interface Food {
+  value: string;
+  viewValue: string;
+}
+
+
 @Component({
   selector: 'app-multi-step-sign-up',
   imports: [
@@ -33,6 +40,17 @@ export class MultiStepSignUp {
   passwordVisible = signal(false);
   submitButtonDisabled = signal(false);
   router = inject(Router);
+
+
+
+    foods: Food[] = [
+    {value: 'steak-0', viewValue: 'Steak'},
+    {value: 'pizza-1', viewValue: 'Pizza'},
+    {value: 'tacos-2', viewValue: 'Tacos'},
+  ];
+
+
+
 
   accountFormGroup = this._formBuilder.group({
     email: ['test@gmail.com', [Validators.required, Validators.email]],
