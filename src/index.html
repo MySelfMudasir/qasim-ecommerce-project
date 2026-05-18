@@ -32,9 +32,12 @@
   <!-- <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"> -->
 
 
-  <link href="/lib/googleFonts.css" rel="stylesheet">
-  <link href="/lib/materialIcons.css" rel="stylesheet">
-
+  <link rel="preload" as="style" href="./lib/googleFonts.css" onload="this.onload=null;this.rel='stylesheet'">
+  <link rel="preload" as="style" href="./lib/materialIcons.css" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript>
+    <link rel="stylesheet" href="./lib/googleFonts.css">
+    <link rel="stylesheet" href="./lib/materialIcons.css">
+  </noscript>
 
 
   <style>
@@ -80,7 +83,7 @@
 <body>
   <!-- GLOBAL LOADER (shows instantly) -->
   <div id="global-loader">
-    <img src="./icons/loading.svg" alt="Loading Khyber Foods..." width="80"/>
+    <img src="./icons/loading.svg" alt="Loading Khyber Foods..." width="80" />
   </div>
   <app-root></app-root>
   <noscript>Please enable JavaScript to continue using this application.</noscript>

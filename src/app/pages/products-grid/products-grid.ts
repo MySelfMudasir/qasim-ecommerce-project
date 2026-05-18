@@ -112,7 +112,7 @@ export class ProductsGrid {
   }
 
   carouselConfig: CarouselConfig = {
-    autoPlay: false,
+    autoPlay: true,
     interval: 3000,
     animation: 'slide',
     showIndicators: true,
