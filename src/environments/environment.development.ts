@@ -1,6 +1,7 @@
 export const environment = {
-  production: false,
-
+ production: false,
+  pwa: false,
+  
   firebase: {
     apiKey: 'AIzaSyDQdKmqSweFlfj9zqVBCkenWN9DpVmgh0M',
     authDomain: 'my-project-d2b4a.firebaseapp.com',

@@ -11,7 +11,7 @@ import { routes } from './app.routes';
 import { provideHotToastConfig } from '@ngxpert/hot-toast';
 // import { provideFirebaseApp, initializeApp } from '@angular/fire/app';
 // import { provideDatabase, getDatabase } from '@angular/fire/database';
-import { environment } from '../environments/environment.development';
+import { environment } from '../environments/environment';
 import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
 import { ThemeService } from './services/theme';
 import { APP_INITIALIZER, inject, isDevMode } from '@angular/core';
@@ -48,7 +48,6 @@ export const appConfig: ApplicationConfig = {
     // provideFirebaseApp(() => initializeApp(environment.firebase)),
     // provideDatabase(() => getDatabase()), provideClientHydration(withEventReplay())
 
-    provideClientHydration(withEventReplay()),
     // THEME INIT (CORRECT PLACE)
     {
       provide: APP_INITIALIZER,
@@ -69,7 +68,8 @@ export const appConfig: ApplicationConfig = {
     },
     provideClientHydration(withEventReplay()),
     provideServiceWorker('ngsw-worker.js', {
-      enabled: !isDevMode(),
+      // enabled: !isDevMode(),
+        enabled: environment.pwa,
       registrationStrategy: 'registerWhenStable:30000',
     }),
   ],
