@@ -12,13 +12,12 @@ import { SharedModule } from '../../modules/shared';
 export class SummarizeOrder {
   store = inject(EcommerceStore);
 
-  subTotal = computed(() => {
-    return Math.round(
-      this.store
-      .cartItems()
-      .reduce((acc, item) => acc + item.product.price * item.quantity, 0)
-    ) 
-  });
+  subTotal = computed(() =>
+    this.store.cartItems().reduce((acc, item) => {
+      if (!item?.product?.price) return acc;
+      return acc + item.product.price * item.quantity;
+    }, 0),
+  );
 
   tax = computed(() => Math.round(this.subTotal() * 0.1));
 

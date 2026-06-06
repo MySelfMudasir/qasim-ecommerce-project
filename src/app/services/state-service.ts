@@ -1,5 +1,6 @@
 import { Injectable, inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
+import { REQUEST } from '@angular/core';
 
 @Injectable({
   providedIn: 'root',
@@ -7,7 +8,7 @@ import { isPlatformBrowser } from '@angular/common';
 export class StateService {
   private readonly TOKEN_KEY = 'globalAuthToken';
   private readonly platformId = inject(PLATFORM_ID);
-  private readonly request = inject(Request, { optional: true });
+  private readonly request = inject(REQUEST, { optional: true });
   private readonly isBrowser = isPlatformBrowser(this.platformId);
 
   setGlobalAuthToken(token: string) {

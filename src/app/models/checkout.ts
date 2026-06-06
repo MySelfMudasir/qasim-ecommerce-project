@@ -1,5 +1,3 @@
-
-
 export interface ShippingModel {
   firstName: string;
   lastName: string;
@@ -8,6 +6,13 @@ export interface ShippingModel {
   state: string;
   zipCode: string;
   paymentMethod: 'creditCard' | 'paypal' | 'cashOnDelivery';
+}
+
+export interface CollectionModel {
+  // Collection
+  collectionLocation?: string;
+  collectionDate?: Date | null;
+  collectionTime?: string | null;
 }
 
 export type paymentModel = {
@@ -20,12 +25,8 @@ export type paymentModel = {
 export interface CheckoutModel {
   // mode can be 'collection' or 'delivery'
   mode: 'collection' | 'delivery';
-
   // Collection
-  collectionLocation?:string | 'Khyber Food Ltd, Unit C Doris Rd, Birmingham B9 4SJ, United Kingdom';
-  collectionDate?: Date | null;
-  collectionTime?: string | null;
-
+  collection?: CollectionModel | null;
   // Delivery
   shipping?: ShippingModel | null;
 }

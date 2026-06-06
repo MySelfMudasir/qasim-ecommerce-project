@@ -1,32 +1,31 @@
 import { Injectable, inject } from '@angular/core';
 import { StateService } from './state-service';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
   private readonly stateService = inject(StateService);
-  private isAuthenticated = false;
+  private router = inject(Router);
 
   setSession(token: string): void {
     this.stateService.setGlobalAuthToken(token);
-    this.isAuthenticated = true;
   }
 
   login(email: string, password: string): boolean {
-    void email;
-    void password;
     this.setSession(crypto.randomUUID());
     return true;
   }
 
   logout(): void {
     this.stateService.clearGlobalAuthToken();
-    this.isAuthenticated = false;
+    console.log('Logged out successfully');
+    this.router.navigate(['/']);
   }
 
   isLoggedIn(): boolean {
-    return this.isAuthenticated || Boolean(this.stateService.getGlobalAuthToken());
+    return !!this.stateService.getGlobalAuthToken();
   }
 
   getToken(): string {

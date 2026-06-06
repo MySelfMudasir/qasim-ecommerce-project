@@ -11,13 +11,8 @@ import { SharedModule } from '../../modules/shared';
   styleUrl: './product-card.scss',
 })
 export class ProductCard {
-
   product = input.required<ProductModel>();
   addToCartClicked = output<ProductModel>();
 
   store = inject(EcommerceStore);
-
-
-
-
 }

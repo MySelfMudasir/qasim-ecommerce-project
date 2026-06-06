@@ -1,4 +1,4 @@
-import { Component, inject, input } from '@angular/core';
+import { Component, inject, input, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { EcommerceStore } from '../../ecommerce-store';
 import { ProductCard } from '../../components/product-card/product-card';
@@ -14,6 +14,9 @@ import { SkeletonComponent } from 'boneyard-js/angular';
 import { AdvertisementBanner } from '../../components/advertisement-banner/advertisement-banner';
 import { ViewPanel } from '../../directives/view-panel';
 import { SharedModule } from '../../modules/shared';
+import { ApiService } from '../../services/backend/api-service';
+import { isPlatformBrowser } from '@angular/common';
+import { PLATFORM_ID } from '@angular/core';
 
 @Component({
   selector: 'app-products-grid',
@@ -35,20 +38,16 @@ import { SharedModule } from '../../modules/shared';
   templateUrl: './products-grid.html',
   styleUrl: './products-grid.scss',
 })
-export class ProductsGrid {
+export class ProductsGrid implements OnInit {
   selectedCategory = input<string>('all');
   store = inject(EcommerceStore);
+  apiService = inject(ApiService);
   mySlides: any[];
   route = inject(ActivatedRoute);
   timer: any = true;
+  private readonly platformId = inject(PLATFORM_ID);
 
   constructor() {
-    this.route.paramMap.subscribe((params) => {
-      const category = params.get('selectedCategory') ?? 'all';
-      this.store.setCategory(category);
-      this.store.setProductsListSeoTags(this.selectedCategory);
-    });
-
     this.mySlides = [
       {
         url: 'https://www.google.com/',
@@ -105,6 +104,18 @@ export class ProductsGrid {
         subtitle: 'Up to 50% Off',
       },
     ];
+  }
+
+  ngOnInit(): void {
+    this.route.paramMap.subscribe(async (params) => {
+      const category = params.get('selectedCategory') ?? 'all';
+      this.store.setCategory(category);
+      this.store.setProductsListSeoTags(category);
+
+      if (isPlatformBrowser(this.platformId)) {
+        this.store.loadProducts();
+      }
+    });
   }
 
   onCategoryChange(category: string) {

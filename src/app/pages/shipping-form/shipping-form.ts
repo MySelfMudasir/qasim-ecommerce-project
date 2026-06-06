@@ -10,5 +10,5 @@ import { SharedModule } from '../../modules/shared';
   styleUrl: './shipping-form.scss',
 })
 export class ShippingForm {
-group = input.required<FormGroup>();
+  group = input.required<FormGroup>();
 }

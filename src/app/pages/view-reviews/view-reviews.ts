@@ -19,6 +19,12 @@ export class ViewReviews {
   product = input.required<ProductModel>();
 
   sortedReviews = computed(() => {
-    return [...this.product().reviews].sort((a, b) => b.reviewDate.getTime() - a.reviewDate.getTime());
-  })
+    const reviews = this.product()?.reviews;
+    if (!reviews?.length) return [];
+    return [...reviews].sort((a, b) => {
+      const dateA = a.reviewDate instanceof Date ? a.reviewDate : new Date(a.reviewDate);
+      const dateB = b.reviewDate instanceof Date ? b.reviewDate : new Date(b.reviewDate);
+      return dateB.getTime() - dateA.getTime();
+    });
+  });
 }

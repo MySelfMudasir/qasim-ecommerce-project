@@ -7,7 +7,7 @@
         }
         }
         @else {
-        @for (item of store.cartItems(); track item.product.id) {
+        @for (item of store.cartItems(); track item.product?.id ?? $index) {
         <app-show-cart-item [item]="item"></app-show-cart-item>
         }
         }

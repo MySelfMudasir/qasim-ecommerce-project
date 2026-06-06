@@ -25,6 +25,8 @@ import { formatDate } from '@angular/common';
 import { PRODUCTS } from './data/products.data';
 import { CATEGORIES } from './data/categories.data';
 import { AuthService } from './services/auth-service';
+import { ApiService } from './services/backend/api-service';
+import { elementAt, firstValueFrom } from 'rxjs';
 
 export type EcommerceState = {
   products: ProductModel[];
@@ -54,6 +56,9 @@ export type EcommerceState = {
   showOutOfStock: boolean;
   itemsPerPage: number;
   displayedItemCount: number;
+  popularProductsList: ProductModel[];
+  topSellingProductsList: ProductModel[];
+  recommendedProductsList: ProductModel[];
 };
 
 const LOGOUT_STATE: Partial<EcommerceState> = {
@@ -72,8 +77,7 @@ export const EcommerceStore = signalStore(
     providedIn: 'root',
   },
   withState({
-    // products: [],
-    products: PRODUCTS,
+    products: [],
     categoriesList: CATEGORIES,
     selectedCategory: 'all',
     wishlistItems: [],
@@ -90,10 +94,13 @@ export const EcommerceStore = signalStore(
     searchedProduct: '',
     checkout: {
       mode: 'collection', // default
-      collectionLocation: 'Khyber Foods LTD',
-      collectionDate: null,
-      collectionTime: null,
       shipping: null,
+      collection: {
+        collectionLocation:
+          'Khyber Foods LTD: Khyber Food Ltd, Unit C Doris Rd, Birmingham B9 4SJ, United Kingdom',
+        collectionDate: null,
+        collectionTime: null,
+      },
     } as CheckoutModel,
     // Filter state
     selectedBrands: [],
@@ -106,6 +113,9 @@ export const EcommerceStore = signalStore(
     showOutOfStock: true,
     itemsPerPage: 10,
     displayedItemCount: 10,
+    popularProductsList: [],
+    topSellingProductsList: [],
+    recommendedProductsList: [],
   } as EcommerceState),
 
   withStorageSync(
@@ -285,498 +295,677 @@ export const EcommerceStore = signalStore(
       seoManager = inject(SeoManager),
       searchLoadingService = inject(SearchLoadingService),
       authService = inject(AuthService),
-    ) => ({
-      setCategory: signalMethod<string>((selectedCategory: string) => {
-        searchLoadingService.open();
-        // // 1. show skeleton
-        patchState(store, {
-          selectedCategory,
-          searchedProduct: '',
-          isSkeletonLoading: true,
-          preLoader: false,
-        });
+      apiService = inject(ApiService),
+    ) => {
+      const getUserId = () => {
+        const id = store.user()?.id;
+        if (!id) return null;
+        return Number(id);
+      };
 
-        // // 2. simulate API delay (or real API later)
-        setTimeout(() => {
-          searchLoadingService.close();
-          patchState(store, { isSkeletonLoading: false });
-        }, 1500);
-      }),
+      return {
+        loadProducts: async (
+          category = store.selectedCategory(),
+          limit = store.itemsPerPage(),
+          page = 1,
+        ) => {
+          patchState(store, { isSkeletonLoading: true });
+          try {
+            const response = await firstValueFrom(
+              apiService.loadProducts(
+                undefined,
+                category,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                limit,
+                page,
+              ),
+            );
+            console.log('Products API Response:', response);
 
-      setProductsListSeoTags: signalMethod<string | undefined>((category) => {
-        const selectedCategory = category
-          ? category.charAt(0).toUpperCase() + category.slice(1)
-          : undefined;
-        const description = selectedCategory
-          ? `Browse our collection of ${selectedCategory} products`
-          : 'Browse our collection of products';
-        seoManager.updateSeoTags({
-          title: selectedCategory ? `${selectedCategory}` : 'All',
-          description,
-        });
-      }),
+            patchState(store, {
+              products: response.data || response.products || [],
+              isSkeletonLoading: false,
+            });
+          } catch (error) {
+            console.error('Products API Error:', error);
+            patchState(store, { products: [], isSkeletonLoading: false });
+            toaster.error('Failed to load products');
+          }
+        },
 
-      setProductId: signalMethod<string>((productId: string) => {
-        patchState(store, { selectedProductId: productId });
-        const product = store.products().find((p) => p.id === productId);
-        if (product) {
+        setCategory: signalMethod<string>((selectedCategory: string) => {
+          patchState(store, {
+            selectedCategory,
+            searchedProduct: '',
+          });
+        }),
+
+        setProductsListSeoTags: signalMethod<string | undefined>((category) => {
+          const selectedCategory = category
+            ? category.charAt(0).toUpperCase() + category.slice(1)
+            : undefined;
+          const description = selectedCategory
+            ? `Browse our collection of ${selectedCategory} products`
+            : 'Browse our collection of products';
+          seoManager.updateSeoTags({
+            title: selectedCategory ? `${selectedCategory}` : 'All',
+            description,
+          });
+        }),
+
+        loadProductDetails: async (productId: string) => {
+          if (store.isSkeletonLoading() && store.selectedProductId() === productId) return;
+          patchState(store, { selectedProductId: productId, isSkeletonLoading: true });
+          try {
+            const response = await firstValueFrom(apiService.productDetails(productId));
+            const raw = response.data || response.product || response;
+            const product: ProductModel = {
+              ...raw,
+              reviews: Array.isArray(raw.reviews) ? raw.reviews : [],
+            };
+
+            const existing = store.products();
+            const index = existing.findIndex((p) => p.id === productId);
+            const updatedProducts =
+              index !== -1
+                ? existing.map((p, i) => (i === index ? product : p))
+                : [...existing, product];
+
+            patchState(store, { products: updatedProducts, isSkeletonLoading: false });
+
+            seoManager.updateSeoTags({
+              title: product.name,
+              description: product.description,
+              image: product.imageUrl,
+              type: 'product',
+            });
+
+            // Fire related product calls in parallel
+            const [popularRes, topSellingRes, recommendedRes] = await Promise.allSettled([
+              firstValueFrom(apiService.loadPopularProducts(6)),
+              firstValueFrom(apiService.loadTopSellingProducts(6)),
+              firstValueFrom(apiService.loadRecommendedProducts(product.category, productId, 6)),
+            ]);
+
+            const normalize = (res: PromiseSettledResult<any>, fallback: ProductModel[]) => {
+              if (res.status === 'fulfilled') {
+                const data = res.value?.data || res.value?.products || [];
+                return data.map((p: any) => ({
+                  ...p,
+                  reviews: Array.isArray(p.reviews) ? p.reviews : [],
+                }));
+              }
+              return fallback;
+            };
+
+            patchState(store, {
+              popularProductsList: normalize(popularRes, store.popularProductsList()),
+              topSellingProductsList: normalize(topSellingRes, store.topSellingProductsList()),
+              recommendedProductsList: normalize(recommendedRes, store.recommendedProductsList()),
+            });
+          } catch (error) {
+            console.error('Product Details API Error:', error);
+            patchState(store, { isSkeletonLoading: false });
+          } finally {
+            searchLoadingService.close();
+          }
+        },
+
+        setProductSeoTags: signalMethod<ProductModel | undefined>((product) => {
+          if (!product) return;
           seoManager.updateSeoTags({
             title: product.name,
             description: product.description,
-            image: product.imageUrl, // ← ADD THIS — was missing!
+            image: product.imageUrl,
             type: 'product',
           });
-        }
+        }),
 
-         // // 2. simulate API delay (or real API later)
-        setTimeout(() => {
-          searchLoadingService.close();
-          patchState(store, { isSkeletonLoading: false });
-        }, 1500);
-      }),
+        openWishlist: () => {
+          patchState(store, { isSkeletonLoading: true });
 
-      setProductSeoTags: signalMethod<ProductModel | undefined>((product) => {
-        if (!product) return;
-        seoManager.updateSeoTags({
-          title: product.name,
-          description: product.description,
-          image: product.imageUrl,
-          type: 'product',
-        });
-      }),
+          // // 2. simulate API delay (or real API later)
+          setTimeout(() => {
+            patchState(store, { isSkeletonLoading: false });
+          }, 1500);
+        },
 
-      openWishlist: () => {
-        patchState(store, { isSkeletonLoading: true });
+        openCart: () => {
+          patchState(store, { isSkeletonLoading: true });
 
-        // // 2. simulate API delay (or real API later)
-        setTimeout(() => {
-          patchState(store, { isSkeletonLoading: false });
-        }, 1500);
-      },
+          // // 2. simulate API delay (or real API later)
+          setTimeout(() => {
+            patchState(store, { isSkeletonLoading: false });
+          }, 1500);
+        },
 
-      openCart: () => {
-        patchState(store, { isSkeletonLoading: true });
+        // Skeleton methods
+        setIsSkeletonLoading: signalMethod<boolean>((value: boolean) => {
+          patchState(store, { isSkeletonLoading: value });
+        }),
 
-        // // 2. simulate API delay (or real API later)
-        setTimeout(() => {
-          patchState(store, { isSkeletonLoading: false });
-        }, 1500);
-      },
+        setPreLoader: signalMethod<boolean>((value: boolean) => {
+          patchState(store, { preLoader: value });
+        }),
 
-      // Skeleton methods
-      setIsSkeletonLoading: signalMethod<boolean>((value: boolean) => {
-        patchState(store, { isSkeletonLoading: value });
-      }),
-
-      setPreLoader: signalMethod<boolean>((value: boolean) => {
-        patchState(store, { preLoader: value });
-      }),
-
-      addToWishlist: (product: ProductModel) => {
-        const updateWishlistItems = produce(store.wishlistItems(), (draft) => {
-          if (!draft.find((p) => p.id === product.id)) {
-            draft.push(product);
-          }
-        });
-        patchState(store, { wishlistItems: updateWishlistItems });
-        toaster.success(`Product added to wishlist`);
-      },
-
-      removeFromWishlist: (product: ProductModel) => {
-        const updatedWishlistItems = store.wishlistItems().filter((p) => p.id !== product.id);
-        patchState(store, {
-          wishlistItems: updatedWishlistItems,
-        });
-        toaster.success(`Product remove from wishlist`);
-      },
-
-      clearWishlist: () => {
-        patchState(store, { wishlistItems: [] });
-      },
-
-      loadMoreProducts: () => {
-        patchState(store, { isLoadingMore: true });
-
-        const batchSize = store.itemsPerPage();
-        const baseIndex = store.products().length + 1;
-        const searchTerm = store.searchedProduct().trim();
-        const selectedCategory = store.selectedCategory().toLowerCase();
-        const category =
-          selectedCategory !== 'all'
-            ? selectedCategory
-            : (store.selectedCategories()[0]?.toLowerCase() ?? 'all');
-        const priceRange = store.priceRange();
-        const brand = store.selectedBrands()[0] ?? 'Demo Brand';
-        const storageType = store.selectedStorageTypes()[0] ?? 'Standard';
-        const size = store.selectedSizes()[0] ?? 'M';
-
-        const moreProducts = Array.from({ length: batchSize }, (_, index) => {
-          const productNumber = baseIndex + index;
-          const nameSeed = searchTerm || category || 'product';
-          return {
-            id: crypto.randomUUID(),
-            name: `${nameSeed} ${productNumber}`,
-            price: priceRange[0] + (productNumber % Math.max(1, priceRange[1] - priceRange[0] + 1)),
-            category: category === 'all' ? 'all' : category,
-            imageUrl: 'https://placehold.co/600x400',
-            rating: 4,
-            reviewCount: 5,
-            inStock: true,
-            description: `Demo product ${productNumber} for ${nameSeed}`,
-            reviews: [],
-            brand,
-            storageType,
-            size,
-            isNew: store.selectedFeatures().includes('new-arrivals'),
-            onPromotion: store.selectedFeatures().includes('monthly-promos'),
-            reducedToClear: store.selectedFeatures().includes('reduced'),
-          } as ProductModel;
-        });
-
-        setTimeout(() => {
-          patchState(store, {
-            products: [...store.products(), ...moreProducts],
-            displayedItemCount: store.displayedItemCount() + batchSize,
-            isLoadingMore: false,
-          });
-        }, 500);
-      },
-
-      addToCart: (product: ProductModel, quantity = 1) => {
-        const existingItemIndex = store.cartItems().findIndex((i) => i.product.id === product.id);
-        const updateCartItems = produce(store.cartItems(), (draft) => {
-          if (existingItemIndex !== -1) {
-            draft[existingItemIndex].quantity += quantity;
-            return;
-          }
-          draft.push({ product, quantity });
-        });
-        patchState(store, { cartItems: updateCartItems });
-        toaster.success(existingItemIndex !== -1 ? 'Product added again' : 'Product added to cart');
-      },
-
-      setItemQuantity(params: { productId: string; quantity: number }) {
-        const index = store.cartItems().findIndex((c) => c.product.id === params.productId);
-        const updated = produce(store.cartItems(), (draft) => {
-          draft[index].quantity = params.quantity;
-        });
-
-        patchState(store, { cartItems: updated });
-      },
-
-      addAllWishlistToCart: () => {
-        const updatedCartItems = produce(store.cartItems(), (draft) => {
-          store.wishlistItems().forEach((p) => {
-            if (!draft.find((c) => c.product.id === p.id)) {
-              draft.push({ product: p, quantity: 1 });
+        addToWishlist: (product: ProductModel) => {
+          const updateWishlistItems = produce(store.wishlistItems(), (draft) => {
+            if (!draft.find((p) => p.id === product.id)) {
+              draft.push(product);
             }
           });
-        });
-        patchState(store, { cartItems: updatedCartItems, wishlistItems: [] });
-      },
-
-      // move to wishlist
-      moveToWishlist: (product: ProductModel) => {
-        const updatedCartItems = store.cartItems().filter((p) => p.product.id !== product.id);
-        const updatedWishlistItems = produce(store.wishlistItems(), (draft) => {
-          if (!draft.find((p) => p.id === product.id)) {
-            draft.push(product);
+          patchState(store, { wishlistItems: updateWishlistItems });
+          toaster.success(`Product added to wishlist`);
+          const uid = getUserId();
+          if (uid) {
+            apiService.addToWishlist(uid, Number(product.id)).subscribe({ error: () => {} });
           }
-        });
-        patchState(store, {
-          cartItems: updatedCartItems,
-          wishlistItems: updatedWishlistItems,
-        });
-      },
+        },
 
-      //remove from cart
-      removeFromCart: (product: ProductModel) => {
-        const updatedCartItems = store.cartItems().filter((c) => c.product.id !== product.id);
-        patchState(store, {
-          cartItems: updatedCartItems,
-        });
-      },
+        removeFromWishlist: (product: ProductModel) => {
+          const updatedWishlistItems = store.wishlistItems().filter((p) => p.id !== product.id);
+          patchState(store, { wishlistItems: updatedWishlistItems });
+          toaster.success(`Product removed from wishlist`);
+          const uid = getUserId();
+          if (uid) {
+            apiService.removeFromWishlist(uid, Number(product.id)).subscribe({ error: () => {} });
+          }
+        },
 
-      proceedToCheckout: () => {
-        console.log('proceed to checkout', store.cartItems());
-        if (!store.user()) {
-          matDialog.open(SignInDialog, {
-            disableClose: true,
-            data: {
-              checkout: false,
-            },
+        clearWishlist: () => {
+          patchState(store, { wishlistItems: [] });
+          const uid = getUserId();
+          if (uid) {
+            apiService.clearWishlist(uid).subscribe({ error: () => {} });
+          }
+        },
+
+        loadMoreProducts: () => {
+          patchState(store, { isLoadingMore: true });
+
+          const batchSize = store.itemsPerPage();
+          const baseIndex = store.products().length + 1;
+          const searchTerm = store.searchedProduct().trim();
+          const selectedCategory = store.selectedCategory().toLowerCase();
+          const category =
+            selectedCategory !== 'all'
+              ? selectedCategory
+              : (store.selectedCategories()[0]?.toLowerCase() ?? 'all');
+          const priceRange = store.priceRange();
+          const brand = store.selectedBrands()[0] ?? 'Demo Brand';
+          const storageType = store.selectedStorageTypes()[0] ?? 'Standard';
+          const size = store.selectedSizes()[0] ?? 'M';
+
+          const moreProducts = Array.from({ length: batchSize }, (_, index) => {
+            const productNumber = baseIndex + index;
+            const nameSeed = searchTerm || category || 'product';
+            return {
+              id: crypto.randomUUID(),
+              name: `${nameSeed} ${productNumber}`,
+              price:
+                priceRange[0] + (productNumber % Math.max(1, priceRange[1] - priceRange[0] + 1)),
+              category: category === 'all' ? 'all' : category,
+              imageUrl: 'https://placehold.co/600x400',
+              rating: 4,
+              reviewCount: 5,
+              inStock: true,
+              description: `Demo product ${productNumber} for ${nameSeed}`,
+              reviews: [],
+              brand,
+              storageType,
+              size,
+              isNew: store.selectedFeatures().includes('new-arrivals'),
+              onPromotion: store.selectedFeatures().includes('monthly-promos'),
+              reducedToClear: store.selectedFeatures().includes('reduced'),
+            } as ProductModel;
           });
-          return;
-        }
-        if (store.cartCount() === 0) {
-          toaster.error('Your cart is empty');
-          patchState(store, { loading: false });
-          return;
-        }
 
-        router.navigate(['/checkout']);
-      },
+          setTimeout(() => {
+            patchState(store, {
+              products: [...store.products(), ...moreProducts],
+              displayedItemCount: store.displayedItemCount() + batchSize,
+              isLoadingMore: false,
+            });
+          }, 500);
+        },
 
-      updateCheckout: signalMethod<Partial<CheckoutModel>>((payload) => {
-        patchState(store, {
-          checkout: {
-            ...store.checkout(),
-            ...payload,
-          },
-        });
-      }),
+        addToCart: (product: ProductModel, quantity = 1) => {
+          const existingItemIndex = store.cartItems().findIndex((i) => i.product.id === product.id);
+          const newQuantity =
+            existingItemIndex !== -1
+              ? store.cartItems()[existingItemIndex].quantity + quantity
+              : quantity;
+          const updateCartItems = produce(store.cartItems(), (draft) => {
+            if (existingItemIndex !== -1) {
+              draft[existingItemIndex].quantity += quantity;
+              return;
+            }
+            draft.push({ product, quantity });
+          });
+          patchState(store, { cartItems: updateCartItems });
+          toaster.success(
+            existingItemIndex !== -1 ? 'Product added again' : 'Product added to cart',
+          );
+          const uid = getUserId();
+          if (uid) {
+            apiService
+              .addToCart(uid, Number(product.id), newQuantity)
+              .subscribe({ error: () => {} });
+          }
+        },
 
-      placeOrder: async () => {
-        patchState(store, { loading: true });
+        setItemQuantity(params: { productId: string; quantity: number }) {
+          const index = store.cartItems().findIndex((c) => c.product.id === params.productId);
+          const updated = produce(store.cartItems(), (draft) => {
+            draft[index].quantity = params.quantity;
+          });
 
-        const user = store.user();
-        const checkout = store.checkout();
+          patchState(store, { cartItems: updated });
+        },
 
-        if (!user) {
-          toaster.error('Please sign in to place the order');
-          patchState(store, { loading: false });
-          return;
-        }
+        addAllWishlistToCart: () => {
+          const updatedCartItems = produce(store.cartItems(), (draft) => {
+            store.wishlistItems().forEach((p) => {
+              if (!draft.find((c) => c.product.id === p.id)) {
+                draft.push({ product: p, quantity: 1 });
+              }
+            });
+          });
+          patchState(store, { cartItems: updatedCartItems, wishlistItems: [] });
+        },
 
-        console.log(checkout);
+        // move to wishlist
+        moveToWishlist: (product: ProductModel) => {
+          const updatedCartItems = store.cartItems().filter((p) => p.product.id !== product.id);
+          const updatedWishlistItems = produce(store.wishlistItems(), (draft) => {
+            if (!draft.find((p) => p.id === product.id)) {
+              draft.push(product);
+            }
+          });
+          patchState(store, {
+            cartItems: updatedCartItems,
+            wishlistItems: updatedWishlistItems,
+          });
+        },
 
-        // DELIVERY
-        if (checkout.mode === 'delivery') {
-          if (!checkout.shipping) {
-            toaster.error('Please fill shipping details');
+        //remove from cart
+        removeFromCart: (product: ProductModel) => {
+          const updatedCartItems = store.cartItems().filter((c) => c.product.id !== product.id);
+          patchState(store, { cartItems: updatedCartItems });
+          const uid = getUserId();
+          if (uid) {
+            apiService.removeFromCart(uid, Number(product.id)).subscribe({ error: () => {} });
+          }
+        },
+
+        proceedToCheckout: () => {
+          console.log('proceed to checkout', store.cartItems());
+          if (!store.user()) {
+            matDialog.open(SignInDialog, {
+              disableClose: true,
+              data: {
+                checkout: false,
+              },
+            });
+            return;
+          }
+          if (store.cartCount() === 0) {
+            toaster.error('Your cart is empty');
             patchState(store, { loading: false });
             return;
           }
-        } else {
-          if (!checkout.collectionDate || !checkout.collectionTime) {
-            toaster.error('Please select collection date and time');
+
+          router.navigate(['/checkout']);
+        },
+
+        updateCheckout: signalMethod<Partial<CheckoutModel>>((payload) => {
+          patchState(store, {
+            checkout: {
+              ...store.checkout(),
+              ...payload,
+            },
+          });
+        }),
+
+        placeOrder: async () => {
+          patchState(store, { loading: true });
+
+          const user = store.user();
+          const checkout = store.checkout();
+
+          if (!user) {
+            toaster.error('Please sign in to place the order');
             patchState(store, { loading: false });
             return;
           }
-        }
 
-        const date = checkout.collectionDate;
-        const formattedDate = date
-          ? `${date.getFullYear()}-${(date.getMonth() + 1)
-              .toString()
-              .padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`
-          : '';
+          console.log(checkout);
 
-        const order: orderModel = {
-          id: crypto.randomUUID(),
-          userId: user.id,
-          total: Math.round(
-            store.cartItems().reduce((acc, item) => acc + item.product.price * item.quantity, 0),
-          ),
-          items: store.cartItems(),
+          // DELIVERY
+          if (checkout.mode === 'delivery') {
+            if (!checkout.shipping) {
+              toaster.error('Please fill shipping details');
+              patchState(store, { loading: false });
+              return;
+            }
+          } else {
+            if (!checkout.collection?.collectionDate || !checkout.collection?.collectionTime) {
+              toaster.error('Please select collection date and time');
+              patchState(store, { loading: false });
+              return;
+            }
+          }
 
-          shippingAddress: checkout.mode === 'delivery' ? checkout.shipping?.address || '' : '',
+          const date = checkout.collection?.collectionDate;
+          const formattedDate = date
+            ? `${date.getFullYear()}-${(date.getMonth() + 1)
+                .toString()
+                .padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`
+            : '';
 
-          collectionLocation:
-            checkout.mode === 'collection' ? checkout.collectionLocation || '' : '',
+          const order: orderModel = {
+            id: crypto.randomUUID(),
+            userId: user.id,
+            total: Math.round(
+              store.cartItems().reduce((acc, item) => acc + item.product.price * item.quantity, 0),
+            ),
+            items: store.cartItems(),
 
-          collectionDate:
-            checkout.mode === 'collection' && checkout.collectionDate
-              ? formatDate(checkout.collectionDate, 'yyyy-MM-dd', 'en-US')
-              : '',
+            shippingAddress: checkout.mode === 'delivery' ? checkout.shipping?.address || '' : '',
 
-          collectionTime: checkout.mode === 'collection' ? checkout.collectionTime || '' : '',
+            collectionLocation:
+              checkout.mode === 'collection' ? checkout.collection?.collectionLocation || '' : '',
 
-          paymentStatus: 'success',
-        };
+            collectionDate:
+              checkout.mode === 'collection' && checkout.collection?.collectionDate
+                ? formatDate(checkout.collection.collectionDate, 'yyyy-MM-dd', 'en-US')
+                : '',
 
-        // --- NEW: LOGGING THE ORDER DETAILS BEFORE SUBMIT ---
-        console.group('📦 Order Submitted');
-        console.log('👤 User:', user);
-        console.log('🚚 Mode:', checkout.mode.toUpperCase());
-        console.log('📝 Full Order Payload:', order);
-        console.groupEnd();
+            collectionTime:
+              checkout.mode === 'collection' ? checkout.collection?.collectionTime || '' : '',
 
-        await new Promise((res) => setTimeout(res, 2000));
+            paymentStatus: 'success',
+          };
 
-        patchState(store, { loading: false, cartItems: [] });
-        router.navigate(['/order-success']);
-        toaster.success('Order placed successfully!');
-      },
+          // --- NEW: LOGGING THE ORDER DETAILS BEFORE SUBMIT ---
+          console.group('📦 Order Submitted');
+          console.log('👤 User:', user);
+          console.log('👤 Checkout:', checkout);
+          console.log('🚚 Mode:', checkout.mode.toUpperCase());
+          console.log('📝 Full Order Payload:', order);
+          console.groupEnd();
 
-      signUp: ({ email, checkout, dialogId, redirectUrl }: SignInParams) => {
-        // console.log('Signing up with', { email, checkout, dialogId, redirectUrl });
-        const user: UserModel = {
-          id: crypto.randomUUID(),
-          name: email.split('@')[0],
-          email,
-          imageUrl: 'https://randomuser.me/api/portraits/men/1.jpg',
-          checkoutMode: { mode: 'delivery' },
-        };
+          await new Promise((res) => setTimeout(res, 2000));
 
-        authService.setSession(crypto.randomUUID());
+          patchState(store, { loading: false, cartItems: [] });
+          router.navigate(['/order-success']);
+          toaster.success('Order placed successfully!');
+        },
 
-        patchState(store, { user });
+        signUp: (payload: any) => {
+          patchState(store, { loading: true });
 
-        toaster.success(`Account created for ${email}`);
-        matDialog.getDialogById(dialogId)?.close();
-        if (checkout) {
-          router.navigate(['/checkout']);
-          toaster.success('Proceeding to checkout...');
-        } else if (redirectUrl) {
-          router.navigate([redirectUrl]);
-        }
-      },
+          apiService.register(payload).subscribe({
+            next: (response: any) => {
+              console.log('SIGNUP RESPONSE:', response);
 
-      signIn: ({ email, checkout, dialogId, redirectUrl }: SignInParams) => {
-        // console.log('Signing in with', { email, checkout, dialogId, redirectUrl });
-        const mode: CheckoutModel['mode'] = 'collection';
-        const user: UserModel = {
-          id: '1',
-          name: 'John Doe',
-          email: email,
-          imageUrl: 'https://randomuser.me/api/portraits/men/1.jpg',
-          checkoutMode: { mode: 'collection' },
-        };
+              const userData = response?.data?.user || response?.user;
 
-        authService.setSession(crypto.randomUUID());
+              if (!userData) {
+                patchState(store, { loading: false });
+                toaster.error('Invalid API response: user missing');
+                return;
+              }
 
-        patchState(store, {
-          user,
-          checkout: {
-            ...store.checkout(),
-            mode,
-          },
-        });
+              const token = response?.data?.token || response?.token;
 
-        toaster.success(`Signed in as ${email}`);
-        matDialog.getDialogById(dialogId)?.close();
+              const user: UserModel = {
+                id: userData.id,
+                name: userData.name,
+                email: userData.email,
+                imageUrl: 'https://randomuser.me/api/portraits/men/1.jpg',
+                checkoutMode: { mode: 'collection' },
+              };
 
-        if (checkout) {
-          router.navigate(['/checkout']);
-        } else if (redirectUrl) {
-          router.navigate([redirectUrl]);
-        }
-      },
+              if (token) {
+                authService.setSession(token);
+              }
 
-      signOut: () => {
-        authService.logout();
-        patchState(store, LOGOUT_STATE);
-        // router.navigate(['/']);
-      },
+              patchState(store, {
+                user,
+                loading: false,
+              });
 
-      showWriteReview: () => {
-        if (!store.user()) {
-          matDialog.open(SignInDialog, {
-            disableClose: true,
-            data: {
-              redirectUrl: `/product/${store.selectedProductId()}`,
+              toaster.success('Account created Successfully');
+              router.navigate(['/signup-success']);
+            },
+
+            error: (err) => {
+              patchState(store, { loading: false });
+              toaster.error(err?.error?.message || 'Signup failed');
             },
           });
+        },
 
-          return;
-        }
-        patchState(store, { writeReview: true });
-      },
+        signIn: ({ email, password, checkout, dialogId, redirectUrl }: SignInParams) => {
+          console.log('Signing in with', { email, password, checkout, dialogId, redirectUrl });
+          patchState(store, { loading: true });
+          apiService.login({ email, password }).subscribe({
+            next: (response) => {
+              console.log('Login Response:', response);
 
-      hideWriteReview: () => {
-        patchState(store, { writeReview: false });
-      },
+              const user: UserModel = {
+                id: response.data.user.id,
+                name: response.data.user.name,
+                email: response.data.user.email,
+                imageUrl: 'https://img.icons8.com/ios_filled/1200/user-male-circle.jpg',
+                checkoutMode: response.data.user.checkoutMode || { mode: 'collection' },
+              };
 
-      addReview: async ({ title, rating, comment }: AddReviewParams) => {
-        patchState(store, { loading: true });
-        const product = store.products().find((p) => p.id === store.selectedProductId());
-        if (!product) {
-          patchState(store, { loading: false });
-          toaster.error('Product not found');
-          return;
-        }
+              // Save JWT Token
+              authService.setSession(response.data.token);
 
-        const review: UserReviewModel = {
-          id: crypto.randomUUID(),
-          productId: '', // This would typically be passed in or derived from the context
-          userId: store.user()?.id || '',
-          userName: store.user()?.name || '',
-          userImageUrl: store.user()?.imageUrl || '',
-          rating,
-          title,
-          comment,
-          reviewDate: new Date(),
-        };
+              patchState(store, {
+                user,
+                loading: false,
+                checkout: {
+                  ...store.checkout(),
+                  mode: 'collection',
+                },
+              });
 
-        const updatedProducts = produce(store.products(), (draft) => {
-          const index = draft.findIndex((p) => p.id === product.id);
-          draft[index].reviews.push(review);
-          draft[index].rating =
-            Math.round(
-              (draft[index].reviews.reduce((acc, r) => acc + r.rating, 0) /
-                draft[index].reviews.length) *
-                10,
-            ) / 10;
-          draft[index].reviewCount = draft[index].reviews.length;
-        });
+              toaster.success(`Signed in Successfully as ${email}`);
+              matDialog.getDialogById(dialogId)?.close();
 
-        await new Promise((res) => setTimeout(res, 2000));
-        patchState(store, { loading: false, products: updatedProducts, writeReview: false });
-      },
+              // Sync wishlist and cart from DB
+              const userId = Number(response.data.user.id);
 
-      setSearchTerm: signalMethod<string>((term: string) => {
-        searchLoadingService.open();
-        patchState(store, {
-          searchedProduct: term,
-          selectedCategory: 'all',
-          isSkeletonLoading: true,
-          preLoader: false,
-          searchLoading: true,
-        });
+              apiService.getWishlist(userId).subscribe({
+                next: (res) => {
+                  const items = res?.data || res?.items || [];
+                  patchState(store, { wishlistItems: items });
+                },
+                error: () => {},
+              });
 
-        // 2. simulate delay
-        setTimeout(() => {
-          searchLoadingService.close();
-          patchState(store, { isSkeletonLoading: false, searchLoading: false });
-        }, 500);
-      }),
+              apiService.getCart(userId).subscribe({
+                next: (res) => {
+                  const items = res?.data || res?.items || [];
+                  patchState(store, { cartItems: items });
+                },
+                error: () => {},
+              });
 
-      // Filter methods
-      setSelectedBrands: signalMethod<string[]>((brands: string[]) => {
-        patchState(store, { selectedBrands: brands });
-      }),
+              if (redirectUrl) {
+                router.navigate([redirectUrl]);
+              } else if (checkout) {
+                router.navigate(['/checkout']);
+              } else {
+                router.navigate(['/']); // fallback (IMPORTANT)
+              }
+            },
 
-      setSelectedCategories: signalMethod<string[]>((categories: string[]) => {
-        patchState(store, { selectedCategories: categories });
-      }),
+            error: (error) => {
+              patchState(store, { loading: false });
+              console.error(error);
+              toaster.error(error?.error?.message || 'Invalid email or password');
+            },
+          });
+        },
 
-      setPriceRange: signalMethod<[number, number]>((range: [number, number]) => {
-        patchState(store, { priceRange: range });
-      }),
+        signOut: () => {
+          patchState(store, LOGOUT_STATE);
+          authService.logout();
+        },
 
-      setSelectedStorageTypes: signalMethod<string[]>((types: string[]) => {
-        patchState(store, { selectedStorageTypes: types });
-      }),
+        showWriteReview: () => {
+          if (!store.user()) {
+            matDialog.open(SignInDialog, {
+              disableClose: true,
+              data: {
+                redirectUrl: `/product/${store.selectedProductId()}`,
+              },
+            });
 
-      setSelectedSizes: signalMethod<string[]>((sizes: string[]) => {
-        patchState(store, { selectedSizes: sizes });
-      }),
+            return;
+          }
+          patchState(store, { writeReview: true });
+        },
 
-      setSelectedFeatures: signalMethod<string[]>((features: string[]) => {
-        patchState(store, { selectedFeatures: features });
-      }),
+        hideWriteReview: () => {
+          patchState(store, { writeReview: false });
+        },
 
-      setSelectedSort: signalMethod<string>((sortBy: string) => {
-        patchState(store, { selectedSort: sortBy });
-      }),
+        addReview: async ({ title, rating, comment }: AddReviewParams) => {
+          patchState(store, { loading: true });
+          const product = store.products().find((p) => p.id === store.selectedProductId());
+          if (!product) {
+            patchState(store, { loading: false });
+            toaster.error('Product not found');
+            return;
+          }
 
-      setShowOutOfStock: signalMethod<boolean>((show: boolean) => {
-        patchState(store, { showOutOfStock: show });
-      }),
+          const review: UserReviewModel = {
+            id: crypto.randomUUID(),
+            productId: '', // This would typically be passed in or derived from the context
+            userId: store.user()?.id || '',
+            userName: store.user()?.name || '',
+            userImageUrl: store.user()?.imageUrl || '',
+            rating,
+            title,
+            comment,
+            reviewDate: new Date(),
+          };
 
-      clearFilters: () => {
-        patchState(store, {
-          selectedBrands: [],
-          selectedCategories: [],
-          priceRange: [0, 500],
-          selectedStorageTypes: [],
-          selectedSizes: [],
-          selectedFeatures: [],
-          selectedSort: 'relevance',
-          showOutOfStock: false,
-        });
-      },
-    }),
+          const updatedProducts = produce(store.products(), (draft) => {
+            const index = draft.findIndex((p) => p.id === product.id);
+            draft[index].reviews.push(review);
+            draft[index].rating =
+              Math.round(
+                (draft[index].reviews.reduce((acc, r) => acc + r.rating, 0) /
+                  draft[index].reviews.length) *
+                  10,
+              ) / 10;
+            draft[index].reviewCount = draft[index].reviews.length;
+          });
+
+          await new Promise((res) => setTimeout(res, 2000));
+          patchState(store, { loading: false, products: updatedProducts, writeReview: false });
+        },
+
+        setSearchTerm: signalMethod<string>((term: string) => {
+          searchLoadingService.open();
+          patchState(store, {
+            searchedProduct: term,
+            selectedCategory: 'all',
+            isSkeletonLoading: true,
+            preLoader: false,
+            searchLoading: true,
+          });
+
+          firstValueFrom(
+            apiService.loadProducts(
+              term,
+              undefined,
+              undefined,
+              undefined,
+              undefined,
+              undefined,
+              undefined,
+              undefined,
+              store.itemsPerPage(),
+              1,
+            ),
+          )
+            .then((response) => {
+              const products = (response?.data || response?.products || []).map((p: any) => ({
+                ...p,
+                reviews: Array.isArray(p.reviews) ? p.reviews : [],
+              }));
+              searchLoadingService.close();
+              patchState(store, {
+                products,
+                isSkeletonLoading: false,
+                searchLoading: false,
+              });
+            })
+            .catch(() => {
+              searchLoadingService.close();
+              patchState(store, { isSkeletonLoading: false, searchLoading: false });
+            });
+        }),
+
+        // Filter methods
+        setSelectedBrands: signalMethod<string[]>((brands: string[]) => {
+          patchState(store, { selectedBrands: brands });
+        }),
+
+        setSelectedCategories: signalMethod<string[]>((categories: string[]) => {
+          patchState(store, { selectedCategories: categories });
+        }),
+
+        setPriceRange: signalMethod<[number, number]>((range: [number, number]) => {
+          patchState(store, { priceRange: range });
+        }),
+
+        setSelectedStorageTypes: signalMethod<string[]>((types: string[]) => {
+          patchState(store, { selectedStorageTypes: types });
+        }),
+
+        setSelectedSizes: signalMethod<string[]>((sizes: string[]) => {
+          patchState(store, { selectedSizes: sizes });
+        }),
+
+        setSelectedFeatures: signalMethod<string[]>((features: string[]) => {
+          patchState(store, { selectedFeatures: features });
+        }),
+
+        setSelectedSort: signalMethod<string>((sortBy: string) => {
+          patchState(store, { selectedSort: sortBy });
+        }),
+
+        setShowOutOfStock: signalMethod<boolean>((show: boolean) => {
+          patchState(store, { showOutOfStock: show });
+        }),
+
+        clearFilters: () => {
+          patchState(store, {
+            selectedBrands: [],
+            selectedCategories: [],
+            priceRange: [0, 500],
+            selectedStorageTypes: [],
+            selectedSizes: [],
+            selectedFeatures: [],
+            selectedSort: 'relevance',
+            showOutOfStock: false,
+          });
+        },
+      };
+    },
   ),
 );

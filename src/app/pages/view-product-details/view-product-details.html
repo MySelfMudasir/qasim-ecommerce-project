@@ -56,7 +56,7 @@
             }
             }
             @else {
-            @for (product of store.recommendedProducts().slice(0, 5); track product.id) {
+            @for (product of store.recommendedProductsList().slice(0, 5); track product.id) {
             <app-recommended-products [product]="product">
                 <app-toggle-wishlist-button class="!absolute top-3 right-3" [product]="product"
                     [style.view-transition-name]="'wishlist-button-' + product.id">

@@ -19,7 +19,7 @@ import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { ScrollToTopGuard } from './guards/scroll-to-top.guard';
 import { provideServiceWorker } from '@angular/service-worker';
 import { NotificationClickService } from './services/notification-click.service';
-// import { cacheInterceptor } from './interceptors/cache.interceptor';
+import { tokenInterceptor } from './interceptors/token.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -32,7 +32,7 @@ export const appConfig: ApplicationConfig = {
       withInMemoryScrolling({ scrollPositionRestoration: 'disabled' }),
     ),
 
-    // provideHttpClient(withInterceptors([cacheInterceptor])),
+    provideHttpClient(withInterceptors([tokenInterceptor])),
 
     provideHotToastConfig(),
     provideHotToastConfig({

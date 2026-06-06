@@ -12,20 +12,18 @@ import { StarRating } from '../../components/star-rating/star-rating';
 export class RatingSummary {
   product = input.required<ProductModel>();
 
-
   totalReviews = computed(() => {
-    return this.product().reviews.length;
+    return this.product()?.reviews?.length ?? 0;
   });
 
-
   ratingBreakdown = computed(() => {
-    const reviews = this.product().reviews;
+    const reviews = this.product()?.reviews ?? [];
     const total = reviews.length;
     if (total === 0) {
       return [5, 4, 3, 2, 1].map((stars) => ({ stars, count: 0, percentage: 0 }));
     }
 
-    const counts = [5, 4, 3, 2, 1].map((stars) => {
+    return [5, 4, 3, 2, 1].map((stars) => {
       const count = reviews.filter((r) => r.rating === stars).length;
       return {
         stars,
@@ -33,8 +31,5 @@ export class RatingSummary {
         percentage: Math.round((count / total) * 100),
       };
     });
-    return counts;
   });
-
-
 }

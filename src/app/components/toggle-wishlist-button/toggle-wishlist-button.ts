@@ -21,8 +21,6 @@ export class ToggleWishlistButton {
     if (this.isInWishlist()) {
       this.store.removeFromWishlist(product);
     } else {
-      console.log();
-
       this.store.addToWishlist(product);
     }
   }

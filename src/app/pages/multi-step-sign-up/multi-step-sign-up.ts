@@ -6,26 +6,20 @@ import { Observable, zip } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { AsyncPipe } from '@angular/common';
 import { BackButton } from '../../components/back-button/back-button';
-import { ViewPanel } from '../../directives/view-panel';;
+import { ViewPanel } from '../../directives/view-panel';
 import { STEPPER_GLOBAL_OPTIONS } from '@angular/cdk/stepper';
 import { Router } from '@angular/router';
 import { SharedModule } from '../../modules/shared';
-
+import { EcommerceStore } from '../../ecommerce-store';
 
 interface Food {
   value: string;
   viewValue: string;
 }
 
-
 @Component({
   selector: 'app-multi-step-sign-up',
-  imports: [
-    SharedModule,
-    ViewPanel,
-    BackButton,
-    AsyncPipe,
-  ],
+  imports: [SharedModule, ViewPanel, BackButton, AsyncPipe],
   templateUrl: './multi-step-sign-up.html',
   styleUrl: './multi-step-sign-up.scss',
   providers: [
@@ -40,17 +34,12 @@ export class MultiStepSignUp {
   passwordVisible = signal(false);
   submitButtonDisabled = signal(false);
   router = inject(Router);
-
-
-
-    foods: Food[] = [
-    {value: 'steak-0', viewValue: 'Steak'},
-    {value: 'pizza-1', viewValue: 'Pizza'},
-    {value: 'tacos-2', viewValue: 'Tacos'},
+  private store = inject(EcommerceStore);
+  foods: Food[] = [
+    { value: 'steak-0', viewValue: 'Steak' },
+    { value: 'pizza-1', viewValue: 'Pizza' },
+    { value: 'tacos-2', viewValue: 'Tacos' },
   ];
-
-
-
 
   accountFormGroup = this._formBuilder.group({
     email: ['test@gmail.com', [Validators.required, Validators.email]],
@@ -87,7 +76,6 @@ export class MultiStepSignUp {
 
   readonly businessTypes = ['Retail', 'Wholesale', 'Services', 'Marketplace'];
   readonly productCategories = ['Fashion', 'Electronics', 'Home Goods', 'Beauty', 'Grocery'];
-
   readonly formGroups = [
     this.accountFormGroup,
     this.emailFormGroup,
@@ -102,29 +90,22 @@ export class MultiStepSignUp {
     this.stepperOrientation = breakpointObserver
       .observe('(min-width: 800px)')
       .pipe(map(({ matches }) => (matches ? 'horizontal' : 'vertical')));
-
     this.emailFormGroup.controls['phoneCode'].disable();
   }
 
   onSubmit() {
-    if (this.formGroups.every((group) => group.valid)) {
-      this.submitButtonDisabled.set(true);
-      console.log('Form submitted successfully!', {
-        account: this.accountFormGroup.getRawValue(),
-        email: this.emailFormGroup.getRawValue(),
-        profile: this.profileFormGroup.getRawValue(),
-        business: this.businessFormGroup.getRawValue(),
-        notifications: this.notificationsFormGroup.getRawValue(),
-      });
-    }
-    this.router.navigate(['/signup-success']);
-
     this.formGroups.forEach((group) => group.markAllAsTouched());
+
+    if (!this.formGroups.every((group) => group.valid)) return;
+
+    const payload = {
+      account: this.accountFormGroup.getRawValue(),
+      email: this.emailFormGroup.getRawValue(),
+      profile: this.profileFormGroup.getRawValue(),
+      business: this.businessFormGroup.getRawValue(),
+      notifications: this.notificationsFormGroup.getRawValue(),
+    };
+
+    this.store.signUp(payload);
   }
-
-
-
-
-
-
 }

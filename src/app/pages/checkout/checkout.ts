@@ -1,5 +1,10 @@
 import { Component, inject, signal } from '@angular/core';
-import { NonNullableFormBuilder, ReactiveFormsModule, Validators, FormControl } from '@angular/forms';
+import {
+  NonNullableFormBuilder,
+  ReactiveFormsModule,
+  Validators,
+  FormControl,
+} from '@angular/forms';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { merge } from 'rxjs';
 
@@ -9,19 +14,12 @@ import { SummarizeOrder } from '../../components/summarize-order/summarize-order
 import { CollectionDate } from '../../components/collection-date/collection-date';
 import { CollectionTime } from '../../components/collection-time/collection-time';
 import { ShippingForm } from '../shipping-form/shipping-form';
-import { ShippingModel } from '../../models/checkout';
+import { CollectionModel, ShippingModel } from '../../models/checkout';
 import { SharedModule } from '../../modules/shared';
 
 @Component({
   selector: 'app-checkout',
-  imports: [
-    SharedModule,
-    BackButton,
-    SummarizeOrder,
-    CollectionDate,
-    CollectionTime,
-    ShippingForm,
-  ],
+  imports: [SharedModule, BackButton, SummarizeOrder, CollectionDate, CollectionTime, ShippingForm],
   templateUrl: './checkout.html',
   styleUrl: './checkout.scss',
 })
@@ -30,38 +28,36 @@ export class Checkout {
 
   // Pre-fill defaults so the form is valid as soon as it's enabled
   private readonly defaultShipping = {
-    firstName:     'John',
-    lastName:      'Doe',
-    address:       '123 Main St',
-    city:          'Birmingham',
-    state:         'West Midlands',
-    zipCode:       'B9 4SJ',
+    firstName: 'John',
+    lastName: 'Doe',
+    address: '123 Main St',
+    city: 'Birmingham',
+    state: 'West Midlands',
+    zipCode: 'B9 4SJ',
     paymentMethod: 'cashOnDelivery' as ShippingModel['paymentMethod'],
   };
 
   store = inject(EcommerceStore);
   fb = inject(NonNullableFormBuilder);
 
-  checkoutMode = signal<'delivery' | 'collection'>(
-    this.store.checkout().mode || 'collection'
-  );
+  checkoutMode = signal<'delivery' | 'collection'>(this.store.checkout().mode || 'collection');
 
   // ── Shipping group — pre-filled with defaults so it's valid on enable ─────
   shippingGroup = this.fb.group({
-    firstName:     [this.defaultShipping.firstName,     Validators.required],
-    lastName:      [this.defaultShipping.lastName,      Validators.required],
-    address:       [this.defaultShipping.address,       Validators.required],
-    city:          [this.defaultShipping.city,          Validators.required],
-    state:         [this.defaultShipping.state,         Validators.required],
-    zipCode:       [this.defaultShipping.zipCode,       [Validators.required, Validators.minLength(4)]],
+    firstName: [this.defaultShipping.firstName, Validators.required],
+    lastName: [this.defaultShipping.lastName, Validators.required],
+    address: [this.defaultShipping.address, Validators.required],
+    city: [this.defaultShipping.city, Validators.required],
+    state: [this.defaultShipping.state, Validators.required],
+    zipCode: [this.defaultShipping.zipCode, [Validators.required, Validators.minLength(4)]],
     // paymentMethod: [this.defaultShipping.paymentMethod, Validators.required],
   });
 
   // ── Collection group ──────────────────────────────────────────────────────
   collectionGroup = this.fb.group({
     collectionLocation: [this.defaultLocation, Validators.required],
-    collectionDate:     new FormControl<Date | null>(null, Validators.required),
-    collectionTime:     new FormControl<Date | null>(null, Validators.required),
+    collectionDate: new FormControl<Date | null>(null, Validators.required),
+    collectionTime: new FormControl<Date | null>(null, Validators.required),
   });
 
   // ── Payment group ─────────────────────────────────────────────────────────
@@ -86,11 +82,17 @@ export class Checkout {
       this.shippingGroup.patchValue(saved.shipping);
     }
 
-    this.collectionGroup.patchValue({
-      collectionLocation: saved.collectionLocation ?? this.defaultLocation,
-      collectionDate: saved.collectionDate ? new Date(saved.collectionDate) : null,
-      collectionTime: saved.collectionTime ? new Date(saved.collectionTime as string) : null,
-    });
+    if (saved.collection) {
+      this.collectionGroup.patchValue({
+        collectionLocation: saved.collection.collectionLocation ?? this.defaultLocation,
+        collectionDate: saved.collection.collectionDate
+          ? new Date(saved.collection.collectionDate)
+          : null,
+        collectionTime: saved.collection.collectionTime
+          ? new Date(saved.collection.collectionTime as string)
+          : null,
+      });
+    }
 
     // 2. Apply initial mode — runs after values are set so validity is correct
     this.applyMode(this.checkoutMode());
@@ -132,19 +134,16 @@ export class Checkout {
   private syncStoreFromForm(): void {
     const mode = this.checkoutMode();
     const collectionRaw = this.collectionGroup.getRawValue();
-    const shippingRaw   = this.shippingGroup.getRawValue();
+    const shippingRaw = this.shippingGroup.getRawValue();
 
     this.store.updateCheckout({
       mode,
-      shipping:           mode === 'delivery'   ? (shippingRaw as ShippingModel) : null,
-      collectionDate:     mode === 'collection' ? (collectionRaw.collectionDate as unknown as Date) : null,
-      collectionTime:     mode === 'collection' ? (collectionRaw.collectionTime as unknown as string) : null,
-      collectionLocation: collectionRaw.collectionLocation,
+      shipping: mode === 'delivery' ? (shippingRaw as ShippingModel) : null,
+      collection: mode === 'collection' ? (collectionRaw as CollectionModel) : null,
     });
   }
 
   submitCheckout() {
-    // console.log('Submitting checkout. Check console for form values and validity.');
     const activeGroupValid = this.isDeliveryMode
       ? this.shippingGroup.valid
       : this.collectionGroup.valid;

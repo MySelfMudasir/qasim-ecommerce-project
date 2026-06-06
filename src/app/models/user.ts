@@ -4,8 +4,8 @@ export type UserModel = {
     id: string;
     email: string;
     name: string;
-    imageUrl: string;
-    checkoutMode: CheckoutModel;
+    imageUrl?: string;
+    checkoutMode?: CheckoutModel;
 }
 
 export type SignUpParams = {
@@ -15,7 +15,7 @@ export type SignUpParams = {
     checkout?: boolean;
     dialogId: string;
     redirectUrl?: string;
-    checkoutmode: CheckoutModel;
+    checkoutmode?: CheckoutModel;
 }
 
 export type SignInParams =  {
@@ -25,5 +25,5 @@ export type SignInParams =  {
     checkout?: boolean;
     dialogId: string;
     redirectUrl?: string;
-    checkoutmode: CheckoutModel;
+    checkoutmode?: CheckoutModel;
 }

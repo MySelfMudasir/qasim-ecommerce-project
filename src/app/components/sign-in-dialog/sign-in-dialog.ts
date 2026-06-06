@@ -37,17 +37,13 @@ export class SignInDialog {
       email,
       password,
       dialogId: this.dialogRef.id,
-      checkoutmode: this.store.user()?.checkoutMode ?? { mode: 'collection' },
+      checkout: this.router.url === '/cart' ? true : false, 
+      redirectUrl: this.data.redirectUrl,
     } as SignInParams);
   }
 
   openSignUpDialog() {
     this.dialogRef.close();
-    // this.matDialog.open(SignUpDialog, {
-    //   disableClose: true,
-    //   data: { checkout: this.router.url === '/cart' ? true : false, redirectUrl: this.data.redirectUrl },
-    // });
-
     this.router.navigate(['/multi-step-sign-up']);
   }
 }

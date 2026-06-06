@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { ViewPanel } from '../../directives/view-panel';
-import { CollectionDate } from "../collection-date/collection-date";
-import { CollectionTime } from "../collection-time/collection-time";
+import { CollectionDate } from '../collection-date/collection-date';
+import { CollectionTime } from '../collection-time/collection-time';
 import { EcommerceStore } from '../../ecommerce-store';
 import { NonNullableFormBuilder, FormControl, Validators } from '@angular/forms';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -21,6 +21,10 @@ export class CollectionDetails {
   collectionGroup = this.fb.group({
     collectionDate: new FormControl<Date | null>(null, Validators.required),
     collectionTime: new FormControl<Date | null>(null, Validators.required),
+    collectionLocation: new FormControl<string>(
+      this.store.checkout().collection?.collectionLocation || '',
+      Validators.required,
+    ),
   });
 
   get collectionDateControl(): FormControl {
@@ -35,8 +39,12 @@ export class CollectionDetails {
     // Restore from store
     const saved = this.store.checkout();
     this.collectionGroup.patchValue({
-      collectionDate: saved.collectionDate ? new Date(saved.collectionDate) : null,
-      collectionTime: saved.collectionTime ? new Date(saved.collectionTime as string) : null,
+      collectionDate: saved.collection?.collectionDate
+        ? new Date(saved.collection?.collectionDate)
+        : null,
+      collectionTime: saved.collection?.collectionTime
+        ? new Date(saved.collection?.collectionTime as string)
+        : null,
     });
 
     // Sync to store on change
@@ -45,8 +53,11 @@ export class CollectionDetails {
       .subscribe(() => {
         const raw = this.collectionGroup.getRawValue();
         this.store.updateCheckout({
-          collectionDate: raw.collectionDate as unknown as Date,
-          collectionTime: raw.collectionTime as unknown as string,
+          collection: {
+            collectionDate: raw.collectionDate as unknown as Date,
+            collectionTime: raw.collectionTime as unknown as string,
+            collectionLocation: raw.collectionLocation as string,
+          },
         });
       });
   }
