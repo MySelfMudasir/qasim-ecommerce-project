@@ -64,8 +64,8 @@ export type EcommerceState = {
 const LOGOUT_STATE: Partial<EcommerceState> = {
   user: undefined,
   writeReview: false,
-  // cartItems: [],
-  // wishlistItems: [],
+  cartItems: [],
+  wishlistItems: [],
   // selectedProductId: undefined,
   // isSkeletonLoading: false,
   // preLoader: false,
@@ -93,7 +93,7 @@ export const EcommerceStore = signalStore(
     isLoadingMore: false,
     searchedProduct: '',
     checkout: {
-      mode: 'collection', // default
+      mode: 'delivery', // default
       shipping: null,
       collection: {
         collectionLocation:
@@ -663,9 +663,7 @@ export const EcommerceStore = signalStore(
 
           const date = checkout.collection?.collectionDate;
           const formattedDate = date
-            ? `${date.getFullYear()}-${(date.getMonth() + 1)
-                .toString()
-                .padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`
+            ? `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`
             : '';
 
           const order: orderModel = {
@@ -674,9 +672,23 @@ export const EcommerceStore = signalStore(
             total: Math.round(
               store.cartItems().reduce((acc, item) => acc + item.product.price * item.quantity, 0),
             ),
-            items: store.cartItems(),
+            items: store.cartItems().map((item) => ({
+              product: item.product,
+              quantity: item.quantity,
+            })),
+            mode: checkout.mode,
 
-            shippingAddress: checkout.mode === 'delivery' ? checkout.shipping?.address || '' : '',
+            shipping:
+              checkout.mode === 'delivery' && checkout.shipping
+                ? {
+                    firstName: checkout.shipping.firstName,
+                    lastName: checkout.shipping.lastName,
+                    address: checkout.shipping.address,
+                    city: checkout.shipping.city,
+                    state: checkout.shipping.state,
+                    zipCode: checkout.shipping.zipCode,
+                  }
+                : null,
 
             collectionLocation:
               checkout.mode === 'collection' ? checkout.collection?.collectionLocation || '' : '',
@@ -697,14 +709,19 @@ export const EcommerceStore = signalStore(
           console.log('👤 User:', user);
           console.log('👤 Checkout:', checkout);
           console.log('🚚 Mode:', checkout.mode.toUpperCase());
-          console.log('📝 Full Order Payload:', order);
+          console.log('📝 Full Order Payload:', JSON.stringify(order, null, 2));
           console.groupEnd();
 
-          await new Promise((res) => setTimeout(res, 2000));
-
-          patchState(store, { loading: false, cartItems: [] });
-          router.navigate(['/order-success']);
-          toaster.success('Order placed successfully!');
+          firstValueFrom(apiService.placeOrder(order))
+            .then(() => {
+              patchState(store, { loading: false, cartItems: [] });
+              router.navigate(['/order-success']);
+              toaster.success('Order placed successfully!');
+            })
+            .catch((err) => {
+              patchState(store, { loading: false });
+              toaster.error(err?.error?.message || 'Failed to place order');
+            });
         },
 
         signUp: (payload: any) => {
@@ -725,11 +742,13 @@ export const EcommerceStore = signalStore(
               const token = response?.data?.token || response?.token;
 
               const user: UserModel = {
-                id: userData.id,
-                name: userData.name,
-                email: userData.email,
-                imageUrl: 'https://randomuser.me/api/portraits/men/1.jpg',
-                checkoutMode: { mode: 'collection' },
+                id: response.data.user.id,
+                name: response.data.user.name,
+                email: response.data.user.email,
+                imageUrl: 'https://img.icons8.com/ios_filled/1200/user-male-circle.jpg',
+                checkoutMode: {
+                  mode: response.data.user.checkoutMode === 'delivery' ? 'delivery' : 'collection',
+                },
               };
 
               if (token) {
@@ -770,12 +789,16 @@ export const EcommerceStore = signalStore(
               // Save JWT Token
               authService.setSession(response.data.token);
 
+              const savedMode = response.data.user.checkoutMode;
+              const mode: 'delivery' | 'collection' =
+                savedMode === 'delivery' ? 'delivery' : 'collection';
+
               patchState(store, {
                 user,
                 loading: false,
                 checkout: {
                   ...store.checkout(),
-                  mode: 'collection',
+                  mode,
                 },
               });
 

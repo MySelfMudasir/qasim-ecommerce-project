@@ -113,4 +113,8 @@ export class ApiService {
     const data = { userId };
     return this.http.post(`${this.baseUrl}/cart/clear`, data);
   }
+
+  placeOrder(order: any): Observable<any> {
+    return this.http.post(`${this.baseUrl}/orders/place`, order);
+  }
 }
