@@ -4,58 +4,148 @@
   <div class="flex items-center gap-2 md:gap-4">
 
     <!-- Wishlist -->
-    <button matIconButton  routerLink="/wishlist" [matBadge]="store.wishlistCount()"
+    <button matIconButton routerLink="/wishlist" [matBadge]="store.wishlistCount()"
       [matBadgeHidden]="store.wishlistCount() === 0" matTooltip="Wishlist">
       <mat-icon>favorite</mat-icon>
     </button>
 
     <!-- Cart -->
-    <button matIconButton routerLink="/cart" [matBadge]="store.cartCount()" [matBadgeHidden]="store.cartCount() === 0" matTooltip="Cart">
+    <button matIconButton routerLink="/cart" [matBadge]="store.cartCount()" [matBadgeHidden]="store.cartCount() === 0"
+      matTooltip="Cart">
       <mat-icon>shopping_cart</mat-icon>
     </button>
 
     @if(store.user(); as user) {
-    <button matIconButton [matMenuTriggerFor]="userMenu" matTooltip="Account">
-      <img [src]="user.imageUrl" loading="lazy" [alt]="user.name"
-        onerror="this.onerror=null; this.src='./assets/images/image-404.jpg'" class="w-8 h-8 rounded-full" />
+    <button type="button" [matMenuTriggerFor]="userMenu" matTooltip="Account" class="relative cursor-pointer">
+      <img [src]="user.imageUrl" [alt]="user.name" loading="lazy"
+        onerror="this.onerror=null; this.src='./assets/images/image-404.jpg'"
+        class="w-9 h-9 rounded-full border-2 border-green-500 object-cover shadow-sm transition-transform duration-1000 hover:scale-105" />
+      <!-- Online Dot -->
+      <span
+        class="absolute bottom-0 right-0 w-3.5 h-3.5 bg-green-500 rounded-full border-2 border-white dark:border-gray-900">
+      </span>
+      <!-- Pulse Ring -->
+      <span class="absolute bottom-0 right-0 w-3.5 h-3.5 bg-green-500 rounded-full animate-ping opacity-60">
+      </span>
     </button>
-    <mat-menu #userMenu="matMenu" xPosition="before">
-      <div class="flex flex-col px-3 min-w-[200px]">
-        <span class="text-sm font-medium">{{ user.name }}</span>
-        <span class="text-xs">{{ user.email }}</span>
+
+
+    <mat-menu #userMenu="matMenu" xPosition="before" class="account-menu">
+
+      <!-- User Info -->
+      <div class="account-header">
+        <img [src]="user.imageUrl" [alt]="user.name" class="account-avatar" />
+
+        <div class="account-info">
+          <div class="account-name">{{ user.name }}</div>
+          <div class="account-email">{{ user.email }}</div>
+        </div>
       </div>
+
       <mat-divider></mat-divider>
-      <button class="!min-h-[32px]" mat-menu-item (click)="store.signOut()" matTooltip="Sign Out">
+
+      <!-- Orders -->
+      <button mat-menu-item routerLink="/orders">
+        <mat-icon>receipt_long</mat-icon>
+        <span>My Orders</span>
+      </button>
+
+      <!-- Wishlist -->
+      <button mat-menu-item routerLink="/wishlist">
+        <mat-icon>favorite</mat-icon>
+        <span>Wishlist</span>
+      </button>
+
+      <!-- Profile -->
+      <button mat-menu-item routerLink="/profile">
+        <mat-icon>person</mat-icon>
+        <span>Profile</span>
+      </button>
+
+      <mat-divider></mat-divider>
+
+      <!-- Theme -->
+      <button mat-menu-item (click)="toggleTheme()">
+        <mat-icon>
+          {{ isDark ? 'light_mode' : 'dark_mode' }}
+        </mat-icon>
+        <span>
+          {{ isDark ? 'Light Mode' : 'Dark Mode' }}
+        </span>
+      </button>
+
+      <mat-divider></mat-divider>
+
+      <!-- Logout -->
+      <button mat-menu-item class="logout-item" (click)="store.signOut()">
         <mat-icon>logout</mat-icon>
         <span>Sign Out</span>
       </button>
+
     </mat-menu>
     }
     @else {
 
     <!-- Hidden on mobile -->
-    <div class="hidden md:inline">
-      <button matButton matTooltip="Sign In" class="" (click)="openSignInDialog()">
-        Sign In
+
+
+    <button type="button" [matMenuTriggerFor]="guestMenu" matTooltip="Account"
+      class="flex items-center justify-center w-11 h-11 rounded-full">
+      <mat-icon>account_circle</mat-icon>
+    </button>
+
+    <mat-menu #guestMenu="matMenu" xPosition="before">
+
+      <div class="px-4 py-3 min-w-[220px]">
+        <div class="font-medium text-base">
+          Welcome 👋
+        </div>
+        <div class="text-sm text-gray-500">
+          Sign in to access your account
+        </div>
+      </div>
+
+      <mat-divider></mat-divider>
+
+      <button mat-menu-item (click)="openSignInDialog()">
+        <mat-icon>login</mat-icon>
+        <span>Sign In</span>
       </button>
 
-      <!-- <button matButton="filled" class="hidden md:inline" (click)="openSignUpDialog()">
-        Sign Up
-      </button> -->
-
-      <button matButton="filled" matTooltip="Sign Up" class="hidden md:inline" routerLink="/multi-step-sign-up">
-        Sign Up
+      <button mat-menu-item routerLink="/multi-step-sign-up">
+        <mat-icon>person_add</mat-icon>
+        <span>Create Account</span>
       </button>
-    </div>
+
+      <mat-divider></mat-divider>
+
+      <button mat-menu-item (click)="toggleTheme()">
+        <mat-icon>
+          {{ isDark ? 'light_mode' : 'dark_mode' }}
+        </mat-icon>
+        <span>
+          {{ isDark ? 'Light Mode' : 'Dark Mode' }}
+        </span>
+      </button>
+
+    </mat-menu>
+
     }
 
 
   </div>
 
-  <div class="hidden md:flex md:flex-1 md:justify-center md:px-4">
+
+  <!-- <button matButton matTooltip="Sign In" class="" (click)="openSignInDialog()">Sign In</button> -->
+
+  <!-- <button matButton="filled" class="hidden md:inline" (click)="openSignUpDialog()">Sign Up</button> -->
+
+  <!-- <button matButton="filled" matTooltip="Sign Up" class="hidden md:inline" routerLink="/multi-step-sign-up">Sign Up</button> -->
+
+  <!-- <div class="hidden md:flex md:flex-1 md:justify-center md:px-4">
     <app-theme-button></app-theme-button>
-  </div>
-  
+  </div> -->
+
   <!-- <button matButton="" (click)="toggle()">Toggle Skeleton</button> -->
 
 </div>

@@ -23,23 +23,22 @@ export class SearchBar {
 
   ngOnInit() {
     // Get search value from URL query params
-    this.route.queryParams.subscribe(params => {
+    this.route.queryParams.subscribe((params) => {
       const query = params['query']?.toLowerCase().trim() || '';
       this.searchValue.set(query);
     });
 
     this.searchSubject
-      .pipe(debounceTime(500), distinctUntilChanged())
+      .pipe(debounceTime(800), distinctUntilChanged())
       .subscribe((value: string) => {
         const trimmed = value.trim().toLowerCase();
         if (trimmed) {
-          // Navigate to search page with query param
           this.router.navigate(['/search'], { queryParams: { query: trimmed } });
         } else {
-          // If empty, redirect to products
+          this.store.setSearchTerm('');
           this.router.navigate(['/products/all']);
         }
-        this.store.setSearchTerm(trimmed);
+        // DO NOT call setSearchTerm here — SearchResults handles it via queryParams
       });
   }
 
@@ -51,9 +50,8 @@ export class SearchBar {
   }
 
   clearSearch() {
-    this.searchLoadingService.open();
     this.searchValue.set('');
-    this.searchSubject.next(''); // reset stream
-    this.store.setSearchTerm('');
+    this.searchSubject.next('');
+    // setSearchTerm('') is handled in the subscription above when trimmed is empty
   }
 }

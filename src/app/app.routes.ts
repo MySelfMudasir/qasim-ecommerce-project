@@ -33,6 +33,12 @@ export const routes: Routes = [
           import('./pages/my-wishlist/my-wishlist').then(m => m.MyWishlist),
       },
       {
+        path: 'orders',
+        canActivate: [authGuardGuard],
+        loadComponent: () =>
+          import('./pages/my-orders/my-orders').then(m => m.MyOrders),
+      },
+      {
         path: 'cart',
         loadComponent: () =>
           import('./pages/view-cart/view-cart').then(m => m.ViewCart),

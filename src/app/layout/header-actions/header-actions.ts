@@ -23,8 +23,22 @@ export class HeaderActions {
   themeService = inject(ThemeService);
   matDialog = inject(MatDialog);
 
+  get isDark() {
+    return this.themeService.isDark;
+  }
+  
+  toggleTheme() {
+    this.themeService.toggleTheme();
+  }
+
+
   toggle() {
-    this.store.setIsSkeletonLoading(!this.store.isSkeletonLoading());
+    console.log(this.store.loading());
+    this.store.setLoading(true);
+    console.log(this.store.loading());
+    
+    // this.store.setIsSkeletonLoading(!this.store.isSkeletonLoading());
+    // this.store.preLoader() ? this.store.preLoader() : this.store.preLoader();
   }
 
   openSignInDialog() {

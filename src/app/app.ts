@@ -6,16 +6,7 @@ import { EcommerceStore } from './ecommerce-store';
 import { PreLoader } from './shared/pre-loader/pre-loader';
 import { ThemeService } from './services/theme';
 // import { Database, ref, set, onValue } from '@angular/fire/database';
-import {
-  Router,
-  NavigationStart,
-  NavigationEnd,
-  NavigationCancel,
-  NavigationError,
-} from '@angular/router';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
-import { log } from 'node:console';
-import { MyService } from './services/my-service';
 import { Footer } from './layout/footer/footer';
 import { MenuBar } from './components/menu-bar/menu-bar';
 import { SkeletonComponent } from 'boneyard-js/angular';
@@ -24,6 +15,7 @@ import { NetworkService } from './services/network-service';
 import { Toaster } from './services/toaster';
 import { MatDialog } from '@angular/material/dialog';
 import { AdvertisementDialog } from './components/advertisement-dialog/advertisement-dialog';
+import { Loader } from "./shared/loader/loader";
 
 @Component({
   selector: 'app-root',
@@ -36,7 +28,8 @@ import { AdvertisementDialog } from './components/advertisement-dialog/advertise
     Footer,
     MenuBar,
     SkeletonComponent,
-  ],
+    Loader
+],
   templateUrl: './app.html',
   styleUrl: './app.scss',
 })
@@ -144,9 +137,9 @@ export class App {
     this.push.requestPermission();
     this.push.listen();
 
-    const loader = document.getElementById('global-loader');
-    if (loader) {
-      loader.remove();
+    const preLoader = document.getElementById('global-pre-loader');
+    if (preLoader) {
+      preLoader.remove();
     }
 
     this.advertisementDialog('https://www.google.com');

@@ -1,0 +1,34 @@
+.account-menu {
+  .mat-mdc-menu-content {
+    padding: 0;
+  }
+}
+
+.account-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  min-width: 260px;
+}
+
+.account-avatar {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.account-info {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.logout-item {
+  color: #ef4444;
+
+  mat-icon {
+    color: #ef4444;
+  }
+}

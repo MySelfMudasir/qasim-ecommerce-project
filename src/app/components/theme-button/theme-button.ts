@@ -10,11 +10,9 @@ import { SharedModule } from '../../modules/shared';
 })
 export class ThemeButton {
   themeService = inject(ThemeService);
-
   get isDark() {
     return this.themeService.isDark;
   }
-
   toggleTheme() {
     this.themeService.toggleTheme();
   }

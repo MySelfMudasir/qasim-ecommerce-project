@@ -2,6 +2,12 @@
 <app-pre-loader></app-pre-loader>
 }
 
+
+<!-- @if (store.loading()) {
+<app-loader class=""></app-loader>
+} -->
+
+
 <!-- <div class="fixed inset-0 flex items-center justify-center z-50 pointer-events-none select-none"
   [ngStyle]="{ background: myService.backdropColor() }" *ngIf="myService.isBlocked() === 'block'">
   <div class="bg-white p-6 rounded-lg text-center" [ngStyle]="{ width: myService.width() }">

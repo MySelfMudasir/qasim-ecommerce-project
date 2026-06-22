@@ -1,23 +1,32 @@
-import { cartModel } from "./cart";
+import { cartModel } from './cart';
 
 export type orderModel = {
+  id?: string;
+  userId: number | string;
+  total: number;
+
+  items: {
     id: string;
-    userId: string;
-    total: number;
-    items: cartModel[];
-    mode: 'collection' | 'delivery';
-    // delivery
-    shipping: {
-        firstName: string;
-        lastName: string;
-        address: string;
-        city: string;
-        state: string;
-        zipCode: string;
-    } | null;
-    // collection
+    quantity: number;
+    product: any;
+  }[];
+
+  mode: 'delivery' | 'collection';
+
+  shipping: {
+    firstName: string;
+    lastName: string;
+    address: string;
+    city: string;
+    zipCode: string;
+  } | null;
+
+  collection: {
     collectionLocation: string;
     collectionDate: string;
     collectionTime: string;
-    paymentStatus: 'pending' | 'success' | 'failed';
+  } | null;
+
+  paymentStatus: 'pending' | 'completed' | 'failed';
+  orderStatus: 'pending' | 'shipped' | 'completed' | 'cancelled' | 'failed';
 };

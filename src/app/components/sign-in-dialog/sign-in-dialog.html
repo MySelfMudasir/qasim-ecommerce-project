@@ -27,7 +27,7 @@
             </button>
         </mat-form-field>
         <button matButton="filled" class="w-full mt-2 py-3 rounded-lg" [disabled]="signInForm.invalid" type="submit">
-            Sign In
+            {{ store.loading() ? 'Signing in...' : 'Sign In' }}
         </button>
     </form>
 

@@ -45,6 +45,7 @@ export type EcommerceState = {
   isLoadingMore: boolean;
   searchedProduct: string;
   checkout: CheckoutModel;
+  order: orderModel;
   // Filter state
   selectedBrands: string[];
   selectedCategories: string[];
@@ -93,7 +94,7 @@ export const EcommerceStore = signalStore(
     isLoadingMore: false,
     searchedProduct: '',
     checkout: {
-      mode: 'delivery', // default
+      mode: 'collection', // default
       shipping: null,
       collection: {
         collectionLocation:
@@ -102,6 +103,32 @@ export const EcommerceStore = signalStore(
         collectionTime: null,
       },
     } as CheckoutModel,
+    order: {
+      id: undefined,
+      userId: '',
+      total: 0,
+      items: [],
+      mode: 'collection',
+
+      shipping: {
+        firstName: '',
+        lastName: '',
+        address: '',
+        city: '',
+        state: '',
+        zipCode: '',
+      },
+
+      collection: {
+        collectionLocation:
+          'Khyber Foods LTD: Khyber Food Ltd, Unit C Doris Rd, Birmingham B9 4SJ, United Kingdom',
+        collectionDate: '',
+        collectionTime: '',
+      },
+
+      paymentStatus: 'pending',
+      orderStatus: 'pending',
+    } as orderModel,
     // Filter state
     selectedBrands: [],
     selectedCategories: [],
@@ -121,7 +148,11 @@ export const EcommerceStore = signalStore(
   withStorageSync(
     {
       key: 'E-Commerce Store',
-      select: ({ user, wishlistItems, cartItems }) => ({ user, wishlistItems, cartItems }),
+      select: ({ user, wishlistItems, cartItems }) => ({
+        user,
+        wishlistItems,
+        cartItems,
+      }),
     },
     withLocalStorage(),
   ),
@@ -278,6 +309,7 @@ export const EcommerceStore = signalStore(
             .slice(0, 6);
         }),
         wishlistCount: computed(() => wishlistItems().length),
+        ordersCount: computed(() => wishlistItems().length),
         cartCount: computed(() => cartItems().length),
         selectedProduct: computed(
           () => products().find((p) => p.id === selectedProductId()) ?? undefined,
@@ -428,29 +460,31 @@ export const EcommerceStore = signalStore(
 
         openWishlist: () => {
           patchState(store, { isSkeletonLoading: true });
-
           // // 2. simulate API delay (or real API later)
           setTimeout(() => {
             patchState(store, { isSkeletonLoading: false });
-          }, 1500);
+          }, 800);
         },
 
         openCart: () => {
           patchState(store, { isSkeletonLoading: true });
-
           // // 2. simulate API delay (or real API later)
           setTimeout(() => {
             patchState(store, { isSkeletonLoading: false });
-          }, 1500);
+          }, 800);
         },
 
         // Skeleton methods
         setIsSkeletonLoading: signalMethod<boolean>((value: boolean) => {
           patchState(store, { isSkeletonLoading: value });
         }),
-
+        // preLoader methods
         setPreLoader: signalMethod<boolean>((value: boolean) => {
           patchState(store, { preLoader: value });
+        }),
+        // loading methods
+        setLoading: signalMethod<boolean>((value: boolean) => {
+          patchState(store, { loading: value });
         }),
 
         addToWishlist: (product: ProductModel) => {
@@ -485,53 +519,48 @@ export const EcommerceStore = signalStore(
           }
         },
 
-        loadMoreProducts: () => {
+        loadMoreProducts: async () => {
+          if (store.isLoadingMore()) return;
           patchState(store, { isLoadingMore: true });
 
-          const batchSize = store.itemsPerPage();
-          const baseIndex = store.products().length + 1;
-          const searchTerm = store.searchedProduct().trim();
-          const selectedCategory = store.selectedCategory().toLowerCase();
-          const category =
-            selectedCategory !== 'all'
-              ? selectedCategory
-              : (store.selectedCategories()[0]?.toLowerCase() ?? 'all');
-          const priceRange = store.priceRange();
-          const brand = store.selectedBrands()[0] ?? 'Demo Brand';
-          const storageType = store.selectedStorageTypes()[0] ?? 'Standard';
-          const size = store.selectedSizes()[0] ?? 'M';
+          const currentPage = Math.floor(store.products().length / store.itemsPerPage()) + 1;
+          const term = store.searchedProduct().trim() || undefined;
+          const category = store.selectedCategory().toLowerCase();
+          const [minPrice, maxPrice] = store.priceRange();
+          const brand = store.selectedBrands()[0] ?? undefined;
+          const storageType = store.selectedStorageTypes()[0] ?? undefined;
+          const size = store.selectedSizes()[0] ?? undefined;
+          const inStock = store.showOutOfStock() ? undefined : true;
 
-          const moreProducts = Array.from({ length: batchSize }, (_, index) => {
-            const productNumber = baseIndex + index;
-            const nameSeed = searchTerm || category || 'product';
-            return {
-              id: crypto.randomUUID(),
-              name: `${nameSeed} ${productNumber}`,
-              price:
-                priceRange[0] + (productNumber % Math.max(1, priceRange[1] - priceRange[0] + 1)),
-              category: category === 'all' ? 'all' : category,
-              imageUrl: 'https://placehold.co/600x400',
-              rating: 4,
-              reviewCount: 5,
-              inStock: true,
-              description: `Demo product ${productNumber} for ${nameSeed}`,
-              reviews: [],
-              brand,
-              storageType,
-              size,
-              isNew: store.selectedFeatures().includes('new-arrivals'),
-              onPromotion: store.selectedFeatures().includes('monthly-promos'),
-              reducedToClear: store.selectedFeatures().includes('reduced'),
-            } as ProductModel;
-          });
+          try {
+            const response = await firstValueFrom(
+              apiService.loadProducts(
+                term,
+                category !== 'all' ? category : undefined,
+                brand,
+                storageType,
+                size,
+                minPrice,
+                maxPrice,
+                inStock,
+                store.itemsPerPage(),
+                currentPage,
+              ),
+            );
 
-          setTimeout(() => {
+            const newProducts = (response?.data || response?.products || []).map((p: any) => ({
+              ...p,
+              reviews: Array.isArray(p.reviews) ? p.reviews : [],
+            }));
+
             patchState(store, {
-              products: [...store.products(), ...moreProducts],
-              displayedItemCount: store.displayedItemCount() + batchSize,
+              products: [...store.products(), ...newProducts],
+              displayedItemCount: store.displayedItemCount() + newProducts.length,
               isLoadingMore: false,
             });
-          }, 500);
+          } catch {
+            patchState(store, { isLoadingMore: false });
+          }
         },
 
         addToCart: (product: ProductModel, quantity = 1) => {
@@ -637,14 +666,13 @@ export const EcommerceStore = signalStore(
 
           const user = store.user();
           const checkout = store.checkout();
+          const order = store.order();
 
           if (!user) {
             toaster.error('Please sign in to place the order');
             patchState(store, { loading: false });
             return;
           }
-
-          console.log(checkout);
 
           // DELIVERY
           if (checkout.mode === 'delivery') {
@@ -666,42 +694,43 @@ export const EcommerceStore = signalStore(
             ? `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`
             : '';
 
-          const order: orderModel = {
-            id: crypto.randomUUID(),
-            userId: user.id,
+          const orderDetails: orderModel = {
+            userId: Number(user.id),
             total: Math.round(
               store.cartItems().reduce((acc, item) => acc + item.product.price * item.quantity, 0),
             ),
-            items: store.cartItems().map((item) => ({
-              product: item.product,
-              quantity: item.quantity,
-            })),
-            mode: checkout.mode,
 
+            items: store.cartItems().map((item, index) => ({
+              id: String(index + 1),
+              quantity: item.quantity,
+              product: item.product,
+            })),
+
+            mode: checkout.mode,
             shipping:
-              checkout.mode === 'delivery' && checkout.shipping
+              checkout.mode === 'delivery'
                 ? {
-                    firstName: checkout.shipping.firstName,
-                    lastName: checkout.shipping.lastName,
-                    address: checkout.shipping.address,
-                    city: checkout.shipping.city,
-                    state: checkout.shipping.state,
-                    zipCode: checkout.shipping.zipCode,
+                    firstName: checkout.shipping?.firstName || '',
+                    lastName: checkout.shipping?.lastName || '',
+                    address: checkout.shipping?.address || '',
+                    city: checkout.shipping?.city || '',
+                    zipCode: checkout.shipping?.zipCode || '',
                   }
                 : null,
 
-            collectionLocation:
-              checkout.mode === 'collection' ? checkout.collection?.collectionLocation || '' : '',
+            collection:
+              checkout.mode === 'collection'
+                ? {
+                    collectionLocation: checkout.collection?.collectionLocation || '',
+                    collectionDate: checkout.collection?.collectionDate
+                      ? formatDate(checkout.collection.collectionDate, 'yyyy-MM-dd', 'en-US')
+                      : '',
+                    collectionTime: checkout.collection?.collectionTime || '',
+                  }
+                : null,
 
-            collectionDate:
-              checkout.mode === 'collection' && checkout.collection?.collectionDate
-                ? formatDate(checkout.collection.collectionDate, 'yyyy-MM-dd', 'en-US')
-                : '',
-
-            collectionTime:
-              checkout.mode === 'collection' ? checkout.collection?.collectionTime || '' : '',
-
-            paymentStatus: 'success',
+            paymentStatus: order.paymentStatus || 'pending',
+            orderStatus: order.orderStatus || 'pending',
           };
 
           // --- NEW: LOGGING THE ORDER DETAILS BEFORE SUBMIT ---
@@ -709,10 +738,10 @@ export const EcommerceStore = signalStore(
           console.log('👤 User:', user);
           console.log('👤 Checkout:', checkout);
           console.log('🚚 Mode:', checkout.mode.toUpperCase());
-          console.log('📝 Full Order Payload:', JSON.stringify(order, null, 2));
+          console.log('📝 Full Order Payload:', JSON.stringify(orderDetails, null, 2));
           console.groupEnd();
 
-          firstValueFrom(apiService.placeOrder(order))
+          firstValueFrom(apiService.placeOrder(orderDetails))
             .then(() => {
               patchState(store, { loading: false, cartItems: [] });
               router.navigate(['/order-success']);
@@ -790,16 +819,12 @@ export const EcommerceStore = signalStore(
               authService.setSession(response.data.token);
 
               const savedMode = response.data.user.checkoutMode;
-              const mode: 'delivery' | 'collection' =
-                savedMode === 'delivery' ? 'delivery' : 'collection';
+              const mode: 'delivery' | 'collection' = savedMode === 'delivery' ? 'delivery' : 'collection';
 
-              patchState(store, {
-                user,
+              patchState(store, { 
+                user, 
                 loading: false,
-                checkout: {
-                  ...store.checkout(),
-                  mode,
-                },
+                checkout: {...store.checkout(), mode},
               });
 
               toaster.success(`Signed in Successfully as ${email}`);
@@ -841,10 +866,12 @@ export const EcommerceStore = signalStore(
           });
         },
 
+        
         signOut: () => {
           patchState(store, LOGOUT_STATE);
           authService.logout();
         },
+
 
         showWriteReview: () => {
           if (!store.user()) {
@@ -942,6 +969,48 @@ export const EcommerceStore = signalStore(
               patchState(store, { isSkeletonLoading: false, searchLoading: false });
             });
         }),
+
+        searchWithFilters: async (term: string) => {
+          searchLoadingService.open();
+          patchState(store, {
+            searchedProduct: term,
+            selectedCategory: 'all',
+            isSkeletonLoading: true,
+            searchLoading: true,
+          });
+
+          const [minPrice, maxPrice] = store.priceRange();
+          const brand = store.selectedBrands()[0] ?? undefined;
+          const storageType = store.selectedStorageTypes()[0] ?? undefined;
+          const size = store.selectedSizes()[0] ?? undefined;
+          const inStock = store.showOutOfStock() ? undefined : true;
+
+          try {
+            const response = await firstValueFrom(
+              apiService.loadProducts(
+                term || undefined,
+                undefined,
+                brand,
+                storageType,
+                size,
+                minPrice,
+                maxPrice,
+                inStock,
+                store.itemsPerPage(),
+                1,
+              ),
+            );
+            const products = (response?.data || response?.products || []).map((p: any) => ({
+              ...p,
+              reviews: Array.isArray(p.reviews) ? p.reviews : [],
+            }));
+            patchState(store, { products, isSkeletonLoading: false, searchLoading: false });
+          } catch {
+            patchState(store, { isSkeletonLoading: false, searchLoading: false });
+          } finally {
+            searchLoadingService.close();
+          }
+        },
 
         // Filter methods
         setSelectedBrands: signalMethod<string[]>((brands: string[]) => {

@@ -7,7 +7,8 @@ import { Observable } from 'rxjs';
 })
 export class ApiService {
   // private baseUrl = `${environment.kpkAndPpfApiBaseUrl}/KpkVps-1/api`;
-  private baseUrl = `http://localhost:3000/api`;
+  private baseUrl = `https://qasim-ecommerce-backend-project.onrender.com/api`;
+  // private baseUrl = `http://localhost:3000/api`;
 
   constructor(private http: HttpClient) {}
 
@@ -116,5 +117,10 @@ export class ApiService {
 
   placeOrder(order: any): Observable<any> {
     return this.http.post(`${this.baseUrl}/orders/place`, order);
+  }
+
+  getOrders(userId: number, orderStatus: string): Observable<any> {
+    const data = { userId, orderStatus };
+    return this.http.post<any>(`${this.baseUrl}/orders/all`, data);
   }
 }

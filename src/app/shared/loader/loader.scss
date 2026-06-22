@@ -1,13 +1,13 @@
-#global-pre-loader {
+#global-loader {
   position: fixed;
   inset: 0;
   background: white;
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 99999;
+  z-index: 100000 !important;
 }
 
-.dark-theme #global-pre-loader {
+.dark-theme #global-loader {
   background: #121212;
 }

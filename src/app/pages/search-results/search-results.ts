@@ -1,4 +1,13 @@
-import { Component, inject, signal, computed, HostListener, PLATFORM_ID, OnInit, ViewChild } from '@angular/core';
+import {
+  Component,
+  inject,
+  signal,
+  computed,
+  HostListener,
+  PLATFORM_ID,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
@@ -58,7 +67,7 @@ export class SearchResults implements OnInit {
 
   ngOnInit() {
     // Observe breakpoints for responsive sidebar
-    this.breakpointObserver.observe([Breakpoints.Handset]).subscribe(result => {
+    this.breakpointObserver.observe([Breakpoints.Handset]).subscribe((result) => {
       this._isMobile.set(result.matches);
 
       // Default state follows the active layout: open on desktop, closed on mobile
@@ -66,8 +75,9 @@ export class SearchResults implements OnInit {
     });
 
     // Get search query from URL
-    this.route.queryParams.subscribe(params => {
+    this.route.queryParams.subscribe((params) => {
       const query = params['query']?.toLowerCase().trim() || '';
+      console.log('setSearchTerm called from SearchResults', query);
       this.searchQuery.set(query);
       if (query) {
         this.store.setSearchTerm(query);
@@ -77,14 +87,9 @@ export class SearchResults implements OnInit {
   }
 
   onFilterChange(newFilters: FilterOptions) {
-    this.searchLoadingService.open();
-    if (this.searchLoadingTimer) {
-      clearTimeout(this.searchLoadingTimer);
-    }
-
     this.filters.set(newFilters);
-    
-    // Update store with new filters
+
+    // update store filter signals first
     this.store.setSelectedBrands(newFilters.brand || []);
     this.store.setSelectedCategories(newFilters.categories || []);
     this.store.setPriceRange(newFilters.priceRange || [0, 500]);
@@ -92,11 +97,10 @@ export class SearchResults implements OnInit {
     this.store.setSelectedSizes(newFilters.size || []);
     this.store.setSelectedFeatures(newFilters.featured || []);
     this.store.setSelectedSort(newFilters.sortBy || 'relevance');
-    this.store.setShowOutOfStock(newFilters.showOutOfStock || false);
+    this.store.setShowOutOfStock(newFilters.showOutOfStock ?? true);
 
-    this.searchLoadingTimer = setTimeout(() => {
-      this.searchLoadingService.close();
-    }, 500);
+    // now re-hit the API with current search term + all filter params
+    this.store.searchWithFilters(this.searchQuery());
   }
 
   @HostListener('window:scroll')
@@ -108,7 +112,11 @@ export class SearchResults implements OnInit {
     const scrollPosition = window.innerHeight + window.scrollY;
     const pageHeight = document.documentElement.scrollHeight;
 
-    if (scrollPosition >= pageHeight - 300 && !this.store.isLoadingMore() && this.store.filteredProducts().length > 0) {
+    if (
+      scrollPosition >= pageHeight - 300 &&
+      !this.store.isLoadingMore() &&
+      this.store.filteredProducts().length > 0
+    ) {
       this.store.loadMoreProducts();
     }
   }
@@ -117,7 +125,7 @@ export class SearchResults implements OnInit {
     if (this.sidenav) {
       this.sidenav.toggle();
     } else {
-      this._sidebarOpen.update(v => !v);
+      this._sidebarOpen.update((v) => !v);
     }
   }
 

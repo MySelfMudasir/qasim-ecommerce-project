@@ -1,0 +1,151 @@
+<div class="mx-auto max-w-[1200px] py-6 px-4 sm:px-6 lg:px-0">
+    <app-back-button class="mb-6" navigateTo="/products/all"> Continue Shopping </app-back-button>
+
+    <div class="grid grid-cols-1 md:grid-cols-12 gap-4 mb-6">
+        <mat-form-field appearance="outline" class="col-span-3 col-start-10 w-full">
+            <mat-label>Orders Status</mat-label>
+            <mat-select [value]="orderStatus" (selectionChange)="onChange($event.value)">
+                <mat-option value="all">All</mat-option>
+                <mat-option value="pending">Pending</mat-option>
+                <mat-option value="shipped">Shipped</mat-option>
+                <mat-option value="completed">Completed</mat-option>
+                <mat-option value="failed">Failed</mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+
+    @if (orderCount() > 0) {
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="text-2xl font-bold">My Orders</h1>
+        <span class="text-gray-500 text-xl">{{ orderCount() }} items </span>
+    </div>
+
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+        <div class="bg-white rounded-xl shadow p-5">
+            <h3>Total Orders</h3>
+            <p class="text-3xl font-bold">{{ orderCount() }}</p>
+        </div>
+
+        <div class="bg-white rounded-xl shadow p-5">
+            <h3>Pending Orders</h3>
+            <p class="text-3xl font-bold text-yellow-600">
+                {{ pendingOrders() }}
+            </p>
+        </div>
+
+        <div class="bg-white rounded-xl shadow p-5">
+            <h3>Completed Orders</h3>
+            <p class="text-3xl font-bold text-green-600">
+                {{ completedOrders() }}
+            </p>
+        </div>
+    </div>
+
+    <div class="space-y-6">
+        @for (order of ordersList; track order.id) {
+        <div class="bg-white rounded-2xl shadow-md border border-gray-200 overflow-hidden hover:shadow-lg transition">
+            <div class="p-5">
+                <!-- Header -->
+                <div class="flex flex-col md:flex-row md:justify-between md:items-center gap-3 mb-4">
+                    <div>
+                        <h3 class="text-lg font-bold text-gray-900">Order #{{ order.orderId }}</h3>
+                        <p class="text-sm text-gray-500">Product ID: {{ order.id }}</p>
+                    </div>
+
+                    <div class="flex gap-2">
+                        <div class="flex items-center justify-center gap-2 px-3 py-1 rounded-full text-xs font-semibold"
+                            [ngClass]="{
+                            'bg-yellow-100 text-yellow-800': order.orderStatus === 'pending',
+                            'bg-green-100 text-green-800': order.orderStatus === 'completed',
+                            'bg-red-100 text-red-800': order.orderStatus === 'cancelled'
+                            }">
+                            <mat-icon class="text-xs" color="currentColor">local_shipping</mat-icon>
+                            {{ order.orderStatus }}
+                        </div>
+                        <div class="flex items-center justify-center gap-2 px-3 py-1 rounded-full text-xs font-semibold"
+                            [ngClass]="{
+                            'bg-yellow-100 text-yellow-800': order.paymentStatus === 'pending',
+                            'bg-green-100 text-green-800': order.paymentStatus === 'completed',
+                            'bg-red-100 text-red-800': order.paymentStatus === 'failed'
+                            }">
+                            <mat-icon class="text-xs" color="currentColor">payment</mat-icon>
+                            {{ order.paymentStatus }}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product -->
+                <div class="flex flex-col md:flex-row gap-5">
+                    <img [src]="order.imageUrl" [alt]="order.name" class="w-full md:w-40 h-40 object-cover rounded-xl border">
+                    <div class="flex-1">
+                        <h2 class="text-xl font-semibold">{{ order.name }}</h2>
+                        <p class="text-gray-500 mt-1">{{ order.description }}</p>
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
+                            <div>
+                                <p class="text-gray-400 text-xs">Price</p>
+                                <p class="font-semibold">£{{ order.price }}</p>
+                            </div>
+                            <div>
+                                <p class="text-gray-400 text-xs">Category</p>
+                                <p class="font-semibold">{{ order.category }}</p>
+                            </div>
+                            <div>
+                                <p class="text-gray-400 text-xs">Brand</p>
+                                <p class="font-semibold">{{ order.brand }}</p>
+                            </div>
+                            <div>
+                                <p class="text-gray-400 text-xs">Storage</p>
+                                <p class="font-semibold">{{ order.storageType }}</p>
+                            </div>
+                            <div>
+                                <p class="text-gray-400 text-xs">Quantity</p>
+                                <p class="font-semibold">{{ order.quantity }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Collection Information -->
+                @if(order.mode === 'collection') {
+                <div class="mt-5 bg-gray-50 rounded-xl p-4 border border-gray-100">
+                    <h4 class="font-semibold mb-3">Collection Details</h4>
+                    <div class="grid md:grid-cols-3 gap-4">
+                        <div>
+                            <p class="text-xs text-gray-400">Collection Date</p>
+                            <p class="font-medium">{{ order.collection?.collectionDate | date:'dd MMM yyyy' }}</p>
+                        </div>
+                        <div>
+                            <p class="text-xs text-gray-400">Collection Time</p>
+                            <p class="font-medium">{{ order.collection?.collectionTime | date:'hh:mm a' }}</p>
+                        </div>
+                        <div>
+                            <p class="text-xs text-gray-400">Location</p>
+                            <p class="font-medium">{{ order.collection?.collectionLocation }}</p>
+                        </div>
+                    </div>
+                </div>
+                }
+
+                <!-- Footer -->
+                <div class="mt-5 pt-4 border-t flex flex-col md:flex-row justify-between items-center">
+                    <div class="text-sm text-gray-500">
+                        Mode:<span class="font-medium capitalize">{{ order.mode }}</span>
+                    </div>
+                    <button mat-flat-button color="primary">View Details</button>
+                </div>
+            </div>
+        </div>
+        }
+    </div>
+
+
+    <div class="mt-8 flex justify-center">
+        <button matButton="outlined" matTooltip="Clear Orders History" class="danger">Clear Orders History</button>
+    </div>
+    }
+
+    @else {
+    <app-empty-orders></app-empty-orders>
+    }
+</div>

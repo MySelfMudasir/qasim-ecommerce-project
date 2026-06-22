@@ -3,10 +3,12 @@ import { inject } from '@angular/core';
 import { StateService } from '../services/state-service';
 import { catchError, throwError } from 'rxjs';
 import { AuthService } from '../services/auth-service';
+import { EcommerceStore } from '../ecommerce-store';
 
 export const tokenInterceptor: HttpInterceptorFn = (req, next) => {
   const stateService = inject(StateService);
   const authService = inject(AuthService);
+  const store = inject(EcommerceStore);
   const token = stateService.getGlobalAuthToken();
 
   const headersConfig: Record<string, string> = {
@@ -24,7 +26,7 @@ export const tokenInterceptor: HttpInterceptorFn = (req, next) => {
   return next(authReq).pipe(
     catchError((error: HttpErrorResponse) => {
       if (error.status === 403 || error.status === 401) {
-        authService.logout();
+        store.signOut()
       }
       return throwError(() => error);
     }),
