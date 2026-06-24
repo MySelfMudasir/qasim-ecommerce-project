@@ -27,9 +27,11 @@ import { CATEGORIES } from './data/categories.data';
 import { AuthService } from './services/auth-service';
 import { ApiService } from './services/backend/api-service';
 import { elementAt, firstValueFrom } from 'rxjs';
+import { CategoryModel } from './models/category';
 
 export type EcommerceState = {
   products: ProductModel[];
+  // categoriesList: CategoryModel[];
   categoriesList: string[];
   selectedCategory: string;
   wishlistItems: ProductModel[];
@@ -79,7 +81,7 @@ export const EcommerceStore = signalStore(
   },
   withState({
     products: [],
-    categoriesList: CATEGORIES,
+  categoriesList: CATEGORIES,
     selectedCategory: 'all',
     wishlistItems: [],
     cartItems: [],
@@ -369,6 +371,19 @@ export const EcommerceStore = signalStore(
             toaster.error('Failed to load products');
           }
         },
+
+        
+        // loadCategoriesList: async () => {
+        //   try {
+        //     const response = await firstValueFrom(apiService.getCategories());
+        //     const categories = response.data || response.categories || [];
+        //     patchState(store, { categoriesList: categories });
+        //   } catch (error) {
+        //     console.error('Categories API Error:', error);
+        //     patchState(store, { categoriesList: [] });
+        //     toaster.error('Failed to load categories');
+        //   }
+        // },
 
         setCategory: signalMethod<string>((selectedCategory: string) => {
           patchState(store, {
@@ -714,6 +729,7 @@ export const EcommerceStore = signalStore(
                     lastName: checkout.shipping?.lastName || '',
                     address: checkout.shipping?.address || '',
                     city: checkout.shipping?.city || '',
+                    state: checkout.shipping?.state || '',
                     zipCode: checkout.shipping?.zipCode || '',
                   }
                 : null,
@@ -819,12 +835,13 @@ export const EcommerceStore = signalStore(
               authService.setSession(response.data.token);
 
               const savedMode = response.data.user.checkoutMode;
-              const mode: 'delivery' | 'collection' = savedMode === 'delivery' ? 'delivery' : 'collection';
+              const mode: 'delivery' | 'collection' =
+                savedMode === 'delivery' ? 'delivery' : 'collection';
 
-              patchState(store, { 
-                user, 
+              patchState(store, {
+                user,
                 loading: false,
-                checkout: {...store.checkout(), mode},
+                checkout: { ...store.checkout(), mode },
               });
 
               toaster.success(`Signed in Successfully as ${email}`);
@@ -866,12 +883,10 @@ export const EcommerceStore = signalStore(
           });
         },
 
-        
         signOut: () => {
           patchState(store, LOGOUT_STATE);
           authService.logout();
         },
-
 
         showWriteReview: () => {
           if (!store.user()) {

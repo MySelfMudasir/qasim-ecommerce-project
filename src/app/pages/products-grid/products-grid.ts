@@ -107,6 +107,7 @@ export class ProductsGrid implements OnInit {
   }
 
   ngOnInit(): void {
+    // this.store.loadCategoriesList();
     this.route.paramMap.subscribe(async (params) => {
       const category = params.get('selectedCategory') ?? 'all';
       this.store.setCategory(category);

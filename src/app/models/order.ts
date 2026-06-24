@@ -18,6 +18,7 @@ export type orderModel = {
     lastName: string;
     address: string;
     city: string;
+    state: string;
     zipCode: string;
   } | null;
 

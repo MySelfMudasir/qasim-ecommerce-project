@@ -6,7 +6,6 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class ApiService {
-  // private baseUrl = `${environment.kpkAndPpfApiBaseUrl}/KpkVps-1/api`;
   private baseUrl = `https://qasim-ecommerce-backend-project.onrender.com/api`;
   // private baseUrl = `http://localhost:3000/api`;
 
@@ -48,11 +47,14 @@ export class ApiService {
     return this.http.get<any>(`${this.baseUrl}/products`, { params });
   }
 
+  getCategories(): Observable<any> {
+    return this.http.get<any>(`${this.baseUrl}/categories`);
+  }
+
   productDetails(id: string): Observable<any> {
     return this.http.get<any>(`${this.baseUrl}/products/${id}`);
   }
 
-  // Recommended, popular, top-selling — reuse loadProducts with sort param
   loadRecommendedProducts(category: string, excludeId: string, limit = 6): Observable<any> {
     let params = new HttpParams();
     if (category && category !== 'all') params = params.set('category', category);
