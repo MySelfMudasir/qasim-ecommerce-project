@@ -4,6 +4,7 @@ export interface ShippingModel {
   address: string;
   city: string;
   state: string;
+  country: string;
   zipCode: string;
   paymentMethod: 'creditCard' | 'paypal' | 'cashOnDelivery';
 }

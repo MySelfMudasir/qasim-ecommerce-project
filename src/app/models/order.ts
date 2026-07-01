@@ -20,6 +20,7 @@ export type orderModel = {
     city: string;
     state: string;
     zipCode: string;
+    country: string;
   } | null;
 
   collection: {

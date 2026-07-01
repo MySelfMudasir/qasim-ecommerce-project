@@ -33,6 +33,7 @@ export class Checkout {
     address: '123 Main St',
     city: 'Birmingham',
     state: 'West Midlands',
+    country: 'UK',
     zipCode: 'B9 4SJ',
     paymentMethod: 'cashOnDelivery' as ShippingModel['paymentMethod'],
   };
@@ -49,6 +50,7 @@ export class Checkout {
     address: [this.defaultShipping.address, Validators.required],
     city: [this.defaultShipping.city, Validators.required],
     state: [this.defaultShipping.state, Validators.required],
+    country: [this.defaultShipping.country, Validators.required],
     zipCode: [this.defaultShipping.zipCode, [Validators.required, Validators.minLength(4)]],
     // paymentMethod: [this.defaultShipping.paymentMethod, Validators.required],
   });

@@ -111,13 +111,13 @@ export const EcommerceStore = signalStore(
       total: 0,
       items: [],
       mode: 'collection',
-
       shipping: {
         firstName: '',
         lastName: '',
         address: '',
         city: '',
         state: '',
+        country: '',
         zipCode: '',
       },
 
@@ -150,10 +150,11 @@ export const EcommerceStore = signalStore(
   withStorageSync(
     {
       key: 'E-Commerce Store',
-      select: ({ user, wishlistItems, cartItems }) => ({
+      select: ({ user, wishlistItems, cartItems, checkout }) => ({
         user,
         wishlistItems,
         cartItems,
+        checkout,
       }),
     },
     withLocalStorage(),
@@ -362,7 +363,7 @@ export const EcommerceStore = signalStore(
             console.log('Products API Response:', response);
 
             patchState(store, {
-              products: response.data || response.products || [],
+              products: response.data.products || response.products || [],
               isSkeletonLoading: false,
             });
           } catch (error) {
@@ -563,7 +564,7 @@ export const EcommerceStore = signalStore(
               ),
             );
 
-            const newProducts = (response?.data || response?.products || []).map((p: any) => ({
+            const newProducts = (response?.data.products || response?.products || []).map((p: any) => ({
               ...p,
               reviews: Array.isArray(p.reviews) ? p.reviews : [],
             }));
@@ -688,7 +689,7 @@ export const EcommerceStore = signalStore(
             patchState(store, { loading: false });
             return;
           }
-
+          
           // DELIVERY
           if (checkout.mode === 'delivery') {
             if (!checkout.shipping) {
@@ -730,6 +731,7 @@ export const EcommerceStore = signalStore(
                     address: checkout.shipping?.address || '',
                     city: checkout.shipping?.city || '',
                     state: checkout.shipping?.state || '',
+                    country: checkout.shipping?.country || '',
                     zipCode: checkout.shipping?.zipCode || '',
                   }
                 : null,
@@ -754,7 +756,7 @@ export const EcommerceStore = signalStore(
           console.log('👤 User:', user);
           console.log('👤 Checkout:', checkout);
           console.log('🚚 Mode:', checkout.mode.toUpperCase());
-          console.log('📝 Full Order Payload:', JSON.stringify(orderDetails, null, 2));
+          // console.log('📝 Full Order Payload:', JSON.stringify(orderDetails, null, 2));
           console.groupEnd();
 
           firstValueFrom(apiService.placeOrder(orderDetails))
@@ -968,7 +970,7 @@ export const EcommerceStore = signalStore(
             ),
           )
             .then((response) => {
-              const products = (response?.data || response?.products || []).map((p: any) => ({
+              const products = (response?.data.products || response?.products || []).map((p: any) => ({
                 ...p,
                 reviews: Array.isArray(p.reviews) ? p.reviews : [],
               }));
@@ -1015,7 +1017,7 @@ export const EcommerceStore = signalStore(
                 1,
               ),
             );
-            const products = (response?.data || response?.products || []).map((p: any) => ({
+            const products = (response?.data.products || response?.products || []).map((p: any) => ({
               ...p,
               reviews: Array.isArray(p.reviews) ? p.reviews : [],
             }));
