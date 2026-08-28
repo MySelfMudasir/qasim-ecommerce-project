@@ -11,6 +11,9 @@ import { STEPPER_GLOBAL_OPTIONS } from '@angular/cdk/stepper';
 import { Router } from '@angular/router';
 import { SharedModule } from '../../modules/shared';
 import { EcommerceStore } from '../../ecommerce-store';
+import { ApiService } from '../../services/backend/api-service';
+import { MatStepper } from '@angular/material/stepper';
+import { Toaster } from '../../services/toaster';
 
 interface Food {
   value: string;
@@ -35,6 +38,8 @@ export class MultiStepSignUp {
   submitButtonDisabled = signal(false);
   router = inject(Router);
   private store = inject(EcommerceStore);
+  private apiService = inject(ApiService);
+  private toaster = inject(Toaster);
   foods: Food[] = [
     { value: 'steak-0', viewValue: 'Steak' },
     { value: 'pizza-1', viewValue: 'Pizza' },
@@ -107,5 +112,29 @@ export class MultiStepSignUp {
     };
 
     this.store.signUp(payload);
+  }
+
+  checkEmailAndContinue(stepper: MatStepper) {
+    const emailControl = this.accountFormGroup.controls.email;
+    emailControl.markAsTouched();
+
+    if (this.accountFormGroup.invalid || this.submitButtonDisabled()) return;
+
+    this.submitButtonDisabled.set(true);
+    emailControl.setErrors(null);
+
+    this.apiService.checkEmail(emailControl.value ?? '').subscribe({
+      next: () => {
+        this.submitButtonDisabled.set(false);
+        stepper.next();
+      },
+      error: (error) => {
+        this.submitButtonDisabled.set(false);
+        if (error.status === 409) {
+          emailControl.setErrors({ emailExists: true });
+          this.toaster.error(error?.error?.message || 'An account with this email already exists');
+        }
+      },
+    });
   }
 }

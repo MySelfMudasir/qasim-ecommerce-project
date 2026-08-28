@@ -44,8 +44,7 @@
       } @else {
       @for (product of store.displayedProducts(); track product.id) {
       <app-product-card [product]="product">
-        <app-toggle-wishlist-button class="absolute! top-3 right-3" [product]="product"
-          [style.view-transition-name]="'wishlist-button-' + product.id"></app-toggle-wishlist-button>
+        <app-toggle-wishlist-button class="absolute! top-3 right-3" [product]="product"></app-toggle-wishlist-button>
       </app-product-card>
       }
       }

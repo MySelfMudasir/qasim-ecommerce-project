@@ -71,12 +71,6 @@ export class FilterSidebar {
     { label: 'Newest', value: 'newest' },
   ];
 
-  brandOptions = [
-    { label: 'Swift', value: 'swift' },
-    { label: 'Habibi', value: 'habibi' },
-    { label: 'Premium', value: 'premium' },
-  ];
-
   storageTypeOptions = [
     { label: 'Chilled', value: 'chilled' },
     { label: 'Frozen', value: 'frozen' },

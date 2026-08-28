@@ -23,7 +23,6 @@ import { SeoManager } from './services/seo-manager';
 import { CheckoutModel } from './models/checkout';
 import { formatDate } from '@angular/common';
 import { PRODUCTS } from './data/products.data';
-import { CATEGORIES } from './data/categories.data';
 import { AuthService } from './services/auth-service';
 import { ApiService } from './services/backend/api-service';
 import { elementAt, firstValueFrom } from 'rxjs';
@@ -33,6 +32,7 @@ export type EcommerceState = {
   products: ProductModel[];
   // categoriesList: CategoryModel[];
   categoriesList: string[];
+  brandsList: string[];
   selectedCategory: string;
   wishlistItems: ProductModel[];
   cartItems: cartModel[];
@@ -42,7 +42,7 @@ export type EcommerceState = {
   preLoader: boolean;
   loading: boolean;
   isSkeletonLoading: boolean;
-  skeletonLoadingTime: string | null;
+  skeletonLoadingTime: number;
   searchLoading: boolean;
   isLoadingMore: boolean;
   searchedProduct: string;
@@ -81,7 +81,8 @@ export const EcommerceStore = signalStore(
   },
   withState({
     products: [],
-  categoriesList: CATEGORIES,
+    categoriesList: [],
+    brandsList: [],
     selectedCategory: 'all',
     wishlistItems: [],
     cartItems: [],
@@ -91,7 +92,7 @@ export const EcommerceStore = signalStore(
     preLoader: false,
     loading: false,
     isSkeletonLoading: true,
-    skeletonLoadingTime: '3s',
+    skeletonLoadingTime: 350,
     searchLoading: false,
     isLoadingMore: false,
     searchedProduct: '',
@@ -315,7 +316,7 @@ export const EcommerceStore = signalStore(
         ordersCount: computed(() => wishlistItems().length),
         cartCount: computed(() => cartItems().length),
         selectedProduct: computed(
-          () => products().find((p) => p.id === selectedProductId()) ?? undefined,
+          () => products().find((p) => String(p.id) === String(selectedProductId())) ?? undefined,
         ),
       };
     },
@@ -338,6 +339,18 @@ export const EcommerceStore = signalStore(
         return Number(id);
       };
 
+      const showSkeletonFor = async <T>(request: Promise<T>): Promise<T> => {
+        const startedAt = Date.now();
+        try {
+          return await request;
+        } finally {
+          const remaining = store.skeletonLoadingTime() - (Date.now() - startedAt);
+          if (remaining > 0) {
+            await new Promise((resolve) => setTimeout(resolve, remaining));
+          }
+        }
+      };
+
       return {
         loadProducts: async (
           category = store.selectedCategory(),
@@ -346,7 +359,7 @@ export const EcommerceStore = signalStore(
         ) => {
           patchState(store, { isSkeletonLoading: true });
           try {
-            const response = await firstValueFrom(
+            const response = await showSkeletonFor(firstValueFrom(
               apiService.loadProducts(
                 undefined,
                 category,
@@ -359,32 +372,38 @@ export const EcommerceStore = signalStore(
                 limit,
                 page,
               ),
-            );
+            ));
             console.log('Products API Response:', response);
 
-            patchState(store, {
-              products: response.data.products || response.products || [],
-              isSkeletonLoading: false,
-            });
+            patchState(store, { products: response.data.products || response.products || [] });
           } catch (error) {
             console.error('Products API Error:', error);
-            patchState(store, { products: [], isSkeletonLoading: false });
+            patchState(store, { products: [] });
             toaster.error('Failed to load products');
+          } finally {
+            patchState(store, { isSkeletonLoading: false });
           }
         },
 
-        
-        // loadCategoriesList: async () => {
-        //   try {
-        //     const response = await firstValueFrom(apiService.getCategories());
-        //     const categories = response.data || response.categories || [];
-        //     patchState(store, { categoriesList: categories });
-        //   } catch (error) {
-        //     console.error('Categories API Error:', error);
-        //     patchState(store, { categoriesList: [] });
-        //     toaster.error('Failed to load categories');
-        //   }
-        // },
+        loadFilterOptions: async () => {
+          try {
+            const [categoriesResponse, brandsResponse] = await Promise.all([
+              firstValueFrom(apiService.getCategories()),
+              firstValueFrom(apiService.getBrands()),
+            ]);
+            const categories = categoriesResponse.data || categoriesResponse.categories || [];
+            const brands = brandsResponse.data || brandsResponse.brands || [];
+
+            patchState(store, {
+              categoriesList: categories.map((category: any) => category.name || category),
+              brandsList: brands.map((brand: any) => brand.name || brand),
+            });
+          } catch (error) {
+            console.error('Filter options API Error:', error);
+            patchState(store, { categoriesList: [], brandsList: [] });
+            toaster.error('Failed to load categories and brands');
+          }
+        },
 
         setCategory: signalMethod<string>((selectedCategory: string) => {
           patchState(store, {
@@ -410,21 +429,22 @@ export const EcommerceStore = signalStore(
           if (store.isSkeletonLoading() && store.selectedProductId() === productId) return;
           patchState(store, { selectedProductId: productId, isSkeletonLoading: true });
           try {
-            const response = await firstValueFrom(apiService.productDetails(productId));
+            const response = await showSkeletonFor(firstValueFrom(apiService.productDetails(productId)));
             const raw = response.data || response.product || response;
             const product: ProductModel = {
               ...raw,
+              images: Array.isArray(raw.images) ? raw.images : [],
               reviews: Array.isArray(raw.reviews) ? raw.reviews : [],
             };
 
             const existing = store.products();
-            const index = existing.findIndex((p) => p.id === productId);
+            const index = existing.findIndex((p) => String(p.id) === String(productId));
             const updatedProducts =
               index !== -1
                 ? existing.map((p, i) => (i === index ? product : p))
                 : [...existing, product];
 
-            patchState(store, { products: updatedProducts, isSkeletonLoading: false });
+            patchState(store, { products: updatedProducts });
 
             seoManager.updateSeoTags({
               title: product.name,
@@ -433,17 +453,21 @@ export const EcommerceStore = signalStore(
               type: 'product',
             });
 
-            // Fire related product calls in parallel
-            const [popularRes, topSellingRes, recommendedRes] = await Promise.allSettled([
-              firstValueFrom(apiService.loadPopularProducts(6)),
-              firstValueFrom(apiService.loadTopSellingProducts(6)),
+            // Fire related product calls
+            const [recommendedRes] = await Promise.allSettled([
               firstValueFrom(apiService.loadRecommendedProducts(product.category, productId, 6)),
             ]);
 
             const normalize = (res: PromiseSettledResult<any>, fallback: ProductModel[]) => {
               if (res.status === 'fulfilled') {
-                const data = res.value?.data || res.value?.products || [];
-                return data.map((p: any) => ({
+                const data =
+                  res.value?.data?.products ||
+                  res.value?.products ||
+                  res.value?.data ||
+                  res.value ||
+                  [];
+                const arr = Array.isArray(data) ? data : [];
+                return arr.map((p: any) => ({
                   ...p,
                   reviews: Array.isArray(p.reviews) ? p.reviews : [],
                 }));
@@ -452,14 +476,13 @@ export const EcommerceStore = signalStore(
             };
 
             patchState(store, {
-              popularProductsList: normalize(popularRes, store.popularProductsList()),
-              topSellingProductsList: normalize(topSellingRes, store.topSellingProductsList()),
               recommendedProductsList: normalize(recommendedRes, store.recommendedProductsList()),
             });
           } catch (error) {
             console.error('Product Details API Error:', error);
             patchState(store, { isSkeletonLoading: false });
           } finally {
+            patchState(store, { isSkeletonLoading: false });
             searchLoadingService.close();
           }
         },
@@ -476,18 +499,16 @@ export const EcommerceStore = signalStore(
 
         openWishlist: () => {
           patchState(store, { isSkeletonLoading: true });
-          // // 2. simulate API delay (or real API later)
           setTimeout(() => {
             patchState(store, { isSkeletonLoading: false });
-          }, 800);
+          }, store.skeletonLoadingTime());
         },
 
         openCart: () => {
           patchState(store, { isSkeletonLoading: true });
-          // // 2. simulate API delay (or real API later)
           setTimeout(() => {
             patchState(store, { isSkeletonLoading: false });
-          }, 800);
+          }, store.skeletonLoadingTime());
         },
 
         // Skeleton methods
@@ -564,10 +585,12 @@ export const EcommerceStore = signalStore(
               ),
             );
 
-            const newProducts = (response?.data.products || response?.products || []).map((p: any) => ({
-              ...p,
-              reviews: Array.isArray(p.reviews) ? p.reviews : [],
-            }));
+            const newProducts = (response?.data.products || response?.products || []).map(
+              (p: any) => ({
+                ...p,
+                reviews: Array.isArray(p.reviews) ? p.reviews : [],
+              }),
+            );
 
             patchState(store, {
               products: [...store.products(), ...newProducts],
@@ -689,7 +712,7 @@ export const EcommerceStore = signalStore(
             patchState(store, { loading: false });
             return;
           }
-          
+
           // DELIVERY
           if (checkout.mode === 'delivery') {
             if (!checkout.shipping) {
@@ -955,7 +978,7 @@ export const EcommerceStore = signalStore(
             searchLoading: true,
           });
 
-          firstValueFrom(
+          showSkeletonFor(firstValueFrom(
             apiService.loadProducts(
               term,
               undefined,
@@ -968,12 +991,14 @@ export const EcommerceStore = signalStore(
               store.itemsPerPage(),
               1,
             ),
-          )
+          ))
             .then((response) => {
-              const products = (response?.data.products || response?.products || []).map((p: any) => ({
-                ...p,
-                reviews: Array.isArray(p.reviews) ? p.reviews : [],
-              }));
+              const products = (response?.data.products || response?.products || []).map(
+                (p: any) => ({
+                  ...p,
+                  reviews: Array.isArray(p.reviews) ? p.reviews : [],
+                }),
+              );
               searchLoadingService.close();
               patchState(store, {
                 products,
@@ -1003,7 +1028,7 @@ export const EcommerceStore = signalStore(
           const inStock = store.showOutOfStock() ? undefined : true;
 
           try {
-            const response = await firstValueFrom(
+            const response = await showSkeletonFor(firstValueFrom(
               apiService.loadProducts(
                 term || undefined,
                 undefined,
@@ -1016,11 +1041,13 @@ export const EcommerceStore = signalStore(
                 store.itemsPerPage(),
                 1,
               ),
+            ));
+            const products = (response?.data.products || response?.products || []).map(
+              (p: any) => ({
+                ...p,
+                reviews: Array.isArray(p.reviews) ? p.reviews : [],
+              }),
             );
-            const products = (response?.data.products || response?.products || []).map((p: any) => ({
-              ...p,
-              reviews: Array.isArray(p.reviews) ? p.reviews : [],
-            }));
             patchState(store, { products, isSkeletonLoading: false, searchLoading: false });
           } catch {
             patchState(store, { isSkeletonLoading: false, searchLoading: false });

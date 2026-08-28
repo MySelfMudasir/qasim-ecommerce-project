@@ -19,6 +19,12 @@ export class ApiService {
     return this.http.post(`${this.baseUrl}/auth/register`, payload);
   }
 
+  checkEmail(email: string): Observable<any> {
+    return this.http.post(`${this.baseUrl}/auth/check-email`, {
+      email: email.trim().toLowerCase(),
+    });
+  }
+
   loadProducts(
     search?: string,
     category?: string,
@@ -49,6 +55,10 @@ export class ApiService {
 
   getCategories(): Observable<any> {
     return this.http.get<any>(`${this.baseUrl}/categories`);
+  }
+
+  getBrands(): Observable<any> {
+    return this.http.get<any>(`${this.baseUrl}/brands`);
   }
 
   productDetails(id: string): Observable<any> {

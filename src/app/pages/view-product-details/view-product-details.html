@@ -58,8 +58,7 @@
             @else {
             @for (product of store.recommendedProductsList().slice(0, 5); track product.id) {
             <app-recommended-products [product]="product">
-                <app-toggle-wishlist-button class="!absolute top-3 right-3" [product]="product"
-                    [style.view-transition-name]="'wishlist-button-' + product.id">
+                <app-toggle-wishlist-button class="!absolute top-3 right-3" [product]="product">
                 </app-toggle-wishlist-button>
             </app-recommended-products>
             }
@@ -68,5 +67,10 @@
     </div>
     }
 
+    } @else {
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8 mb-8 items-start">
+        <app-skeleton-product-image-gallery></app-skeleton-product-image-gallery>
+        <app-skeleton-product-info></app-skeleton-product-info>
+    </div>
     }
 </div>

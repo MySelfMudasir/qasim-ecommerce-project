@@ -15,4 +15,5 @@ export type ProductModel = {
     brand?: string | null;
     storageType?: string | null;
     size?: string | null;
+    unit?: string | null;
 }

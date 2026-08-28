@@ -2,7 +2,7 @@
     style="background-color: var(--app-surface); color: var(--app-text)">
 
     <img [src]="product().imageUrl" loading="lazy" [alt]="product().name" onerror="this.onerror=null; this.src='./assets/images/image-404.jpg'" class="w-full aspect-square object-cover"
-        [routerLink]="['/product', product().id]" [style.view-transition-name]="'product-image-' + product().id">
+        [routerLink]="['/product', product().id]">
 
     <ng-content></ng-content>
 

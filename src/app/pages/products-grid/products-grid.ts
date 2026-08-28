@@ -10,9 +10,7 @@ import { LoadMoreProducts } from '../../components/load-more-products/load-more-
 import { SkeletonProductCard } from '../../shared/skeletons/skeleton-product-card';
 import { PopularProducts } from '../../components/popular-products/popular-products';
 import { TopSellingProducts } from '../../components/top-selling-products/top-selling-products';
-import { SkeletonComponent } from 'boneyard-js/angular';
 import { AdvertisementBanner } from '../../components/advertisement-banner/advertisement-banner';
-import { ViewPanel } from '../../directives/view-panel';
 import { SharedModule } from '../../modules/shared';
 import { ApiService } from '../../services/backend/api-service';
 import { isPlatformBrowser } from '@angular/common';
@@ -29,11 +27,9 @@ import { PLATFORM_ID } from '@angular/core';
     SearchBar,
     LoadMoreProducts,
     SkeletonProductCard,
-    SkeletonComponent,
     PopularProducts,
     TopSellingProducts,
     AdvertisementBanner,
-    ViewPanel,
   ],
   templateUrl: './products-grid.html',
   styleUrl: './products-grid.scss',

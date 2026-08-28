@@ -21,6 +21,12 @@
                             @if (accountFormGroup.get('email')?.hasError('required')) {
                             <mat-error>Email is required</mat-error>
                             }
+                            @if (accountFormGroup.get('email')?.hasError('email')) {
+                            <mat-error>Enter a valid email address</mat-error>
+                            }
+                            @if (accountFormGroup.get('email')?.hasError('emailExists')) {
+                            <mat-error>An account with this email already exists</mat-error>
+                            }
                         </mat-form-field>
 
                         <mat-form-field appearance="outline">
@@ -42,7 +48,8 @@
 
                     <div class="step-actions">
                         <span></span>
-                        <button mat-flat-button color="primary" matStepperNext>Next</button>
+                        <button mat-flat-button color="primary" type="button"
+                            [disabled]="submitButtonDisabled()" (click)="checkEmailAndContinue(stepper)">Next</button>
                     </div>
                 </form>
             </mat-step>

@@ -16,6 +16,9 @@
     <span class="inline-block px-2 py-1 rounded" *ngIf="product().size" style=" border: 1px solid var(--app-border-2); color: var(--app-text);">
         <strong>Size:</strong> {{ product().size | titlecase }}
     </span>
+    <span class="inline-block px-2 py-1 rounded" *ngIf="product().unit" style=" border: 1px solid var(--app-border-2); color: var(--app-text);">
+        <strong>Unit :</strong> {{ product().unit | titlecase }}
+    </span>
     <span class="inline-block px-2 py-1 rounded" *ngIf="product().storageType" style=" border: 1px solid var(--app-border-2); color: var(--app-text);">
         <strong>Storage:</strong> {{ product().storageType | titlecase }}
     </span>

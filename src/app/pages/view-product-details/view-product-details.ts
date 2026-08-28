@@ -42,7 +42,6 @@ constructor() {}
 
 ngOnInit() {
   this.store.loadProductDetails(this.productId());
-  this.store.openWishlist();
 }
 
   backRoute = computed(() => {

@@ -81,12 +81,12 @@
     </button>
     @if (expandedPanels()['brand']) {
     <div class="flex flex-col gap-2 mt-3">
-      @for (option of brandOptions; track option.value) {
+      @for (brand of store.brandsList(); track brand) {
       <label class="flex items-center gap-3 cursor-pointer">
-        <input type="checkbox" [checked]="isBrandChecked(option.value)"
-          (change)="onBrandChange(option.value, $any($event).target.checked)" class="w-4 h-4 cursor-pointer"
+        <input type="checkbox" [checked]="isBrandChecked(brand)"
+          (change)="onBrandChange(brand, $any($event).target.checked)" class="w-4 h-4 cursor-pointer"
           style="accent-color: var(--app-primary);" />
-        <span style="color: var(--app-text);">{{ option.label }}</span>
+        <span style="color: var(--app-text);">{{ brand | titlecase }}</span>
       </label>
       }
     </div>

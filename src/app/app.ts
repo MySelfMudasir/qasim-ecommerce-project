@@ -55,6 +55,10 @@ export class App {
   private hasInitializedConnectionState = false;
 
   constructor(private dialog: MatDialog) {
+    if (isPlatformBrowser(this.platformId)) {
+      this.store.loadFilterOptions();
+    }
+
     effect(() => {
       const online = this.isOnline();
 
